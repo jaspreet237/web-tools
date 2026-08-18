@@ -23,7 +23,6 @@
       --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
     }
 
-    /* Dark Mode Theme Rules */
     body.dark-mode {
       --bg: #090d16;
       --surface: #111827;
@@ -44,13 +43,13 @@
     a { color: inherit; text-decoration: none; }
     .container { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
 
-    /* Header Navigation */
+    /* Navigation */
     header {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 90;
     }
     .nav-wrapper {
       display: flex;
@@ -86,13 +85,8 @@
     }
     .nav-links a:hover { color: var(--primary); }
     
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
+    .nav-right { display: flex; align-items: center; gap: 1.25rem; }
     
-    /* Theme Toggle Switch */
     .theme-toggle {
       display: flex;
       align-items: center;
@@ -122,18 +116,15 @@
     body.dark-mode .switch { background: var(--primary); }
     body.dark-mode .switch::after { transform: translateX(18px); }
 
-    .header-search {
-      position: relative;
-    }
     .header-search input {
-      padding: 0.5rem 1rem 0.5rem 2.25rem;
+      padding: 0.5rem 1rem;
       border-radius: 8px;
       border: 1px solid var(--border);
       background: var(--bg);
       color: var(--text);
       font-size: 0.85rem;
       outline: none;
-      width: 200px;
+      width: 180px;
     }
 
     /* Hero Section */
@@ -156,19 +147,9 @@
     }
     body.dark-mode .pill-badge { background: #1e3a8a; color: #93c5fd; }
 
-    .hero h1 {
-      font-size: 2.75rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 1rem;
-    }
+    .hero h1 { font-size: 2.75rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1rem; }
     .hero h1 span { color: var(--primary); }
-    .hero p {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-      max-width: 580px;
-      margin: 0 auto 2.5rem;
-    }
+    .hero p { color: var(--text-muted); font-size: 1.1rem; max-width: 580px; margin: 0 auto 2.5rem; }
 
     .hero-search {
       max-width: 560px;
@@ -181,51 +162,19 @@
       box-shadow: var(--shadow);
       align-items: center;
     }
-    .hero-search input {
-      border: none;
-      outline: none;
-      width: 100%;
-      font-size: 0.95rem;
-      background: transparent;
-      color: var(--text);
-    }
-    .hero-search button {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.75rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .hero-search input { border: none; outline: none; width: 100%; font-size: 0.95rem; background: transparent; color: var(--text); }
+    .hero-search button { background: var(--primary); color: white; border: none; padding: 0.75rem 1.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
-    /* Trust Highlights Bar */
-    .highlights {
-      display: flex;
-      justify-content: center;
-      gap: 3rem;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
+    .highlights { display: flex; justify-content: center; gap: 3rem; color: var(--text-muted); font-size: 0.85rem; }
     .highlight-item { display: flex; align-items: center; gap: 8px; }
     .highlight-item strong { color: var(--text); display: block; font-size: 0.85rem; }
 
-    /* Sections Shared Styles */
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 3.5rem 0 1.5rem;
-    }
+    /* Tool Section */
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin: 3.5rem 0 1.5rem; }
     .section-title { font-size: 1.35rem; font-weight: 700; }
     .view-all { color: var(--primary); font-size: 0.875rem; font-weight: 600; }
 
-    /* Cards Grid */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
+    .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
     .tool-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -236,7 +185,10 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
+    .tool-card:hover { transform: translateY(-3px); }
     .card-badge {
       position: absolute;
       top: 1.5rem;
@@ -248,14 +200,7 @@
       padding: 0.2rem 0.6rem;
       border-radius: 9999px;
     }
-    .icon-box {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 1.25rem;
-    }
+    .icon-box { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 1.25rem; }
     .icon-blue { background: #eff6ff; color: var(--primary); }
     .icon-purple { background: #f3e8ff; color: #9333ea; }
     .icon-green { background: #f0fdf4; color: #16a34a; }
@@ -270,23 +215,12 @@
       border-radius: var(--radius-sm);
       font-size: 0.85rem;
       font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      border: none;
+      cursor: pointer;
     }
-    .btn-disabled {
-      background: #f1f5f9;
-      color: #94a3b8;
-      cursor: not-allowed;
-    }
-    body.dark-mode .btn-disabled { background: #1e293b; color: #64748b; }
 
-    /* Category Grid */
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 1rem;
-    }
+    /* Categories */
+    .category-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
     .cat-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -295,18 +229,11 @@
       text-align: center;
       box-shadow: var(--shadow);
     }
-    .cat-icon {
-      width: 40px;
-      height: 40px;
-      margin: 0 auto 0.75rem;
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-    }
+    .cat-icon { width: 40px; height: 40px; margin: 0 auto 0.75rem; border-radius: 10px; display: grid; place-items: center; }
     .cat-card h4 { font-size: 0.85rem; margin-bottom: 0.25rem; }
     .cat-card span { font-size: 0.75rem; color: var(--text-muted); }
 
-    /* Feature Banner Section */
+    /* Features Banner */
     .features-banner {
       background: var(--surface);
       border-top: 1px solid var(--border);
@@ -316,40 +243,17 @@
       text-align: center;
     }
     .features-banner h2 { font-size: 1.5rem; margin-bottom: 2.5rem; }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-    }
-    .feature-item { text-align: center; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
     .feature-item h4 { margin: 0.75rem 0 0.25rem; font-size: 1rem; }
     .feature-item p { font-size: 0.85rem; color: var(--text-muted); max-width: 250px; margin: 0 auto; }
 
     /* Footer */
-    footer {
-      background: var(--surface-dark);
-      color: #94a3b8;
-      padding: 4rem 0 2rem;
-      font-size: 0.875rem;
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr repeat(4, 1fr);
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
+    footer { background: var(--surface-dark); color: #94a3b8; padding: 4rem 0 2rem; font-size: 0.875rem; }
+    .footer-grid { display: grid; grid-template-columns: 2fr repeat(4, 1fr); gap: 2rem; margin-bottom: 3rem; }
     .footer-brand h3 { color: white; margin-bottom: 0.75rem; }
     .footer-brand p { font-size: 0.85rem; line-height: 1.6; max-width: 240px; margin-bottom: 1.25rem; }
     .socials { display: flex; gap: 0.75rem; }
-    .social-btn {
-      width: 32px;
-      height: 32px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      color: white;
-    }
+    .social-btn { width: 32px; height: 32px; background: rgba(255,255,255,0.08); border-radius: 50%; display: grid; place-items: center; color: white; }
     .footer-col h5 { color: white; margin-bottom: 1rem; font-size: 0.9rem; }
     .footer-col ul { list-style: none; }
     .footer-col ul li { margin-bottom: 0.6rem; }
@@ -365,26 +269,65 @@
       margin-bottom: 0.5rem;
       outline: none;
     }
-    .subscribe-box button {
+    .subscribe-box button { width: 100%; padding: 0.6rem; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; font-size: 0.8rem; }
+
+    /* Modal System */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      padding: 0.6rem;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      place-items: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: grid; }
+    .calc-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 520px;
+      padding: 2rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .close-btn { position: absolute; top: 1.25rem; right: 1.25rem; background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; }
+    .calc-modal h3 { font-size: 1.35rem; margin-bottom: 0.25rem; }
+    .calc-modal p { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem; }
+
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
     }
 
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding-top: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
+    .calc-results { margin-top: 1.25rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; text-align: center; }
+    .res-box { background: var(--bg); border: 1px solid var(--border); padding: 0.85rem 0.5rem; border-radius: 8px; }
+    .res-num { font-size: 1.35rem; font-weight: 800; color: var(--primary); display: block; }
+    .res-label { font-size: 0.75rem; color: var(--text-muted); }
+
+    .single-res {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      margin-top: 1rem;
     }
 
-    /* Mobile Adaptability */
     @media (max-width: 900px) {
       .card-grid, .features-grid { grid-template-columns: 1fr; }
       .category-grid { grid-template-columns: repeat(3, 1fr); }
@@ -396,7 +339,7 @@
 </head>
 <body>
 
-  <!-- Modern Header / Navigation -->
+  <!-- Header -->
   <header>
     <div class="container nav-wrapper">
       <a href="#" class="brand">
@@ -426,7 +369,7 @@
   </header>
 
   <main>
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero">
       <div class="container">
         <span class="pill-badge">Online Tools</span>
@@ -452,7 +395,7 @@
       </div>
     </section>
 
-    <!-- Popular Tools Section -->
+    <!-- Popular Tools -->
     <section class="container">
       <div class="section-header">
         <h2 class="section-title">Popular Tools</h2>
@@ -460,40 +403,42 @@
       </div>
 
       <div class="card-grid">
-        <!-- Age Calculator Card -->
-        <div class="tool-card">
+        <!-- Age Calculator -->
+        <div class="tool-card" onclick="openModal('ageModal')">
           <span class="card-badge">Popular</span>
           <div class="icon-box icon-blue">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           </div>
           <h3>Age Calculator</h3>
           <p>Calculate your exact age in years, months and days.</p>
-          <a href="#" class="btn-card">Open Tool →</a>
+          <button class="btn-card">Open Tool →</button>
         </div>
 
         <!-- Date Calculator -->
-        <div class="tool-card">
+        <div class="tool-card" onclick="openModal('dateModal')">
+          <span class="card-badge">Popular</span>
           <div class="icon-box icon-purple">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           </div>
           <h3>Date Calculator</h3>
           <p>Calculate the difference between two dates and more.</p>
-          <span class="btn-card btn-disabled">Coming Soon</span>
+          <button class="btn-card">Open Tool →</button>
         </div>
 
         <!-- Time Zone Converter -->
-        <div class="tool-card">
+        <div class="tool-card" onclick="openModal('tzModal')">
+          <span class="card-badge">Popular</span>
           <div class="icon-box icon-green">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
           <h3>Time Zone Converter</h3>
           <p>Convert time between different time zones instantly.</p>
-          <span class="btn-card btn-disabled">Coming Soon</span>
+          <button class="btn-card">Open Tool →</button>
         </div>
       </div>
     </section>
 
-    <!-- Browse By Category Section -->
+    <!-- Categories -->
     <section class="container">
       <div class="section-header">
         <h2 class="section-title">Browse by Category</h2>
@@ -508,7 +453,7 @@
         <div class="cat-card">
           <div class="cat-icon icon-purple">📅</div>
           <h4>Date & Time</h4>
-          <span>Coming soon</span>
+          <span>3 tools</span>
         </div>
         <div class="cat-card">
           <div class="cat-icon icon-green">💻</div>
@@ -533,24 +478,21 @@
       </div>
     </section>
 
-    <!-- Trust / Features Banner -->
+    <!-- Features Banner -->
     <section class="features-banner">
       <div class="container">
         <h2>Why MyAllCodes Tools?</h2>
         <div class="features-grid">
           <div class="feature-item">
-            ⚡
-            <h4>Blazing Fast</h4>
+            ⚡ <h4>Blazing Fast</h4>
             <p>Optimized for speed so you get results in an instant.</p>
           </div>
           <div class="feature-item">
-            🛡️
-            <h4>100% Free</h4>
+            🛡️ <h4>100% Free</h4>
             <p>All tools are completely free. No sign-up required.</p>
           </div>
           <div class="feature-item">
-            🔒
-            <h4>Privacy Friendly</h4>
+            🔒 <h4>Privacy Friendly</h4>
             <p>We respect your privacy. No data collection, ever.</p>
           </div>
         </div>
@@ -558,7 +500,93 @@
     </section>
   </main>
 
-  <!-- Dark Footer -->
+  <!-- Age Calculator Modal -->
+  <div class="modal-overlay" id="ageModal" onclick="closeModalOnBg(event, 'ageModal')">
+    <div class="calc-modal">
+      <button class="close-btn" onclick="closeModal('ageModal')">&times;</button>
+      <h3>Age Calculator</h3>
+      <p>Select your date of birth to calculate your exact age.</p>
+
+      <div class="form-group">
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" onchange="runAgeCalculation()">
+      </div>
+
+      <div class="calc-results">
+        <div class="res-box"><span class="res-num" id="resYears">0</span><span class="res-label">Years</span></div>
+        <div class="res-box"><span class="res-num" id="resMonths">0</span><span class="res-label">Months</span></div>
+        <div class="res-box"><span class="res-num" id="resDays">0</span><span class="res-label">Days</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date Calculator Modal -->
+  <div class="modal-overlay" id="dateModal" onclick="closeModalOnBg(event, 'dateModal')">
+    <div class="calc-modal">
+      <button class="close-btn" onclick="closeModal('dateModal')">&times;</button>
+      <h3>Date Difference Calculator</h3>
+      <p>Select two dates to find the exact duration between them.</p>
+
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" onchange="runDateDiffCalculation()">
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" onchange="runDateDiffCalculation()">
+      </div>
+
+      <div class="single-res">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Total Difference</span>
+        <div id="resDateDiff" style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-top: 0.25rem;">Select dates to compare</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time Zone Converter Modal -->
+  <div class="modal-overlay" id="tzModal" onclick="closeModalOnBg(event, 'tzModal')">
+    <div class="calc-modal">
+      <button class="close-btn" onclick="closeModal('tzModal')">&times;</button>
+      <h3>Time Zone Converter</h3>
+      <p>Convert time directly between different world time zones.</p>
+
+      <div class="form-group">
+        <label for="tzTime">Select Time</label>
+        <input type="time" id="tzTime" value="12:00" onchange="runTzConversion()">
+      </div>
+
+      <div class="form-group">
+        <label for="fromTz">From Time Zone</label>
+        <select id="fromTz" onchange="runTzConversion()">
+          <option value="0">UTC / GMT</option>
+          <option value="-5">EST (New York, UTC-5)</option>
+          <option value="0">GMT (London, UTC+0)</option>
+          <option value="1">CET (Paris, UTC+1)</option>
+          <option value="5.5" selected>IST (India, UTC+5:30)</option>
+          <option value="8">SGT (Singapore, UTC+8)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="toTz">To Time Zone</label>
+        <select id="toTz" onchange="runTzConversion()">
+          <option value="0">UTC / GMT</option>
+          <option value="-5" selected>EST (New York, UTC-5)</option>
+          <option value="0">GMT (London, UTC+0)</option>
+          <option value="1">CET (Paris, UTC+1)</option>
+          <option value="5.5">IST (India, UTC+5:30)</option>
+          <option value="8">SGT (Singapore, UTC+8)</option>
+        </select>
+      </div>
+
+      <div class="single-res">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Converted Time</span>
+        <div id="resTz" style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-top: 0.25rem;">--:--</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
   <footer>
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -575,10 +603,9 @@
       <div class="footer-col">
         <h5>Tools</h5>
         <ul>
-          <li><a href="#">All Tools</a></li>
-          <li><a href="#">Popular Tools</a></li>
-          <li><a href="#">New Tools</a></li>
-          <li><a href="#">Coming Soon</a></li>
+          <li><a href="#" onclick="openModal('ageModal')">Age Calculator</a></li>
+          <li><a href="#" onclick="openModal('dateModal')">Date Calculator</a></li>
+          <li><a href="#" onclick="openModal('tzModal')">Time Zone Converter</a></li>
         </ul>
       </div>
 
@@ -589,7 +616,6 @@
           <li><a href="#">Date & Time</a></li>
           <li><a href="#">Developer</a></li>
           <li><a href="#">Converters</a></li>
-          <li><a href="#">More</a></li>
         </ul>
       </div>
 
@@ -600,7 +626,6 @@
           <li><a href="#">Blog</a></li>
           <li><a href="#">Privacy Policy</a></li>
           <li><a href="#">Terms of Use</a></li>
-          <li><a href="#">Contact</a></li>
         </ul>
       </div>
 
@@ -618,11 +643,84 @@
     </div>
   </footer>
 
-  <!-- Theme Switcher Script -->
+  <!-- Logic Scripts -->
   <script>
     function toggleTheme() {
       document.body.classList.toggle('dark-mode');
     }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function closeModalOnBg(e, id) {
+      if (e.target.id === id) closeModal(id);
+    }
+
+    /* Age Calculator Logic */
+    function runAgeCalculation() {
+      const dobVal = document.getElementById('dob').value;
+      if (!dobVal) return;
+      const dob = new Date(dobVal);
+      const today = new Date();
+
+      let years = today.getFullYear() - dob.getFullYear();
+      let months = today.getMonth() - dob.getMonth();
+      let days = today.getDate() - dob.getDate();
+
+      if (days < 0) {
+        months--;
+        days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+      }
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      document.getElementById('resYears').innerText = Math.max(0, years);
+      document.getElementById('resMonths').innerText = Math.max(0, months);
+      document.getElementById('resDays').innerText = Math.max(0, days);
+    }
+
+    /* Date Difference Logic */
+    function runDateDiffCalculation() {
+      const startVal = document.getElementById('startDate').value;
+      const endVal = document.getElementById('endDate').value;
+      if (!startVal || !endVal) return;
+
+      const d1 = new Date(startVal);
+      const d2 = new Date(endVal);
+      const diffTime = Math.abs(d2 - d1);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      document.getElementById('resDateDiff').innerText = `${diffDays} Days`;
+    }
+
+    /* Time Zone Conversion Logic */
+    function runTzConversion() {
+      const timeVal = document.getElementById('tzTime').value;
+      if (!timeVal) return;
+
+      const [hours, minutes] = timeVal.split(':').map(Number);
+      const fromOffset = parseFloat(document.getElementById('fromTz').value);
+      const toOffset = parseFloat(document.getElementById('toTz').value);
+
+      let totalMinutes = hours * 60 + minutes - (fromOffset * 60) + (toOffset * 60);
+      if (totalMinutes < 0) totalMinutes += 24 * 60;
+      totalMinutes = totalMinutes % (24 * 60);
+
+      const resHours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+      const resMins = Math.floor(totalMinutes % 60).toString().padStart(2, '0');
+
+      document.getElementById('resTz').innerText = `${resHours}:${resMins}`;
+    }
+
+    // Run default conversions on startup
+    runTzConversion();
   </script>
 </body>
 </html>
