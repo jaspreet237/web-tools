@@ -1,20 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-33EN7X8B09"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-33EN7X8B09');
-</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MyAllCodes - Simple tools for everyday problems</title>
   <meta name="description" content="Fast, free, and easy-to-use online tools for calculations, conversions and more.">
-  <link rel="canonical" href="https://myallcodes.com/">
+  <link rel="canonical" href="https://tools.myallcodes.in/">
 
   <style>
     :root {
@@ -546,8 +537,13 @@
       </div>
 
       <div class="single-res">
-        <span style="font-size: 0.85rem; color: var(--text-muted);">Total Difference</span>
-        <div id="resDateDiff" style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-top: 0.25rem;">Select dates to compare</div>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Exact Difference</span>
+        <div id="resDateDiffYMD" style="font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-top: 0.25rem;">Select dates to compare</div>
+        
+        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--border);">
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Total In Days</span>
+          <div id="resDateDiffTotalDays" style="font-size: 1rem; font-weight: 600; color: var(--text); margin-top: 0.15rem;">--</div>
+        </div>
       </div>
     </div>
   </div>
@@ -573,6 +569,17 @@
           <option value="1">CET (Paris, UTC+1)</option>
           <option value="5.5" selected>IST (India, UTC+5:30)</option>
           <option value="8">SGT (Singapore, UTC+8)</option>
+          <!-- Canada -->
+          <option value="-3.5">NST (Newfoundland, UTC-3:30)</option>
+          <option value="-4">AST (Atlantic, UTC-4)</option>
+          <option value="-5">EST (Toronto/Montreal, UTC-5)</option>
+          <option value="-6">CST (Winnipeg, UTC-6)</option>
+          <option value="-7">MST (Edmonton/Calgary, UTC-7)</option>
+          <option value="-8">PST (Vancouver, UTC-8)</option>
+          <!-- Australia -->
+          <option value="10">AEST (Sydney/Melbourne, UTC+10)</option>
+          <option value="9.5">ACST (Adelaide/Darwin, UTC+9:30)</option>
+          <option value="8">AWST (Perth, UTC+8)</option>
         </select>
       </div>
 
@@ -585,6 +592,17 @@
           <option value="1">CET (Paris, UTC+1)</option>
           <option value="5.5">IST (India, UTC+5:30)</option>
           <option value="8">SGT (Singapore, UTC+8)</option>
+          <!-- Canada -->
+          <option value="-3.5">NST (Newfoundland, UTC-3:30)</option>
+          <option value="-4">AST (Atlantic, UTC-4)</option>
+          <option value="-5">EST (Toronto/Montreal, UTC-5)</option>
+          <option value="-6">CST (Winnipeg, UTC-6)</option>
+          <option value="-7">MST (Edmonton/Calgary, UTC-7)</option>
+          <option value="-8">PST (Vancouver, UTC-8)</option>
+          <!-- Australia -->
+          <option value="10">AEST (Sydney/Melbourne, UTC+10)</option>
+          <option value="9.5">ACST (Adelaide/Darwin, UTC+9:30)</option>
+          <option value="8">AWST (Perth, UTC+8)</option>
         </select>
       </div>
 
@@ -701,15 +719,43 @@
       const endVal = document.getElementById('endDate').value;
       if (!startVal || !endVal) return;
 
-      const d1 = new Date(startVal);
-      const d2 = new Date(endVal);
-      const diffTime = Math.abs(d2 - d1);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      let d1 = new Date(startVal);
+      let d2 = new Date(endVal);
 
-      document.getElementById('resDateDiff').innerText = `${diffDays} Days`;
+      if (d1 > d2) {
+        const temp = d1;
+        d1 = d2;
+        d2 = temp;
+      }
+
+      // Total days calculation
+      const diffTime = Math.abs(d2 - d1);
+      const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      // Detailed Y / M / D calculation
+      let years = d2.getFullYear() - d1.getFullYear();
+      let months = d2.getMonth() - d1.getMonth();
+      let days = d2.getDate() - d1.getDate();
+
+      if (days < 0) {
+        months--;
+        days += new Date(d2.getFullYear(), d2.getMonth(), 0).getDate();
+      }
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      const parts = [];
+      if (years > 0) parts.push(`${years} year${years > 1 ? 's' : ''}`);
+      if (months > 0) parts.push(`${months} month${months > 1 ? 's' : ''}`);
+      if (days > 0 || parts.length === 0) parts.push(`${days} day${days !== 1 ? 's' : ''}`);
+
+      document.getElementById('resDateDiffYMD').innerText = parts.join(' ');
+      document.getElementById('resDateDiffTotalDays').innerText = `${totalDays} total days`;
     }
 
-    /* Time Zone Conversion Logic */
+    /* Fixed Time Zone Conversion Logic */
     function runTzConversion() {
       const timeVal = document.getElementById('tzTime').value;
       if (!timeVal) return;
@@ -718,12 +764,13 @@
       const fromOffset = parseFloat(document.getElementById('fromTz').value);
       const toOffset = parseFloat(document.getElementById('toTz').value);
 
-      let totalMinutes = hours * 60 + minutes - (fromOffset * 60) + (toOffset * 60);
-      if (totalMinutes < 0) totalMinutes += 24 * 60;
-      totalMinutes = totalMinutes % (24 * 60);
+      const diffInMinutes = (toOffset - fromOffset) * 60;
+      let totalMinutes = (hours * 60) + minutes + diffInMinutes;
+      
+      totalMinutes = (totalMinutes % 1440 + 1440) % 1440;
 
       const resHours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
-      const resMins = Math.floor(totalMinutes % 60).toString().padStart(2, '0');
+      const resMins = Math.round(totalMinutes % 60).toString().padStart(2, '0');
 
       document.getElementById('resTz').innerText = `${resHours}:${resMins}`;
     }
