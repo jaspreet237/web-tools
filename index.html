@@ -501,17 +501,30 @@
 
     function filterTools() {
         const q = document.getElementById('toolSearch').value.toLowerCase().trim();
+        let visibleCount = 0;
+
         document.querySelectorAll('.searchable-item').forEach(el => {
             const match = (el.getAttribute('data-keywords') + " " + el.innerText).toLowerCase().includes(q);
             el.style.display = match ? "" : "none";
+            if (match) visibleCount++;
         });
+
+        // Toggle empty state message
+        const noResults = document.getElementById('noResultsMessage');
+        if (noResults) {
+            noResults.style.display = (visibleCount === 0) ? "block" : "none";
+        }
     }
 
     function applyQuickFilter(keyword) {
         document.getElementById('toolSearch').value = keyword;
         filterTools();
     }
-
+    function clearToolSearch() {
+        document.getElementById('toolSearch').value = '';
+        filterTools();
+    }
+    
     setInterval(tick, 1000);
     tick();
 </script>
