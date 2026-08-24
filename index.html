@@ -13,6 +13,7 @@
             --surface-card: #ffffff;
             --surface-input: #f1f5f9;
             --primary: #2563eb;
+            --primary-dark: #1d4ed8;
             --primary-light: #eff6ff;
             --text-main: #0f172a;
             --text-sub: #64748b;
@@ -28,16 +29,27 @@
         body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
         .mono { font-family: 'JetBrains Mono', monospace; }
 
-        /* HEADER */
+        /* HEADER & BRAND LOGO */
         .header-nav {
             background: var(--surface-card); border-bottom: 1px solid var(--border-line);
             padding: 0.85rem 2rem; display: flex; align-items: center; justify-content: space-between;
             position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm);
         }
-        .brand { font-size: 1.3rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .brand { 
+            font-size: 1.3rem; font-weight: 800; color: var(--text-main); text-decoration: none; 
+            display: flex; align-items: center; gap: 0.65rem; transition: opacity 0.2s;
+        }
+        .brand:hover { opacity: 0.9; }
+        .brand-logo-icon {
+            background: var(--primary); color: #fff; width: 34px; height: 34px;
+            border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; font-weight: 800; box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+        }
         .brand span { color: var(--primary); }
 
-        .search-wrapper { position: relative; width: 360px; }
+        /* HEADER SEARCH BAR */
+        .search-group { position: relative; width: 440px; display: flex; gap: 0.5rem; }
+        .search-wrapper { position: relative; flex: 1; }
         .search-input {
             width: 100%; padding: 0.6rem 1rem 0.6rem 2.5rem;
             background: var(--surface-input); border: 1px solid var(--border-line);
@@ -46,8 +58,15 @@
         }
         .search-input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
         .search-icon { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-sub); width: 16px; }
+        
+        .header-search-btn {
+            background: var(--primary); color: #fff; border: none; padding: 0 1.25rem;
+            border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; gap: 0.35rem; transition: background 0.2s; flex-shrink: 0;
+        }
+        .header-search-btn:hover { background: var(--primary-dark); }
 
-        /* HERO & FILTER BAR */
+        /* QUICK FILTER BAR */
         .hero-bar { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 0.85rem 2rem; }
         .hero-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
         .preset-label { font-size: 0.8rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; margin-right: 0.25rem; }
@@ -66,7 +85,7 @@
         .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-line); }
         .panel-title { font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; color: var(--text-main); }
 
-        /* CLOCK DISPLAY & PRESETS */
+        /* CLOCK DISPLAY */
         .clock-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; margin-bottom: 1rem; position: relative; }
         .clock-card { background: #f8fafc; border: 1px solid var(--border-line); border-radius: var(--radius-lg); padding: 1rem; text-align: center; }
 
@@ -92,7 +111,7 @@
 
         .diff-status { background: var(--primary-light); border: 1px solid rgba(37, 99, 235, 0.2); color: var(--primary); font-size: 0.8rem; font-weight: 800; padding: 0.4rem 1rem; border-radius: 20px; }
 
-        /* DYNAMIC HUBS & POPULAR PAIRS */
+        /* HUBS & PRESETS */
         .section-subtitle { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-sub); margin: 1rem 0 0.5rem; letter-spacing: 0.5px; }
         
         .city-hubs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
@@ -114,70 +133,63 @@
         .route-btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
         .route-btn span { font-size: 0.7rem; color: var(--text-sub); font-weight: 600; }
 
-        /* DIRECT SUB-URL SUITE GRID (WHOLE CARD IS CLICKABLE) */
+        /* TOOL DIRECTORY GRID */
         .tools-scaffold { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
-        
-        .tool-card-link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
+        .tool-card-link { text-decoration: none; color: inherit; display: block; }
         
         .tool-box { 
-            background: #fff; 
-            border: 1px solid var(--border-line); 
-            border-radius: var(--radius-lg); 
-            padding: 1.25rem; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            height: 100%;
-            cursor: pointer;
-            transition: all 0.2s; 
+            background: #fff; border: 1px solid var(--border-line); border-radius: var(--radius-lg); 
+            padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; 
+            height: 100%; cursor: pointer; transition: all 0.2s; 
         }
         .tool-card-link:hover .tool-box { 
-            transform: translateY(-3px); 
-            border-color: var(--primary); 
-            box-shadow: var(--shadow-md); 
-            background: #fbfcfd;
+            transform: translateY(-3px); border-color: var(--primary); 
+            box-shadow: var(--shadow-md); background: #fbfcfd;
         }
         .tool-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; }
         .tool-desc { font-size: 0.8rem; color: var(--text-sub); line-height: 1.4; margin-bottom: 1rem; }
         .tool-action { font-size: 0.8rem; font-weight: 700; color: var(--primary); display: inline-flex; align-items: center; gap: 0.35rem; }
-        .tool-card-link:hover .tool-action { text-decoration: underline; }
 
         .site-footer { border-top: 1px solid var(--border-line); padding: 1.5rem 0; text-align: center; color: var(--text-sub); font-size: 0.85rem; background: var(--surface-card); margin-top: auto; }
+
+        @media (max-width: 768px) {
+            .search-group { width: 100%; }
+        }
     </style>
 </head>
 <body>
 
 <header class="header-nav">
-    <a href="/" class="brand">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        MyAllCodes<span>Tools</span>
+    <!-- WEBSITE LOGO -->
+    <a href="index.html" class="brand" title="MyAllCodes Home">
+        <div class="brand-logo-icon">#</div>
+        <div>MyAllCodes<span>Tools</span></div>
     </a>
-    <div class="search-wrapper">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="toolSearch" class="search-input" placeholder="Search tools or time zones..." onkeyup="filterTools()">
-    </div>
+    
+    <!-- HEADER SEARCH FORM (REDIRECTS TO SEARCH.HTML) -->
+    <form class="search-group" onsubmit="event.preventDefault(); goToSearchPage();">
+        <div class="search-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="toolSearch" class="search-input" placeholder="Search tools or time zones...">
+        </div>
+        <button type="submit" class="header-search-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Search
+        </button>
+    </form>
 </header>
 
-<!-- QUICK FILTER PRESETS (Inline dynamic filtering) -->
+<!-- QUICK FILTER PRESETS BAR -->
 <div class="hero-bar">
     <div class="hero-inner">
         <span class="preset-label">Quick Search:</span>
-        <button type="button" class="preset-btn" onclick="applyQuickFilter('ist to pst')">IST to PST</button>
-        <button type="button" class="preset-btn" onclick="applyQuickFilter('est')">US Eastern (EST)</button>
-        <button type="button" class="preset-btn" onclick="applyQuickFilter('dubai')">Dubai Time</button>
-        <button type="button" class="preset-btn" onclick="applyQuickFilter('age calculator')">Age Calculator</button>
-        <button type="button" class="preset-btn" onclick="applyQuickFilter('unit converter')">Unit Converter</button>
-        <button type="button" class="preset-btn" onclick="applyQuickFilter('bmi calculator')">BMI Calculator</button>
-        <button type="button" class="preset-btn" onclick="applyQuickFilter('')">Show All</button>
-    </div>
-    <!-- EMPTY SEARCH STATE -->
-    <div id="noResultsMessage" class="no-results-box" style="display: none;">
-        <p>🔍 No tools match your search.</p>
-        <button type="button" onclick="clearToolSearch()" class="reset-link-btn">Show all tools</button>
+        <button type="button" class="preset-btn" onclick="goToSearchPage('ist to pst')">IST to PST</button>
+        <button type="button" class="preset-btn" onclick="goToSearchPage('est')">US Eastern (EST)</button>
+        <button type="button" class="preset-btn" onclick="goToSearchPage('dubai')">Dubai Time</button>
+        <button type="button" class="preset-btn" onclick="goToSearchPage('age calculator')">Age Calculator</button>
+        <button type="button" class="preset-btn" onclick="goToSearchPage('unit converter')">Unit Converter</button>
+        <button type="button" class="preset-btn" onclick="goToSearchPage('bmi calculator')">BMI Calculator</button>
+        <button type="button" class="preset-btn" onclick="goToSearchPage('')">Show All</button>
     </div>
 </div>
 
@@ -190,11 +202,9 @@
             <div id="diffBadge" class="diff-status mono">0H OFFSET</div>
         </div>
 
-        <!-- DUAL CLOCKS WITH SWAP BUTTON -->
         <div class="clock-pair">
             <button type="button" class="swap-btn" onclick="swapClocks()" title="Swap Clocks">⇄</button>
             
-            <!-- Clock 1 -->
             <div class="clock-card">
                 <div class="dial-container">
                     <svg class="dial-svg" viewBox="0 0 100 100">
@@ -228,7 +238,6 @@
                 </select>
             </div>
 
-            <!-- Clock 2 -->
             <div class="clock-card">
                 <div class="dial-container">
                     <svg class="dial-svg" viewBox="0 0 100 100">
@@ -263,7 +272,6 @@
             </div>
         </div>
 
-        <!-- LIVE GLOBAL HUBS GRID -->
         <div class="section-subtitle">Live Major Financial & Tech Hubs</div>
         <div class="city-hubs-grid">
             <div class="hub-card" onclick="setSecondaryTZ('America/New_York')">
@@ -292,7 +300,6 @@
             </div>
         </div>
 
-        <!-- POPULAR DUAL ROUTE PAIRS -->
         <div class="section-subtitle">Popular Time Pairings</div>
         <div class="route-presets-grid">
             <button type="button" class="route-btn" onclick="setTZ('America/New_York', 'America/Los_Angeles')">EST ➔ PST <span>US East/West</span></button>
@@ -302,15 +309,15 @@
         </div>
     </section>
 
-    <!-- RIGHT MAIN WORKSPACE: TOOL DIRECTORY -->
+    <!-- RIGHT WORKSPACE: TOOL DIRECTORY -->
     <section class="panel-box">
         <div class="panel-header">
-            <div class="panel-title">🛠️ Tool Directory & Sub-Pages</div>
+            <div class="panel-title">🛠️ Tool Directory</div>
         </div>
 
-      <div class="tools-scaffold">
+        <!-- TOOLS GRID -->
+        <div class="tools-scaffold">
             
-            <!-- TOOL 1 -->
             <a href="/age-calculator/" class="tool-card-link searchable-item" data-keywords="age calculator birth date dob years age-calculator">
                 <div class="tool-box">
                     <div>
@@ -321,7 +328,6 @@
                 </div>
             </a>
 
-            <!-- TOOL 2 -->
             <a href="/date-calculator/" class="tool-card-link searchable-item" data-keywords="date calculator difference duration days date-calculator">
                 <div class="tool-box">
                     <div>
@@ -332,7 +338,6 @@
                 </div>
             </a>
 
-            <!-- TOOL 3 -->
             <a href="/unit-converter/" class="tool-card-link searchable-item" data-keywords="unit converter distance length weight km miles unit-converter">
                 <div class="tool-box">
                     <div>
@@ -343,7 +348,6 @@
                 </div>
             </a>
 
-            <!-- TOOL 4 -->
             <a href="/percentage-calculator/" class="tool-card-link searchable-item" data-keywords="percentage percent calculator discount margin percentage-calculator">
                 <div class="tool-box">
                     <div>
@@ -354,7 +358,6 @@
                 </div>
             </a>
 
-            <!-- TOOL 5 -->
             <a href="/bmi-calculator/" class="tool-card-link searchable-item" data-keywords="bmi calculator body mass index health weight height bmi-calculator">
                 <div class="tool-box">
                     <div>
@@ -365,7 +368,6 @@
                 </div>
             </a>
 
-            <!-- TOOL 6 -->
             <a href="/time-zone/ist-to-pst.html" class="tool-card-link searchable-item" data-keywords="ist to pst time zone converter india pacific time timezone">
                 <div class="tool-box">
                     <div>
@@ -376,7 +378,6 @@
                 </div>
             </a>
 
-            <!-- TOOL 7 -->
             <a href="/time-zone/ist-to-est.html" class="tool-card-link searchable-item" data-keywords="ist to est time zone converter india eastern time timezone est">
                 <div class="tool-box">
                     <div>
@@ -387,7 +388,6 @@
                 </div>
             </a>
 
-            <!-- TOOL 8 -->
             <a href="/time-zone/ist-to-dubai.html" class="tool-card-link searchable-item" data-keywords="dubai time zone converter uae gulf timezone ist to dubai">
                 <div class="tool-box">
                     <div>
@@ -410,6 +410,14 @@
 </footer>
 
 <script>
+    /* REDIRECT TO SEARCH PAGE FUNCTIONALITY */
+    function goToSearchPage(presetQuery) {
+        const queryVal = presetQuery !== undefined ? presetQuery : document.getElementById('toolSearch').value.trim();
+        const encoded = encodeURIComponent(queryVal);
+        window.location.href = `search.html?q=${encoded}`;
+    }
+
+    /* WORLD CLOCK ENGINE */
     function parseTz(tz) {
         const now = new Date();
         const parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false }).formatToParts(now);
@@ -499,32 +507,6 @@
         tick();
     }
 
-    function filterTools() {
-        const q = document.getElementById('toolSearch').value.toLowerCase().trim();
-        let visibleCount = 0;
-
-        document.querySelectorAll('.searchable-item').forEach(el => {
-            const match = (el.getAttribute('data-keywords') + " " + el.innerText).toLowerCase().includes(q);
-            el.style.display = match ? "" : "none";
-            if (match) visibleCount++;
-        });
-
-        // Toggle empty state message
-        const noResults = document.getElementById('noResultsMessage');
-        if (noResults) {
-            noResults.style.display = (visibleCount === 0) ? "block" : "none";
-        }
-    }
-
-    function applyQuickFilter(keyword) {
-        document.getElementById('toolSearch').value = keyword;
-        filterTools();
-    }
-    function clearToolSearch() {
-        document.getElementById('toolSearch').value = '';
-        filterTools();
-    }
-    
     setInterval(tick, 1000);
     tick();
 </script>

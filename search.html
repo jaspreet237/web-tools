@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Tools - MyAllCodes Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --surface-card: #ffffff;
+            --surface-input: #f1f5f9;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border-line: #e2e8f0;
+            --radius-xl: 16px;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px -2px rgba(0,0,0,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* HEADER NAV WITH LOGO AS HOME LINK */
+        .header-nav {
+            background: var(--surface-card); border-bottom: 1px solid var(--border-line);
+            padding: 0.85rem 2rem; display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm);
+        }
+        .brand { 
+            font-size: 1.3rem; font-weight: 800; color: var(--text-main); text-decoration: none; 
+            display: flex; align-items: center; gap: 0.65rem; transition: opacity 0.2s;
+        }
+        .brand:hover { opacity: 0.9; }
+        .brand-logo-icon {
+            background: var(--primary); color: #fff; width: 34px; height: 34px;
+            border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; font-weight: 800; box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+        }
+        .brand span { color: var(--primary); }
+
+        /* HEADER SEARCH INPUT */
+        .search-group { position: relative; width: 440px; display: flex; gap: 0.5rem; }
+        .search-wrapper { position: relative; flex: 1; }
+        .search-input {
+            width: 100%; padding: 0.6rem 1rem 0.6rem 2.5rem;
+            background: var(--surface-input); border: 1px solid var(--border-line);
+            border-radius: var(--radius-md); color: var(--text-main); font-size: 0.875rem; outline: none;
+            transition: all 0.2s;
+        }
+        .search-input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+        .search-icon { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-sub); width: 16px; }
+        
+        .header-search-btn {
+            background: var(--primary); color: #fff; border: none; padding: 0 1.25rem;
+            border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; gap: 0.35rem; transition: background 0.2s; flex-shrink: 0;
+        }
+        .header-search-btn:hover { background: var(--primary-dark); }
+
+        /* MAIN SEARCH WORKSPACE */
+        .search-container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; width: 100%; flex: 1; }
+        
+        /* SUGGESTED / TRENDING KEYWORDS BAR */
+        .trending-card {
+            background: var(--surface-card); border: 1px solid var(--border-line);
+            border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm);
+        }
+        .section-label { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-sub); letter-spacing: 0.5px; margin-bottom: 0.75rem; }
+        
+        .trending-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .tag-btn {
+            background: var(--surface-input); color: var(--text-main); border: 1px solid var(--border-line);
+            padding: 0.45rem 0.95rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; outline: none;
+        }
+        .tag-btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+
+        /* RESULTS DIRECTORY GRID */
+        .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .tool-card-link { text-decoration: none; color: inherit; display: block; }
+        
+        .tool-box { 
+            background: #fff; border: 1px solid var(--border-line); border-radius: var(--radius-lg); 
+            padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; 
+            height: 100%; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm);
+        }
+        .tool-card-link:hover .tool-box { 
+            transform: translateY(-3px); border-color: var(--primary); 
+            box-shadow: var(--shadow-md); background: #fbfcfd;
+        }
+        .tool-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main); }
+        .tool-desc { font-size: 0.8rem; color: var(--text-sub); line-height: 1.4; margin-bottom: 1rem; }
+        .tool-action { font-size: 0.8rem; font-weight: 700; color: var(--primary); display: inline-flex; align-items: center; gap: 0.35rem; }
+
+        .no-results {
+            display: none; text-align: center; padding: 3rem 1rem; background: #fff;
+            border: 1px dashed var(--border-line); border-radius: var(--radius-lg); color: var(--text-sub); margin-top: 1rem;
+        }
+
+        .site-footer { border-top: 1px solid var(--border-line); padding: 1.5rem 0; text-align: center; color: var(--text-sub); font-size: 0.85rem; background: var(--surface-card); margin-top: auto; }
+        
+        @media (max-width: 768px) {
+            .search-group { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-nav">
+    <!-- WEBSITE LOGO (CLICKING TAKES USER HOME) -->
+    <a href="index.html" class="brand" title="Return to Homepage">
+        <div class="brand-logo-icon">#</div>
+        <div>MyAllCodes<span>Tools</span></div>
+    </a>
+    
+    <!-- SEARCH INPUT AND FUNCTIONAL SEARCH BUTTON -->
+    <div class="search-group">
+        <div class="search-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search tools or time zones..." onkeyup="executeSearch()">
+        </div>
+        <button type="button" class="header-search-btn" onclick="executeSearch()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Search
+        </button>
+    </div>
+</header>
+
+<main class="search-container">
+
+    <!-- SUGGESTED / TRENDING SEARCH PILLS -->
+    <div class="trending-card">
+        <div class="section-label">🔥 Suggested & Trending Searches</div>
+        <div class="trending-tags">
+            <button type="button" class="tag-btn" onclick="applyTag('ist to pst')">🇺🇸 IST to PST</button>
+            <button type="button" class="tag-btn" onclick="applyTag('ist to est')">🇺🇸 IST to EST</button>
+            <button type="button" class="tag-btn" onclick="applyTag('dubai')">🇦🇪 Dubai Time</button>
+            <button type="button" class="tag-btn" onclick="applyTag('age calculator')">📅 Age Calculator</button>
+            <button type="button" class="tag-btn" onclick="applyTag('unit converter')">📏 Unit Converter</button>
+            <button type="button" class="tag-btn" onclick="applyTag('bmi calculator')">⚖️ BMI Calculator</button>
+            <button type="button" class="tag-btn" onclick="applyTag('percentage calculator')">📊 Percentage Calculator</button>
+            <button type="button" class="tag-btn" onclick="applyTag('')">Clear Filter</button>
+        </div>
+    </div>
+
+    <div class="section-label">Directory Search Results</div>
+    
+    <!-- TOOLS DIRECTORY GRID -->
+    <div id="resultsGrid" class="results-grid">
+        
+        <a href="/age-calculator/" class="tool-card-link searchable-item" data-keywords="age calculator birth date dob years">
+            <div class="tool-box">
+                <div>
+                    <div class="tool-title">📅 Age Calculator</div>
+                    <p class="tool-desc">Calculate your exact age in years, months, weeks, and days from date of birth.</p>
+                </div>
+                <span class="tool-action">Open Tool &rarr;</span>
+            </div>
+        </a>
+
+        <a href="/date-calculator/" class="tool-card-link searchable-item" data-keywords="date calculator difference duration days">
+            <div class="tool-box">
+                <div>
+                    <div class="tool-title">🗓️ Date Difference Tool</div>
+                    <p class="tool-desc">Find exact number of days, weeks, and months between two selected dates.</p>
+                </div>
+                <span class="tool-action">Open Tool &rarr;</span>
+            </div>
+        </a>
+
+        <a href="/unit-converter/" class="tool-card-link searchable-item" data-keywords="unit converter distance length weight km miles">
+            <div class="tool-box">
+                <div>
+                    <div class="tool-title">📏 Unit Converter</div>
+                    <p class="tool-desc">Instant conversions for length, mass, distance, speed, and volume units.</p>
+                </div>
+                <span class="tool-action">Open Tool &rarr;</span>
+            </div>
+        </a>
+
+        <a href="/percentage-calculator/" class="tool-card-link searchable-item" data-keywords="percentage percent calculator discount margin">
+            <div class="tool-box">
+                <div>
+                    <div class="tool-title">📊 Percentage Calculator</div>
+                    <p class="tool-desc">Compute percentage differences, discounts, margins, and markups easily.</p>
+                </div>
+                <span class="tool-action">Open Tool &rarr;</span>
+            </div>
+        </a>
+
+        <a href="/bmi-calculator/" class="tool-card-link searchable-item" data-keywords="bmi calculator body mass index health weight height">
+            <div class="tool-box">
+                <div>
+                    <div class="tool-title">⚖️ BMI Calculator</div>
+                    <p class="tool-desc">Calculate Body Mass Index according to height and weight parameters.</p>
+                </div>
+                <span class="tool-action">Open Tool &rarr;</span>
+            </div>
+        </a>
+
+        <a href="/time-zone/ist-to-pst.html" class="tool-card-link searchable-item" data-keywords="ist to pst time zone converter india pacific time timezone">
+            <div class="tool-box">
+                <div>
+                    <div class="tool-title">🇺🇸 IST to PST Converter</div>
+                    <p class="tool-desc">Dedicated converter for Indian Standard Time to US Pacific Standard Time.</p>
+                </div>
+                <span class="tool-action">Open Tool &rarr;</span>
+            </div>
+        </a>
+
+        <a href="/time-zone/ist-to-est.html" class="tool-card-link searchable-item" data-keywords="ist to est time zone converter india eastern time timezone est">
+            <div class="tool-box">
+                <div>
+                    <div class="tool-title">🇺🇸 IST to EST Converter</div>
+                    <p class="tool-desc">Dedicated converter for Indian Standard Time to US Eastern Standard Time.</p>
+                </div>
+                <span class="tool-action">Open Tool &rarr;</span>
+            </div>
+        </a>
+
+        <a href="/time-zone/ist-to-dubai.html" class="tool-card-link searchable-item" data-keywords="dubai time zone converter uae gulf timezone ist to dubai">
+            <div class="tool-box">
+                <div>
+                    <div class="tool-title">🇦🇪 IST to Dubai Converter</div>
+                    <p class="tool-desc">Quick time lookup and conversion for India to Dubai (GST).</p>
+                </div>
+                <span class="tool-action">Open Tool &rarr;</span>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div id="noResults" class="no-results">
+        <h3>🔍 No matching tools found</h3>
+        <p>Try searching with a different keyword like "PST", "Age", or "Converter".</p>
+    </div>
+
+</main>
+
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools • All Rights Reserved</p>
+</footer>
+
+<script>
+    function executeSearch() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        const items = document.querySelectorAll('.searchable-item');
+        let count = 0;
+
+        items.forEach(item => {
+            const keywords = item.getAttribute('data-keywords') || '';
+            const title = item.innerText || '';
+            
+            if (keywords.toLowerCase().includes(query) || title.toLowerCase().includes(query)) {
+                item.style.display = 'block';
+                count++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        document.getElementById('noResults').style.display = (count === 0) ? 'block' : 'none';
+    }
+
+    function applyTag(keyword) {
+        document.getElementById('searchInput').value = keyword;
+        executeSearch();
+    }
+
+    // Parse URL Parameter on Load (e.g. search.html?q=dubai)
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryParam = urlParams.get('q');
+        if (queryParam) {
+            document.getElementById('searchInput').value = queryParam;
+        }
+        executeSearch();
+    });
+</script>
+
+</body>
+</html>
