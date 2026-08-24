@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter | MyAllCodes Tools</title>
+    <meta name="description" content="Free multi-unit converter for length, weight, temperature, area, volume, and digital storage.">
+    <link rel="canonical" href="https://myallcodes.in/unit-converter/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc; --surface-card: #ffffff; --surface-input: #f1f5f9;
+            --primary: #2563eb; --primary-light: #eff6ff; --text-main: #0f172a;
+            --text-sub: #64748b; --border-line: #e2e8f0; --radius-xl: 16px;
+            --radius-lg: 12px; --radius-md: 8px; --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .header-nav { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 0.85rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .brand { font-size: 1.3rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .brand span { color: var(--primary); }
+        .tool-hero { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 2rem 1.5rem 1.5rem; text-align: center; }
+        .breadcrumb { color: var(--text-sub); font-size: 0.78rem; margin-bottom: 1rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; }
+        .tool-badge { display: inline-block; background: var(--primary-light); color: var(--primary); border: 1px solid rgba(37,99,235,0.15); padding: 0.35rem 0.8rem; border-radius: 20px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 0.9rem; }
+        .tool-hero h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.6rem; }
+        .tool-hero p { color: var(--text-sub); font-size: 0.95rem; max-width: 650px; margin: 0 auto 1.5rem; line-height: 1.6; }
+        .preset-tabs { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+        .tab-btn { background: var(--surface-input); border: 1px solid var(--border-line); padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.82rem; font-weight: 700; color: var(--text-main); cursor: pointer; transition: all 0.2s ease; }
+        .tab-btn:hover, .tab-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+        .calculator-section { max-width: 900px; width: 100%; margin: 0 auto; padding: 1.5rem; }
+        .calculator-card { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-xl); padding: 1.5rem; box-shadow: var(--shadow-sm); }
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .form-group input, .form-group select { width: 100%; padding: 0.75rem 0.85rem; background: var(--surface-input); border: 1px solid var(--border-line); border-radius: var(--radius-md); color: var(--text-main); font-size: 0.88rem; outline: none; margin-bottom: 0.5rem; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .hero-result-card { background: var(--primary-light); border: 1px solid rgba(37,99,235,0.2); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; margin-bottom: 1.5rem; }
+        .hero-result-title { font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem; }
+        .hero-result-value { font-size: 1.6rem; font-weight: 800; color: var(--text-main); }
+        .quick-actions { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1rem; }
+        .action-btn { background: var(--surface-input); border: 1px solid var(--border-line); padding: 0.4rem 0.8rem; border-radius: var(--radius-md); font-size: 0.75rem; font-weight: 700; color: var(--text-sub); cursor: pointer; }
+        .site-footer { border-top: 1px solid var(--border-line); padding: 1.5rem 0; text-align: center; color: var(--text-sub); font-size: 0.85rem; background: var(--surface-card); margin-top: auto; }
+        @media (max-width: 700px) { .input-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<header class="header-nav">
+    <a href="/" class="brand">MyAllCodes<span>Tools</span></a>
+</header>
+
+<section class="tool-hero">
+    <div class="breadcrumb"><a href="/">Home</a> / Unit Tools / Unit Converter</div>
+    <span class="tool-badge">Multi-Unit Engine</span>
+    <h1 id="pageTitle">Universal Unit Converter</h1>
+    <p>Convert seamlessly between length, weight, temperature, area, volume, and digital storage dimensions.</p>
+
+    <div class="preset-tabs">
+        <button class="tab-btn active" onclick="switchCategory('length', this)">Length</button>
+        <button class="tab-btn" onclick="switchCategory('weight', this)">Weight</button>
+        <button class="tab-btn" onclick="switchCategory('temperature', this)">Temperature</button>
+        <button class="tab-btn" onclick="switchCategory('area', this)">Area</button>
+        <button class="tab-btn" onclick="switchCategory('digital', this)">Digital Storage</button>
+    </div>
+</section>
+
+<section class="calculator-section">
+    <div class="calculator-card">
+        <div class="quick-actions">
+            <button class="action-btn" onclick="swapUnits()">Swap Units ⇄</button>
+        </div>
+
+        <div class="input-grid">
+            <div class="form-group">
+                <label for="fromValue">From Value</label>
+                <input type="number" id="fromValue" value="1" step="any" oninput="convertUnits()">
+                <select id="fromUnit" onchange="convertUnits()"></select>
+            </div>
+
+            <div class="form-group">
+                <label for="toUnit">To Unit</label>
+                <input type="text" id="toValue" class="mono" readonly style="background: #e2e8f0; cursor: not-allowed;">
+                <select id="toUnit" onchange="convertUnits()"></select>
+            </div>
+        </div>
+
+        <div class="hero-result-card">
+            <div class="hero-result-title">Conversion Formula Result</div>
+            <div class="hero-result-value mono" id="resultText">1 Meter = 3.28084 Feet</div>
+        </div>
+    </div>
+</section>
+
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools • All Rights Reserved</p>
+</footer>
+
+<script>
+const unitsData = {
+    length: {
+        units: { m: "Meter (m)", km: "Kilometer (km)", cm: "Centimeter (cm)", mm: "Millimeter (mm)", ft: "Feet (ft)", in: "Inch (in)", yd: "Yard (yd)", mi: "Mile (mi)" },
+        rates: { m: 1, km: 1000, cm: 0.01, mm: 0.001, ft: 0.3048, in: 0.0254, yd: 0.9144, mi: 1609.344 },
+        defaultFrom: "m", defaultTo: "ft"
+    },
+    weight: {
+        units: { kg: "Kilogram (kg)", g: "Gram (g)", mg: "Milligram (mg)", lb: "Pound (lb)", oz: "Ounce (oz)" },
+        rates: { kg: 1, g: 0.001, mg: 0.000001, lb: 0.45359237, oz: 0.028349523125 },
+        defaultFrom: "kg", defaultTo: "lb"
+    },
+    temperature: {
+        units: { c: "Celsius (°C)", f: "Fahrenheit (°F)", k: "Kelvin (K)" },
+        defaultFrom: "c", defaultTo: "f"
+    },
+    area: {
+        units: { sqm: "Square Meter (m²)", sqft: "Square Feet (ft²)", acre: "Acre", hectare: "Hectare" },
+        rates: { sqm: 1, sqft: 0.092903, acre: 4046.86, hectare: 10000 },
+        defaultFrom: "sqm", defaultTo: "sqft"
+    },
+    digital: {
+        units: { b: "Byte (B)", kb: "Kilobyte (KB)", mb: "Megabyte (MB)", gb: "Gigabyte (GB)", tb: "Terabyte (TB)" },
+        rates: { b: 1, kb: 1024, mb: 1048576, gb: 1073741824, tb: 1099511627776 },
+        defaultFrom: "gb", defaultTo: "mb"
+    }
+};
+
+let currentCat = "length";
+
+function populateDropdowns() {
+    const fromSelect = document.getElementById("fromUnit");
+    const toSelect = document.getElementById("toUnit");
+    const catData = unitsData[currentCat];
+
+    fromSelect.innerHTML = "";
+    toSelect.innerHTML = "";
+
+    for (let key in catData.units) {
+        fromSelect.add(new Option(catData.units[key], key));
+        toSelect.add(new Option(catData.units[key], key));
+    }
+
+    fromSelect.value = catData.defaultFrom;
+    toSelect.value = catData.defaultTo;
+}
+
+function switchCategory(cat, btn) {
+    currentCat = cat;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    populateDropdowns();
+    convertUnits();
+}
+
+function convertUnits() {
+    const val = parseFloat(document.getElementById("fromValue").value);
+    const from = document.getElementById("fromUnit").value;
+    const to = document.getElementById("toUnit").value;
+    
+    if (isNaN(val)) {
+        document.getElementById("toValue").value = "";
+        document.getElementById("resultText").innerText = "Please enter a valid numeric input";
+        return;
+    }
+
+    let result = 0;
+
+    if (currentCat === "temperature") {
+        if (from === to) result = val;
+        else if (from === "c" && to === "f") result = (val * 9/5) + 32;
+        else if (from === "c" && to === "k") result = val + 273.15;
+        else if (from === "f" && to === "c") result = (val - 32) * 5/9;
+        else if (from === "f" && to === "k") result = ((val - 32) * 5/9) + 273.15;
+        else if (from === "k" && to === "c") result = val - 273.15;
+        else if (from === "k" && to === "f") result = ((val - 273.15) * 9/5) + 32;
+    } else {
+        const rates = unitsData[currentCat].rates;
+        const baseValue = val * rates[from];
+        result = baseValue / rates[to];
+    }
+
+    const formatted = Number.isInteger(result) ? result : parseFloat(result.toFixed(6));
+    document.getElementById("toValue").value = formatted;
+    
+    const fromLabel = unitsData[currentCat].units[from];
+    const toLabel = unitsData[currentCat].units[to];
+    document.getElementById("resultText").innerText = `${val} ${fromLabel} = ${formatted} ${toLabel}`;
+}
+
+function swapUnits() {
+    const from = document.getElementById("fromUnit");
+    const to = document.getElementById("toUnit");
+    const temp = from.value;
+    from.value = to.value;
+    to.value = temp;
+    convertUnits();
+}
+
+populateDropdowns();
+convertUnits();
+</script>
+</body>
+</html>

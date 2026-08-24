@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyAllCodes Tools - World Clocks & Online Converters</title>
+    <meta name="description" content="Instant time zone conversions, age calculators, date tools, and unit converters.">
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container header-inner">
+        <a href="/" class="logo">MyAllCodes<span>Tools</span></a>
+    </div>
+</header>
+
+<main>
+    <div class="container hero-section">
+        <h1>MyAllCodes Tools</h1>
+        <p>Fast, client-side tools for everyday calculations.</p>
+    </div>
+
+    <!-- MAIN WORLD CLOCK FEATURE -->
+    <section class="container clock-section">
+        <h2>World Time Converter</h2>
+        <div class="clock-controls">
+            <select id="tzLeft">
+                <option value="Asia/Kolkata" selected>🇮🇳 India (IST)</option>
+                <option value="America/New_York">🇺🇸 New York (EST/EDT)</option>
+                <option value="America/Los_Angeles">🇺🇸 Los Angeles (PST/PDT)</option>
+                <option value="America/Toronto">🇨🇦 Canada (Toronto)</option>
+                <option value="Australia/Sydney">🇦🇺 Australia (Sydney)</option>
+            </select>
+
+            <div id="diffBadge" class="gap-badge">0 Hours</div>
+
+            <select id="tzRight">
+                <option value="Asia/Kolkata">🇮🇳 India (IST)</option>
+                <option value="America/New_York">🇺🇸 New York (EST/EDT)</option>
+                <option value="America/Los_Angeles" selected>🇺🇸 Los Angeles (PST/PDT)</option>
+                <option value="America/Toronto">🇨🇦 Canada (Toronto)</option>
+                <option value="Australia/Sydney">🇦🇺 Australia (Sydney)</option>
+            </select>
+        </div>
+
+        <div class="clocks-display">
+            <div class="clock-box">
+                <span id="leftDay">--</span> | <span id="leftDate">--</span>
+                <div id="leftDigitalTime" class="time-readout">00:00:00</div>
+                <div id="leftTzBadge" class="tz-sub">---</div>
+            </div>
+            <div class="clock-box">
+                <span id="rightDay">--</span> | <span id="rightDate">--</span>
+                <div id="rightDigitalTime" class="time-readout">00:00:00</div>
+                <div id="rightTzBadge" class="tz-sub">---</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- POPULAR TOOLS NAVIGATION GRID -->
+    <section class="container tools-grid-section">
+        <h2>Popular Tools</h2>
+        <div class="grid">
+            <a href="/age-calculator/" class="tool-card">
+                <h3>Age Calculator</h3>
+                <p>Calculate precise age in years, months, and days.</p>
+            </a>
+            <a href="/date-difference/" class="tool-card">
+                <h3>Date Calculator</h3>
+                <p>Find the exact duration between two dates.</p>
+            </a>
+            <a href="/percentage-calculator/" class="tool-card">
+                <h3>Percentage Calculator</h3>
+                <p>Quick percentage, discount, and margin calculations.</p>
+            </a>
+            <a href="/bmi-calculator/" class="tool-card">
+                <h3>BMI Calculator</h3>
+                <p>Calculate body mass index easily.</p>
+            </a>
+            <a href="/unit-converter/" class="tool-card">
+                <h3>Unit Converter</h3>
+                <p>Convert length, weight, and temperature instantly.</p>
+            </a>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <p>© 2026 MyAllCodes Tools</p>
+    </div>
+</footer>
+
+<script src="/assets/js/clock-engine.js"></script>
+<script>
+    // Initialize homepage clocks with IST -> PST defaults
+    initClockEngine("Asia/Kolkata", "America/Los_Angeles");
+</script>
+</body>
+</html>

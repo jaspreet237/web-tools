@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percentage Calculator | MyAllCodes Tools</title>
+    <meta name="description" content="Calculate percentages, percentage increases/decreases, and fraction to percentage values online.">
+    <link rel="canonical" href="https://myallcodes.in/percentage-calculator/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc; --surface-card: #ffffff; --surface-input: #f1f5f9;
+            --primary: #2563eb; --primary-light: #eff6ff; --text-main: #0f172a;
+            --text-sub: #64748b; --border-line: #e2e8f0; --radius-xl: 16px;
+            --radius-lg: 12px; --radius-md: 8px; --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .header-nav { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 0.85rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .brand { font-size: 1.3rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .brand span { color: var(--primary); }
+        .tool-hero { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 2rem 1.5rem 1.5rem; text-align: center; }
+        .breadcrumb { color: var(--text-sub); font-size: 0.78rem; margin-bottom: 1rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; }
+        .tool-badge { display: inline-block; background: var(--primary-light); color: var(--primary); border: 1px solid rgba(37,99,235,0.15); padding: 0.35rem 0.8rem; border-radius: 20px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 0.9rem; }
+        .tool-hero h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.6rem; }
+        .tool-hero p { color: var(--text-sub); font-size: 0.95rem; max-width: 650px; margin: 0 auto 1.5rem; line-height: 1.6; }
+        .preset-tabs { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+        .tab-btn { background: var(--surface-input); border: 1px solid var(--border-line); padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.82rem; font-weight: 700; color: var(--text-main); cursor: pointer; transition: all 0.2s ease; }
+        .tab-btn:hover, .tab-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+        .calculator-section { max-width: 900px; width: 100%; margin: 0 auto; padding: 1.5rem; }
+        .calculator-card { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-xl); padding: 1.5rem; box-shadow: var(--shadow-sm); }
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .form-group input { width: 100%; padding: 0.75rem 0.85rem; background: var(--surface-input); border: 1px solid var(--border-line); border-radius: var(--radius-md); color: var(--text-main); font-size: 0.88rem; outline: none; }
+        .form-group input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .hero-result-card { background: var(--primary-light); border: 1px solid rgba(37,99,235,0.2); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; }
+        .hero-result-title { font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem; }
+        .hero-result-value { font-size: 1.6rem; font-weight: 800; color: var(--text-main); }
+        .site-footer { border-top: 1px solid var(--border-line); padding: 1.5rem 0; text-align: center; color: var(--text-sub); font-size: 0.85rem; background: var(--surface-card); margin-top: auto; }
+        @media (max-width: 700px) { .input-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<header class="header-nav">
+    <a href="/" class="brand">MyAllCodes<span>Tools</span></a>
+</header>
+
+<section class="tool-hero">
+    <div class="breadcrumb"><a href="/">Home</a> / Math Tools / Percentage Calculator</div>
+    <span class="tool-badge">Financial & Math Tool</span>
+    <h1 id="pageTitle">Percentage Calculator</h1>
+    <p>Calculate percentage of values, percentage change (increase/decrease), and portion ratios instantly.</p>
+
+    <div class="preset-tabs">
+        <button class="tab-btn active" onclick="switchMode('basic', this)">What is X% of Y?</button>
+        <button class="tab-btn" onclick="switchMode('ratio', this)">X is what % of Y?</button>
+        <button class="tab-btn" onclick="switchMode('change', this)">% Change (X to Y)</button>
+    </div>
+</section>
+
+<section class="calculator-section">
+    <div class="calculator-card">
+        <div class="input-grid">
+            <div class="form-group">
+                <label id="lbl1" for="val1">Percentage (X)</label>
+                <input type="number" id="val1" value="15" oninput="calculate()">
+            </div>
+
+            <div class="form-group">
+                <label id="lbl2" for="val2">Total Value (Y)</label>
+                <input type="number" id="val2" value="200" oninput="calculate()">
+            </div>
+        </div>
+
+        <div class="hero-result-card">
+            <div class="hero-result-title" id="modeTitle">Calculated Percentage Result</div>
+            <div class="hero-result-value mono" id="resultDisplay">30</div>
+        </div>
+    </div>
+</section>
+
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools • All Rights Reserved</p>
+</footer>
+
+<script>
+let mode = 'basic';
+
+function switchMode(m, btn) {
+    mode = m;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+
+    const lbl1 = document.getElementById("lbl1");
+    const lbl2 = document.getElementById("lbl2");
+
+    if (mode === 'basic') {
+        lbl1.innerText = "Percentage (X%)";
+        lbl2.innerText = "Of Total Value (Y)";
+        document.getElementById("val1").value = 15;
+        document.getElementById("val2").value = 200;
+    } else if (mode === 'ratio') {
+        lbl1.innerText = "Part Value (X)";
+        lbl2.innerText = "Total Value (Y)";
+        document.getElementById("val1").value = 50;
+        document.getElementById("val2").value = 250;
+    } else if (mode === 'change') {
+        lbl1.innerText = "Initial Value (X)";
+        lbl2.innerText = "Final Value (Y)";
+        document.getElementById("val1").value = 100;
+        document.getElementById("val2").value = 150;
+    }
+
+    calculate();
+}
+
+function calculate() {
+    const v1 = parseFloat(document.getElementById("val1").value);
+    const v2 = parseFloat(document.getElementById("val2").value);
+    const display = document.getElementById("resultDisplay");
+
+    if (isNaN(v1) || isNaN(v2)) {
+        display.innerText = "Enter valid numbers";
+        return;
+    }
+
+    if (mode === 'basic') {
+        const res = (v1 / 100) * v2;
+        display.innerText = `${v1}% of ${v2} = ${res}`;
+    } else if (mode === 'ratio') {
+        if (v2 === 0) { display.innerText = "Cannot divide by zero"; return; }
+        const res = (v1 / v2) * 100;
+        display.innerText = `${v1} is ${res.toFixed(2)}% of ${v2}`;
+    } else if (mode === 'change') {
+        if (v1 === 0) { display.innerText = "Initial value cannot be zero"; return; }
+        const diff = v2 - v1;
+        const pct = (diff / v1) * 100;
+        const dir = pct >= 0 ? "Increase" : "Decrease";
+        display.innerText = `${Math.abs(pct).toFixed(2)}% ${dir} (${v1} → ${v2})`;
+    }
+}
+
+calculate();
+</script>
+</body>
+</html>

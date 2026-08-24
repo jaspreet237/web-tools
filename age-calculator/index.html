@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Age Calculator - Calculate Your Exact Age | MyAllCodes Tools</title>
+
+    <meta name="description"
+          content="Free age calculator to calculate your exact age in years, months, weeks and days. Find your next birthday and total days instantly.">
+
+    <link rel="canonical"
+          href="https://myallcodes.in/age-calculator/">
+
+    <!-- Same fonts as latest homepage -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap"
+          rel="stylesheet">
+
+
+    <style>
+
+        :root {
+            --bg-body: #f8fafc;
+            --surface-card: #ffffff;
+            --surface-input: #f1f5f9;
+
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+
+            --border-line: #e2e8f0;
+
+            --radius-xl: 16px;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+
+            --shadow-sm:
+                0 1px 3px rgba(0,0,0,0.05);
+
+            --shadow-md:
+                0 4px 12px -2px rgba(0,0,0,0.08);
+        }
+
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+
+            font-family:
+                'Plus Jakarta Sans',
+                sans-serif;
+        }
+
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+
+            min-height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .mono {
+            font-family:
+                'JetBrains Mono',
+                monospace;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header-nav {
+            background: var(--surface-card);
+
+            border-bottom:
+                1px solid
+                var(--border-line);
+
+            padding:
+                0.85rem
+                2rem;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+
+            box-shadow:
+                var(--shadow-sm);
+        }
+
+
+        .brand {
+            font-size: 1.3rem;
+
+            font-weight: 800;
+
+            color: var(--text-main);
+
+            text-decoration: none;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 0.5rem;
+        }
+
+
+        .brand span {
+            color: var(--primary);
+        }
+
+
+        .search-wrapper {
+            position: relative;
+
+            width: 360px;
+        }
+
+
+        .search-input {
+            width: 100%;
+
+            padding:
+                0.6rem
+                1rem
+                0.6rem
+                2.5rem;
+
+            background:
+                var(--surface-input);
+
+            border:
+                1px solid
+                var(--border-line);
+
+            border-radius:
+                var(--radius-md);
+
+            color: var(--text-main);
+
+            font-size: 0.875rem;
+
+            outline: none;
+        }
+
+
+        .search-input:focus {
+            border-color:
+                var(--primary);
+
+            background:
+                #fff;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37,99,235,0.15);
+        }
+
+
+        .search-icon {
+            position: absolute;
+
+            left: 0.8rem;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color:
+                var(--text-sub);
+
+            width: 16px;
+        }
+
+
+        /* =========================
+           TOOL HERO
+        ========================= */
+
+        .tool-hero {
+            background:
+                var(--surface-card);
+
+            border-bottom:
+                1px solid
+                var(--border-line);
+
+            padding:
+                2.5rem
+                1.5rem
+                2rem;
+
+            text-align: center;
+        }
+
+
+        .breadcrumb {
+            color:
+                var(--text-sub);
+
+            font-size:
+                0.78rem;
+
+            margin-bottom:
+                1rem;
+        }
+
+
+        .breadcrumb a {
+            color:
+                var(--primary);
+
+            text-decoration:
+                none;
+        }
+
+
+        .tool-badge {
+            display:
+                inline-block;
+
+            background:
+                var(--primary-light);
+
+            color:
+                var(--primary);
+
+            border:
+                1px solid
+                rgba(37,99,235,0.15);
+
+            padding:
+                0.35rem
+                0.8rem;
+
+            border-radius:
+                20px;
+
+            font-size:
+                0.72rem;
+
+            font-weight:
+                800;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                0.4px;
+
+            margin-bottom:
+                0.9rem;
+        }
+
+
+        .tool-hero h1 {
+            font-size:
+                2.2rem;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                -0.03em;
+
+            margin-bottom:
+                0.6rem;
+        }
+
+
+        .tool-hero p {
+            color:
+                var(--text-sub);
+
+            font-size:
+                0.95rem;
+
+            max-width:
+                650px;
+
+            margin:
+                0 auto;
+
+            line-height:
+                1.6;
+        }
+
+
+        /* =========================
+           CALCULATOR
+        ========================= */
+
+        .calculator-section {
+            max-width:
+                900px;
+
+            width:
+                100%;
+
+            margin:
+                0 auto;
+
+            padding:
+                1.5rem;
+        }
+
+
+        .calculator-card {
+            background:
+                var(--surface-card);
+
+            border:
+                1px solid
+                var(--border-line);
+
+            border-radius:
+                var(--radius-xl);
+
+            padding:
+                1.5rem;
+
+            box-shadow:
+                var(--shadow-sm);
+        }
+
+
+        .calculator-title {
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            margin-bottom:
+                1.25rem;
+
+            padding-bottom:
+                0.75rem;
+
+            border-bottom:
+                1px solid
+                var(--border-line);
+        }
+
+
+        .calculator-title h2 {
+            font-size:
+                1.1rem;
+
+            font-weight:
+                800;
+        }
+
+
+        .calculator-title p {
+            color:
+                var(--text-sub);
+
+            font-size:
+                0.8rem;
+        }
+
+
+        /* =========================
+           INPUTS
+        ========================= */
+
+        .input-grid {
+            display:
+                grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap:
+                1rem;
+
+            margin-bottom:
+                1rem;
+        }
+
+
+        .form-group label {
+            display:
+                block;
+
+            font-size:
+                0.8rem;
+
+            font-weight:
+                700;
+
+            margin-bottom:
+                0.4rem;
+        }
+
+
+        .form-group input {
+            width:
+                100%;
+
+            padding:
+                0.7rem
+                0.8rem;
+
+            background:
+                var(--surface-input);
+
+            border:
+                1px solid
+                var(--border-line);
+
+            border-radius:
+                var(--radius-md);
+
+            color:
+                var(--text-main);
+
+            font-size:
+                0.85rem;
+
+            outline:
+                none;
+        }
+
+
+        .form-group input:focus {
+            border-color:
+                var(--primary);
+
+            background:
+                #fff;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37,99,235,0.1);
+        }
+
+
+        /* =========================
+           BUTTON
+        ========================= */
+
+        .calculate-btn {
+            width:
+                100%;
+
+            padding:
+                0.75rem;
+
+            background:
+                var(--primary);
+
+            color:
+                white;
+
+            border:
+                none;
+
+            border-radius:
+                var(--radius-md);
+
+            font-size:
+                0.85rem;
+
+            font-weight:
+                800;
+
+            cursor:
+                pointer;
+
+            transition:
+                0.2s;
+        }
+
+
+        .calculate-btn:hover {
+            background:
+                #1d4ed8;
+        }
+
+
+        /* =========================
+           RESULT
+        ========================= */
+
+        .result-section {
+            margin-top:
+                1.5rem;
+
+            padding-top:
+                1.25rem;
+
+            border-top:
+                1px solid
+                var(--border-line);
+        }
+
+
+        .result-heading {
+            text-align:
+                center;
+
+            color:
+                var(--text-sub);
+
+            font-size:
+                0.75rem;
+
+            font-weight:
+                800;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                0.5px;
+
+            margin-bottom:
+                0.75rem;
+        }
+
+
+        .result-main {
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap:
+                0.75rem;
+        }
+
+
+        .result-box {
+            background:
+                var(--surface-input);
+
+            border:
+                1px solid
+                var(--border-line);
+
+            border-radius:
+                var(--radius-md);
+
+            padding:
+                1rem;
+
+            text-align:
+                center;
+        }
+
+
+        .result-number {
+            display:
+                block;
+
+            font-size:
+                1.6rem;
+
+            font-weight:
+                800;
+
+            color:
+                var(--primary);
+        }
+
+
+        .result-label {
+            font-size:
+                0.7rem;
+
+            color:
+                var(--text-sub);
+        }
+
+
+        /* =========================
+           EXTRA RESULTS
+        ========================= */
+
+        .extra-results {
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap:
+                0.75rem;
+
+            margin-top:
+                0.75rem;
+        }
+
+
+        .extra-box {
+            background:
+                var(--surface-input);
+
+            border:
+                1px solid
+                var(--border-line);
+
+            border-radius:
+                var(--radius-md);
+
+            padding:
+                0.8rem;
+
+            text-align:
+                center;
+        }
+
+
+        .extra-box span {
+            display:
+                block;
+
+            font-size:
+                0.68rem;
+
+            color:
+                var(--text-sub);
+
+            margin-bottom:
+                0.25rem;
+        }
+
+
+        .extra-box strong {
+            font-size:
+                0.82rem;
+        }
+
+
+        /* =========================
+           INFORMATION
+        ========================= */
+
+        .info-section {
+            max-width:
+                900px;
+
+            width:
+                100%;
+
+            margin:
+                0 auto;
+
+            padding:
+                0
+                1.5rem
+                3rem;
+        }
+
+
+        .info-card {
+            background:
+                var(--surface-card);
+
+            border:
+                1px solid
+                var(--border-line);
+
+            border-radius:
+                var(--radius-xl);
+
+            padding:
+                1.5rem;
+
+            box-shadow:
+                var(--shadow-sm);
+        }
+
+
+        .info-card h2 {
+            font-size:
+                1.1rem;
+
+            margin-bottom:
+                0.7rem;
+        }
+
+
+        .info-card h3 {
+            font-size:
+                0.9rem;
+
+            margin-top:
+                1.25rem;
+
+            margin-bottom:
+                0.4rem;
+        }
+
+
+        .info-card p {
+            color:
+                var(--text-sub);
+
+            font-size:
+                0.82rem;
+
+            line-height:
+                1.7;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .site-footer {
+            border-top:
+                1px solid
+                var(--border-line);
+
+            padding:
+                1.5rem 0;
+
+            text-align:
+                center;
+
+            color:
+                var(--text-sub);
+
+            font-size:
+                0.85rem;
+
+            background:
+                var(--surface-card);
+
+            margin-top:
+                auto;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .header-nav {
+                padding:
+                    0.75rem
+                    1rem;
+            }
+
+
+            .brand {
+                font-size:
+                    1.05rem;
+            }
+
+
+            .search-wrapper {
+                width:
+                    200px;
+            }
+
+
+            .tool-hero {
+                padding:
+                    2rem
+                    1rem
+                    1.5rem;
+            }
+
+
+            .tool-hero h1 {
+                font-size:
+                    1.8rem;
+            }
+
+
+            .calculator-section {
+                padding:
+                    1rem;
+            }
+
+
+            .calculator-card {
+                padding:
+                    1.1rem;
+            }
+
+
+            .calculator-title {
+                display:
+                    block;
+
+                text-align:
+                    center;
+            }
+
+
+            .calculator-title p {
+                margin-top:
+                    0.3rem;
+            }
+
+
+            .input-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .result-main {
+                grid-template-columns:
+                    repeat(3,1fr);
+            }
+
+
+            .extra-results {
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .info-section {
+                padding:
+                    0
+                    1rem
+                    2rem;
+            }
+
+        }
+
+
+        @media (max-width: 480px) {
+
+            .search-wrapper {
+                width:
+                    160px;
+            }
+
+
+            .search-input {
+                font-size:
+                    0.72rem;
+            }
+
+
+            .tool-hero h1 {
+                font-size:
+                    1.55rem;
+            }
+
+
+            .result-number {
+                font-size:
+                    1.35rem;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     LATEST HOMEPAGE HEADER
+========================= -->
+
+<header class="header-nav">
+
+    <a href="/" class="brand">
+
+        <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5">
+
+            <circle
+                cx="12"
+                cy="12"
+                r="10"/>
+
+            <polyline
+                points="12 6 12 12 16 14"/>
+
+        </svg>
+
+        MyAllCodes<span>Tools</span>
+
+    </a>
+
+
+    <div class="search-wrapper">
+
+        <svg
+            class="search-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2">
+
+            <circle
+                cx="11"
+                cy="11"
+                r="8"/>
+
+            <line
+                x1="21"
+                y1="21"
+                x2="16.65"
+                y2="16.65"/>
+
+        </svg>
+
+
+        <input
+            type="text"
+            class="search-input"
+            placeholder="Search tools or time zones..."
+            onclick="goHomeSearch()">
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================
+     TOOL HEADER
+========================= -->
+
+<section class="tool-hero">
+
+    <div class="breadcrumb">
+
+        <a href="/">
+            Home
+        </a>
+
+        &nbsp;/&nbsp;
+
+        Calculators
+
+        &nbsp;/&nbsp;
+
+        Age Calculator
+
+    </div>
+
+
+    <span class="tool-badge">
+        Calculator
+    </span>
+
+
+    <h1>
+        Age Calculator
+    </h1>
+
+
+    <p>
+        Calculate your exact age in years, months and days.
+        Find your next birthday and total days instantly.
+    </p>
+
+</section>
+
+
+
+<!-- =========================
+     CALCULATOR
+========================= -->
+
+<section class="calculator-section">
+
+    <div class="calculator-card">
+
+
+        <div class="calculator-title">
+
+            <div>
+
+                <h2>
+                    Calculate Your Age
+                </h2>
+
+                <p>
+                    Enter your date of birth and calculation date.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="input-grid">
+
+
+            <div class="form-group">
+
+                <label for="dateOfBirth">
+                    Date of Birth
+                </label>
+
+                <input
+                    type="date"
+                    id="dateOfBirth">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="calculateDate">
+                    Calculate Age On
+                </label>
+
+                <input
+                    type="date"
+                    id="calculateDate">
+
+            </div>
+
+        </div>
+
+
+
+        <button
+            class="calculate-btn"
+            onclick="calculateAge()">
+
+            Calculate Age
+
+        </button>
+
+
+
+        <div class="result-section">
+
+
+            <div class="result-heading">
+                Your Exact Age
+            </div>
+
+
+            <div class="result-main">
+
+
+                <div class="result-box">
+
+                    <span
+                        class="result-number"
+                        id="yearsResult">
+
+                        0
+
+                    </span>
+
+                    <span class="result-label">
+                        Years
+                    </span>
+
+                </div>
+
+
+                <div class="result-box">
+
+                    <span
+                        class="result-number"
+                        id="monthsResult">
+
+                        0
+
+                    </span>
+
+                    <span class="result-label">
+                        Months
+                    </span>
+
+                </div>
+
+
+                <div class="result-box">
+
+                    <span
+                        class="result-number"
+                        id="daysResult">
+
+                        0
+
+                    </span>
+
+                    <span class="result-label">
+                        Days
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="extra-results">
+
+
+                <div class="extra-box">
+
+                    <span>
+                        Total Days
+                    </span>
+
+                    <strong id="totalDays">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="extra-box">
+
+                    <span>
+                        Total Weeks
+                    </span>
+
+                    <strong id="totalWeeks">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="extra-box">
+
+                    <span>
+                        Day of Birth
+                    </span>
+
+                    <strong id="birthDay">
+                        —
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="extra-results">
+
+
+                <div class="extra-box">
+
+                    <span>
+                        Next Birthday
+                    </span>
+
+                    <strong id="nextBirthday">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="extra-box">
+
+                    <span>
+                        Days Until Birthday
+                    </span>
+
+                    <strong id="daysUntilBirthday">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="extra-box">
+
+                    <span>
+                        Total Months
+                    </span>
+
+                    <strong id="totalMonths">
+                        —
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     INFORMATION
+========================= -->
+
+<section class="info-section">
+
+    <div class="info-card">
+
+
+        <h2>
+            Age Calculator
+        </h2>
+
+
+        <p>
+            Our free age calculator calculates your exact age
+            based on your date of birth. The result shows your
+            age in years, months and days and also provides
+            additional information such as total days,
+            total weeks and your next birthday.
+        </p>
+
+
+        <h3>
+            How to use the Age Calculator
+        </h3>
+
+
+        <p>
+            Enter your date of birth, select the date on which
+            you want to calculate your age, and click
+            "Calculate Age". If you select today's date,
+            the calculator will show your current age.
+        </p>
+
+
+        <h3>
+            Is this Age Calculator free?
+        </h3>
+
+
+        <p>
+            Yes. The MyAllCodes Age Calculator is completely
+            free to use and does not require registration.
+            Your date is processed directly in your browser.
+        </p>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     LATEST HOMEPAGE FOOTER
+========================= -->
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <p>
+            © 2026 MyAllCodes Tools &bull; All Rights Reserved
+        </p>
+
+    </div>
+
+</footer>
+
+
+
+<script>
+
+
+/* =========================
+   DEFAULT DATE
+========================= */
+
+const calculateDate =
+    document.getElementById(
+        'calculateDate'
+    );
+
+
+const today =
+    new Date();
+
+
+calculateDate.value =
+    today.toISOString()
+    .split('T')[0];
+
+
+
+/* =========================
+   AGE CALCULATOR
+========================= */
+
+function calculateAge() {
+
+
+    const dobValue =
+        document.getElementById(
+            'dateOfBirth'
+        ).value;
+
+
+    const calculateValue =
+        document.getElementById(
+            'calculateDate'
+        ).value;
+
+
+    if (!dobValue) {
+
+        alert(
+            'Please select your date of birth.'
+        );
+
+        return;
+
+    }
+
+
+    const birthDate =
+        new Date(
+            dobValue + 'T00:00:00'
+        );
+
+
+    const endDate =
+        new Date(
+            calculateValue + 'T00:00:00'
+        );
+
+
+    if (birthDate > endDate) {
+
+        alert(
+            'Date of birth cannot be after the calculation date.'
+        );
+
+        return;
+
+    }
+
+
+
+    /* EXACT AGE */
+
+    let years =
+        endDate.getFullYear()
+        -
+        birthDate.getFullYear();
+
+
+    let months =
+        endDate.getMonth()
+        -
+        birthDate.getMonth();
+
+
+    let days =
+        endDate.getDate()
+        -
+        birthDate.getDate();
+
+
+    if (days < 0) {
+
+        months--;
+
+
+        const previousMonth =
+            new Date(
+                endDate.getFullYear(),
+                endDate.getMonth(),
+                0
+            );
+
+
+        days +=
+            previousMonth.getDate();
+
+    }
+
+
+    if (months < 0) {
+
+        years--;
+
+        months += 12;
+
+    }
+
+
+
+    /* TOTAL DAYS */
+
+    const difference =
+        endDate - birthDate;
+
+
+    const totalDaysValue =
+        Math.floor(
+            difference /
+            (1000 * 60 * 60 * 24)
+        );
+
+
+    const totalWeeksValue =
+        Math.floor(
+            totalDaysValue / 7
+        );
+
+
+    const totalMonthsValue =
+        years * 12 + months;
+
+
+
+    /* DAY OF BIRTH */
+
+    const birthDay =
+        birthDate.toLocaleDateString(
+            'en-US',
+            {
+                weekday: 'long'
+            }
+        );
+
+
+
+    /* NEXT BIRTHDAY */
+
+    let nextBirthday =
+        new Date(
+            endDate.getFullYear(),
+            birthDate.getMonth(),
+            birthDate.getDate()
+        );
+
+
+    if (nextBirthday < endDate) {
+
+        nextBirthday =
+            new Date(
+                endDate.getFullYear() + 1,
+                birthDate.getMonth(),
+                birthDate.getDate()
+            );
+
+    }
+
+
+    const nextBirthdayText =
+        nextBirthday.toLocaleDateString(
+            'en-US',
+            {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            }
+        );
+
+
+
+    /* DAYS UNTIL BIRTHDAY */
+
+    const birthdayDifference =
+        nextBirthday - endDate;
+
+
+    const daysUntilBirthday =
+        Math.ceil(
+            birthdayDifference /
+            (1000 * 60 * 60 * 24)
+        );
+
+
+
+    /* DISPLAY */
+
+    document.getElementById(
+        'yearsResult'
+    ).innerText =
+        years;
+
+
+    document.getElementById(
+        'monthsResult'
+    ).innerText =
+        months;
+
+
+    document.getElementById(
+        'daysResult'
+    ).innerText =
+        days;
+
+
+    document.getElementById(
+        'totalDays'
+    ).innerText =
+        totalDaysValue.toLocaleString();
+
+
+    document.getElementById(
+        'totalWeeks'
+    ).innerText =
+        totalWeeksValue.toLocaleString();
+
+
+    document.getElementById(
+        'birthDay'
+    ).innerText =
+        birthDay;
+
+
+    document.getElementById(
+        'nextBirthday'
+    ).innerText =
+        nextBirthdayText;
+
+
+    document.getElementById(
+        'daysUntilBirthday'
+    ).innerText =
+        daysUntilBirthday;
+
+
+    document.getElementById(
+        'totalMonths'
+    ).innerText =
+        totalMonthsValue.toLocaleString();
+
+}
+
+
+
+/* =========================
+   HEADER SEARCH
+========================= */
+
+function goHomeSearch() {
+
+    window.location.href =
+        "/?search=age-calculator";
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

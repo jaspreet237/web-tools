@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>IST to DUBAI Time Converter with Live Clocks | MyAllCodes Tools</title>
+
+    <meta name="description"
+          content="Free IST to DUBAI time converter featuring live analog clocks, dynamic dates, time slider, multi-zone presets (EST, GMT, UTC, PST), and automatic Daylight Saving Time (EDT) detection.">
+
+    <link rel="canonical" href="https://myallcodes.in/ist-to-dubai/">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --surface-card: #ffffff;
+            --surface-input: #f1f5f9;
+
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+
+            --border-line: #e2e8f0;
+
+            --radius-xl: 16px;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px -2px rgba(0,0,0,0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Header */
+        .header-nav {
+            background: var(--surface-card);
+            border-bottom: 1px solid var(--border-line);
+            padding: 0.85rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .brand {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand span { color: var(--primary); }
+
+        .search-wrapper {
+            position: relative;
+            width: 360px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.6rem 1rem 0.6rem 2.5rem;
+            background: var(--surface-input);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-md);
+            color: var(--text-main);
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-sub);
+            width: 16px;
+        }
+
+        /* Hero */
+        .tool-hero {
+            background: var(--surface-card);
+            border-bottom: 1px solid var(--border-line);
+            padding: 2.5rem 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .breadcrumb {
+            color: var(--text-sub);
+            font-size: 0.78rem;
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .tool-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid rgba(37,99,235,0.15);
+            padding: 0.35rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 0.9rem;
+        }
+
+        .tool-hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.6rem;
+        }
+
+        .tool-hero p {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            max-width: 650px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6;
+        }
+
+        .preset-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--surface-input);
+            border: 1px solid var(--border-line);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        /* Calculator Main */
+        .calculator-section {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .calculator-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .clocks-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--surface-input);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .clock-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .clock-face {
+            width: 140px;
+            height: 140px;
+            background: #ffffff;
+            border: 4px solid var(--primary);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 0.75rem;
+        }
+
+        .clock-number {
+            position: absolute;
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            width: 16px;
+            height: 16px;
+            text-align: center;
+            line-height: 16px;
+        }
+
+        .num-12 { top: 4px; left: 50%; transform: translateX(-50%); }
+        .num-1  { top: 12px; right: 28px; }
+        .num-2  { top: 32px; right: 10px; }
+        .num-3  { top: 50%; right: 4px; transform: translateY(-50%); }
+        .num-4  { bottom: 32px; right: 10px; }
+        .num-5  { bottom: 12px; right: 28px; }
+        .num-6  { bottom: 4px; left: 50%; transform: translateX(-50%); }
+        .num-7  { bottom: 12px; left: 28px; }
+        .num-8  { bottom: 32px; left: 10px; }
+        .num-9  { top: 50%; left: 4px; transform: translateY(-50%); }
+        .num-10 { top: 32px; left: 10px; }
+        .num-11 { top: 12px; left: 28px; }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            background: var(--text-main);
+            border-radius: 4px;
+            z-index: 5;
+        }
+
+        .hand.hour {
+            width: 4px;
+            height: 34px;
+            margin-left: -2px;
+            background: var(--text-main);
+        }
+
+        .hand.minute {
+            width: 3px;
+            height: 50px;
+            margin-left: -1.5px;
+            background: var(--primary);
+        }
+
+        .hand.second {
+            width: 1.5px;
+            height: 54px;
+            margin-left: -0.75px;
+            background: #ef4444;
+            z-index: 6;
+        }
+
+        .clock-pin {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .clock-label {
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 0.2rem;
+        }
+
+        .clock-date-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--primary-light);
+            border: 1px solid rgba(37,99,235,0.15);
+            padding: 0.15rem 0.55rem;
+            border-radius: 12px;
+            margin-bottom: 0.4rem;
+        }
+
+        .clock-digital {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .clock-sub {
+            font-size: 0.72rem;
+            color: var(--text-sub);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.7rem 0.8rem;
+            background: var(--surface-input);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-md);
+            color: var(--text-main);
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        .slider-wrapper {
+            margin: 1.25rem 0;
+            padding: 1rem;
+            background: var(--surface-input);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-line);
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-sub);
+        }
+
+        .timeline-slider {
+            width: 100%;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .result-section {
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border-line);
+        }
+
+        .result-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .result-box {
+            background: var(--surface-input);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .result-number {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .result-label {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+        }
+
+        .extra-results {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .extra-box {
+            background: var(--surface-input);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-md);
+            padding: 0.8rem;
+            text-align: center;
+        }
+
+        .extra-box span {
+            display: block;
+            font-size: 0.68rem;
+            color: var(--text-sub);
+            margin-bottom: 0.25rem;
+        }
+
+        .extra-box strong { font-size: 0.82rem; }
+
+        .info-section {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem;
+        }
+
+        .info-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-card h2 { font-size: 1.1rem; margin-bottom: 0.7rem; }
+        .info-card h3 { font-size: 0.9rem; margin-top: 1.25rem; margin-bottom: 0.4rem; }
+        .info-card p { color: var(--text-sub); font-size: 0.82rem; line-height: 1.7; }
+
+        .site-footer {
+            border-top: 1px solid var(--border-line);
+            padding: 1.5rem 0;
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            background: var(--surface-card);
+            margin-top: auto;
+        }
+
+        @media (max-width: 700px) {
+            .clocks-container { grid-template-columns: 1fr; }
+            .input-grid, .result-main, .extra-results { grid-template-columns: 1fr; }
+            .search-wrapper { width: 160px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="header-nav">
+    <a href="/" class="brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        MyAllCodes<span>Tools</span>
+    </a>
+
+    <div class="search-wrapper">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" class="search-input" placeholder="Search converter..." onclick="goHomeSearch()">
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="tool-hero">
+    <div class="breadcrumb">
+        <a href="/">Home</a> &nbsp;/&nbsp; Time Zones &nbsp;/&nbsp; Interactive Time Converter
+    </div>
+
+    <span class="tool-badge">Live Clocks & Time Converter</span>
+
+    <h1 id="pageTitle">IST to DUBAI Time Converter</h1>
+
+    <p>
+        Compare live analog clocks, scrub through 24-hour timelines, and calculate real-time conversions between Indian Standard Time (IST) and Gulf Standard Time (GST - Dubai).
+</p>
+    </p>
+
+    <!-- Quick Tabs -->
+    <div class="preset-tabs">
+        <button class="tab-btn active" onclick="setPreset('Asia/Kolkata', 'America/New_York', 'IST to DUBAI', this)">IST to DUBAI</button>
+        <button class="tab-btn" onclick="setPreset('America/New_York', 'Asia/Kolkata', 'EST to IST', this)">EST to IST</button>
+        <button class="tab-btn" onclick="setPreset('Asia/Kolkata', 'GMT', 'IST to GMT', this)">IST to GMT</button>
+        <button class="tab-btn" onclick="setPreset('UTC', 'America/New_York', 'UTC to EST', this)">UTC to EST</button>
+        <button class="tab-btn" onclick="setPreset('Asia/Kolkata', 'America/Los_Angeles', 'IST to PST', this)">IST to PST</button>
+    </div>
+</section>
+
+<!-- Calculator Section -->
+<section class="calculator-section">
+    <div class="calculator-card">
+
+        <!-- Dual Analog Clocks View -->
+        <div class="clocks-container">
+            <!-- Source Clock -->
+            <div class="clock-card">
+                <div class="clock-face">
+                    <div class="clock-pin"></div>
+                    <span class="clock-number num-12">12</span>
+                    <span class="clock-number num-1">1</span>
+                    <span class="clock-number num-2">2</span>
+                    <span class="clock-number num-3">3</span>
+                    <span class="clock-number num-4">4</span>
+                    <span class="clock-number num-5">5</span>
+                    <span class="clock-number num-6">6</span>
+                    <span class="clock-number num-7">7</span>
+                    <span class="clock-number num-8">8</span>
+                    <span class="clock-number num-9">9</span>
+                    <span class="clock-number num-10">10</span>
+                    <span class="clock-number num-11">11</span>
+
+                    <div class="hand hour" id="srcHourHand"></div>
+                    <div class="hand minute" id="srcMinHand"></div>
+                    <div class="hand second" id="srcSecHand"></div>
+                </div>
+                <div class="clock-label" id="srcClockTitle">IST Clock (Source)</div>
+                <div class="clock-date-badge" id="srcClockDate">-- --- ----</div>
+                <div class="clock-digital mono" id="srcClockDigital">--:--:-- --</div>
+                <div class="clock-sub" id="srcClockSub">Asia/Kolkata</div>
+            </div>
+
+            <!-- Target Clock -->
+            <div class="clock-card">
+                <div class="clock-face">
+                    <div class="clock-pin"></div>
+                    <span class="clock-number num-12">12</span>
+                    <span class="clock-number num-1">1</span>
+                    <span class="clock-number num-2">2</span>
+                    <span class="clock-number num-3">3</span>
+                    <span class="clock-number num-4">4</span>
+                    <span class="clock-number num-5">5</span>
+                    <span class="clock-number num-6">6</span>
+                    <span class="clock-number num-7">7</span>
+                    <span class="clock-number num-8">8</span>
+                    <span class="clock-number num-9">9</span>
+                    <span class="clock-number num-10">10</span>
+                    <span class="clock-number num-11">11</span>
+
+                    <div class="hand hour" id="tgtHourHand"></div>
+                    <div class="hand minute" id="tgtMinHand"></div>
+                    <div class="hand second" id="tgtSecHand"></div>
+                </div>
+                <div class="clock-label" id="tgtClockTitle">EST Clock (Target)</div>
+                <div class="clock-date-badge" id="tgtClockDate">-- --- ----</div>
+                <div class="clock-digital mono" id="tgtClockDigital">--:--:-- --</div>
+                <div class="clock-sub" id="tgtClockSub">Asia/Dubai</div>
+            </div>
+        </div>
+
+        <!-- Inputs Grid -->
+        <div class="input-grid">
+            <div class="form-group">
+                <label for="sourceZoneSelect">Source Time Zone</label>
+                <select id="sourceZoneSelect" onchange="updateSourceZone(this.value)">
+                    <option value="Asia/Kolkata" selected>Indian Standard Time (IST)</option>
+                    <option value="America/New_York">Eastern Time (EST/EDT)</option>
+                    <option value="America/Los_Angeles">Pacific Time (PST/PDT)</option>
+                    <option value="GMT">Greenwich Mean Time (GMT)</option>
+                    <option value="UTC">Coordinated Universal Time (UTC)</option>
+                    <option value="Europe/London">London (GMT/BST)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="targetZoneSelect">Target Time Zone</label>
+                <select id="targetZoneSelect" onchange="updateTargetZone(this.value)">
+                    <option value="Asia/Dubai" selected>Gulf Standard Time (Dubai/GST)</option>
+                    <option value="Asia/Kolkata">Indian Standard Time (IST)</option>
+                    <option value="America/Los_Angeles">Pacific Time (PST/PDT)</option>
+                    <option value="GMT">Greenwich Mean Time (GMT)</option>
+                    <option value="UTC">Coordinated Universal Time (UTC)</option>
+                    <option value="Europe/London">London (GMT/BST)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label id="sourceLabel" for="sourceDateTime">Source Date & Time</label>
+            <input type="datetime-local" id="sourceDateTime" onchange="syncFromInput()">
+        </div>
+
+        <!-- Interactive Slider -->
+        <div class="slider-wrapper">
+            <div class="slider-header">
+                <span>Drag to Scrub Hours (24-Hour Timeline)</span>
+                <span id="sliderValueDisplay" class="mono">12:00</span>
+            </div>
+            <input type="range" min="0" max="1439" value="720" class="timeline-slider" id="timeSlider" oninput="syncFromSlider(this.value)">
+        </div>
+
+        <!-- Output Cards -->
+        <div class="result-section">
+            <div class="result-main">
+                <div class="result-box">
+                    <span class="result-number mono" id="sourceResult">—</span>
+                    <span class="result-label" id="sourceBoxLabel">Source Time</span>
+                </div>
+
+                <div class="result-box">
+                    <span class="result-number mono" id="targetResult">—</span>
+                    <span class="result-label" id="targetBoxLabel">Target Time</span>
+                </div>
+            </div>
+
+            <div class="extra-results">
+                <div class="extra-box">
+                    <span>Target Date</span>
+                    <strong id="targetDate">—</strong>
+                </div>
+
+                <div class="extra-box">
+                    <span>Day of Week</span>
+                    <strong id="targetDay">—</strong>
+                </div>
+
+                <div class="extra-box">
+                    <span>Active Timezone Mode</span>
+                    <strong id="targetMode">—</strong>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Content Info -->
+<section class="info-section">
+    <div class="info-card">
+        <h2>Real-Time Interactive IST to DUBAI Converter</h2>
+        <p>
+            Convert times seamlessly between Indian Standard Time (IST) and Gulf Standard Time (GST - Dubai).
+        </p>
+
+        <h3>Time Offset Reference</h3>
+        <p>
+            • <strong>IST to Dubai (GST):</strong> IST is 1 hour and 30 minutes ahead of Dubai (GST).<br>
+            • <strong>Daylight Saving:</strong> UAE does not observe Daylight Saving Time, keeping the offset at a fixed +4:00 GMT standard year-round.
+        </p>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools &bull; All Rights Reserved</p>
+</footer>
+
+<script>
+
+let sourceZone = 'Asia/Kolkata';
+let targetZone = 'Asia/Dubai';
+
+const sourceInput = document.getElementById('sourceDateTime');
+const slider = document.getElementById('timeSlider');
+
+function getZoneAbbr(dt, zone) {
+    try {
+        return new Intl.DateTimeFormat('en-US', {
+            timeZone: zone,
+            timeZoneName: 'short'
+        }).formatToParts(dt).find(p => p.type === 'timeZoneName').value;
+    } catch(e) {
+        return zone;
+    }
+}
+
+function setInitialDateTime() {
+    const now = new Date();
+    const isoStr = now.toISOString().slice(0, 16);
+    sourceInput.value = isoStr;
+
+    const mins = (now.getHours() * 60) + now.getMinutes();
+    slider.value = mins;
+    updateSliderLabel(mins);
+}
+
+function setClockHands(prefix, hours, minutes, seconds) {
+    const secDeg = (seconds / 60) * 360;
+    const minDeg = ((minutes + seconds / 60) / 60) * 360;
+    const hrDeg = (((hours % 12) + minutes / 60) / 12) * 360;
+
+    document.getElementById(`${prefix}SecHand`).style.transform = `rotate(${secDeg}deg)`;
+    document.getElementById(`${prefix}MinHand`).style.transform = `rotate(${minDeg}deg)`;
+    document.getElementById(`${prefix}HourHand`).style.transform = `rotate(${hrDeg}deg)`;
+}
+
+function refreshClocks() {
+    const val = sourceInput.value;
+    if (!val) return;
+
+    const dt = new Date(val);
+    const seconds = new Date().getSeconds();
+
+    // Source Clock
+    const srcOpts = { timeZone: sourceZone, hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false };
+    const srcParts = new Intl.DateTimeFormat('en-US', srcOpts).formatToParts(dt);
+    
+    let srcH = parseInt(srcParts.find(p => p.type === 'hour').value, 10);
+    let srcM = parseInt(srcParts.find(p => p.type === 'minute').value, 10);
+    setClockHands('src', srcH, srcM, seconds);
+
+    document.getElementById('srcClockDigital').innerText = dt.toLocaleTimeString('en-US', {
+        timeZone: sourceZone, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+    });
+
+    document.getElementById('srcClockDate').innerText = dt.toLocaleDateString('en-US', {
+        timeZone: sourceZone, weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
+    });
+
+    // Target Clock
+    const tgtOpts = { timeZone: targetZone, hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false };
+    const tgtParts = new Intl.DateTimeFormat('en-US', tgtOpts).formatToParts(dt);
+    
+    let tgtH = parseInt(tgtParts.find(p => p.type === 'hour').value, 10);
+    let tgtM = parseInt(tgtParts.find(p => p.type === 'minute').value, 10);
+    setClockHands('tgt', tgtH, tgtM, seconds);
+
+    document.getElementById('tgtClockDigital').innerText = dt.toLocaleTimeString('en-US', {
+        timeZone: targetZone, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+    });
+
+    document.getElementById('tgtClockDate').innerText = dt.toLocaleDateString('en-US', {
+        timeZone: targetZone, weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
+    });
+
+    // Detailed Output Calculations
+    document.getElementById('sourceResult').innerText = dt.toLocaleTimeString('en-US', {
+        timeZone: sourceZone, hour: '2-digit', minute: '2-digit', hour12: true
+    });
+
+    document.getElementById('targetResult').innerText = dt.toLocaleTimeString('en-US', {
+        timeZone: targetZone, hour: '2-digit', minute: '2-digit', hour12: true
+    });
+
+    document.getElementById('targetDate').innerText = dt.toLocaleDateString('en-US', {
+        timeZone: targetZone, month: 'short', day: 'numeric', year: 'numeric'
+    });
+
+    document.getElementById('targetDay').innerText = dt.toLocaleDateString('en-US', {
+        timeZone: targetZone, weekday: 'long'
+    });
+
+    document.getElementById('targetMode').innerText = getZoneAbbr(dt, targetZone);
+}
+
+setInterval(refreshClocks, 1000);
+
+function updateSliderLabel(mins) {
+    const h = Math.floor(mins / 60).toString().padStart(2, '0');
+    const m = (mins % 60).toString().padStart(2, '0');
+    document.getElementById('sliderValueDisplay').innerText = `${h}:${m}`;
+}
+
+function syncFromSlider(val) {
+    updateSliderLabel(val);
+    const mins = parseInt(val, 10);
+    const currentDate = sourceInput.value ? new Date(sourceInput.value) : new Date();
+    currentDate.setHours(Math.floor(mins / 60));
+    currentDate.setMinutes(mins % 60);
+
+    sourceInput.value = currentDate.toISOString().slice(0, 16);
+    refreshClocks();
+}
+
+function syncFromInput() {
+    const dt = new Date(sourceInput.value);
+    if (!isNaN(dt.getTime())) {
+        const mins = (dt.getHours() * 60) + dt.getMinutes();
+        slider.value = mins;
+        updateSliderLabel(mins);
+        refreshClocks();
+    }
+}
+
+function updateTitles() {
+    const now = new Date();
+    const srcAbbr = getZoneAbbr(now, sourceZone);
+    const tgtAbbr = getZoneAbbr(now, targetZone);
+
+    document.getElementById('pageTitle').innerText = `${srcAbbr} to ${tgtAbbr} Time Converter`;
+    document.getElementById('srcClockTitle').innerText = `${srcAbbr} Clock (Source)`;
+    document.getElementById('tgtClockTitle').innerText = `${tgtAbbr} Clock (Target)`;
+    document.getElementById('srcClockSub').innerText = sourceZone;
+    document.getElementById('tgtClockSub').innerText = targetZone;
+}
+
+function setPreset(src, tgt, title, btn) {
+    sourceZone = src;
+    targetZone = tgt;
+
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    document.getElementById('sourceZoneSelect').value = src;
+    document.getElementById('targetZoneSelect').value = tgt;
+
+    updateTitles();
+    refreshClocks();
+}
+
+function updateSourceZone(newSrc) {
+    sourceZone = newSrc;
+    updateTitles();
+    refreshClocks();
+}
+
+function updateTargetZone(newTgt) {
+    targetZone = newTgt;
+    updateTitles();
+    refreshClocks();
+}
+
+function goHomeSearch() {
+    window.location.href = "/?search=time-converter";
+}
+
+setInitialDateTime();
+updateTitles();
+refreshClocks();
+
+</script>
+
+</body>
+</html>
