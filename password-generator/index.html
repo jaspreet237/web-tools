@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password & Hash Generator | MyAllCodes Tools</title>
+    <meta name="description" content="Generate cryptographically secure random passwords and instant SHA-256 hashes with customizable length and character sets.">
+    <link rel="canonical" href="https://myallcodes.in/password-generator/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc; --surface-card: #ffffff; --surface-input: #f1f5f9;
+            --primary: #2563eb; --primary-light: #eff6ff; --text-main: #0f172a;
+            --text-sub: #64748b; --border-line: #e2e8f0; --radius-xl: 16px;
+            --radius-lg: 12px; --radius-md: 8px; --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .header-nav { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 0.85rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .brand { font-size: 1.3rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .brand span { color: var(--primary); }
+        .tool-hero { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 2rem 1.5rem 1.5rem; text-align: center; }
+        .breadcrumb { color: var(--text-sub); font-size: 0.78rem; margin-bottom: 1rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; }
+        .tool-badge { display: inline-block; background: var(--primary-light); color: var(--primary); border: 1px solid rgba(37,99,235,0.15); padding: 0.35rem 0.8rem; border-radius: 20px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 0.9rem; }
+        .tool-hero h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.6rem; }
+        .tool-hero p { color: var(--text-sub); font-size: 0.95rem; max-width: 650px; margin: 0 auto 1.5rem; line-height: 1.6; }
+        .preset-tabs { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+        .tab-btn { background: var(--surface-input); border: 1px solid var(--border-line); padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.82rem; font-weight: 700; color: var(--text-main); cursor: pointer; transition: all 0.2s ease; }
+        .tab-btn:hover, .tab-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+        .calculator-section { max-width: 900px; width: 100%; margin: 0 auto; padding: 1.5rem; }
+        .calculator-card { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-xl); padding: 1.5rem; box-shadow: var(--shadow-sm); }
+        .input-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+        .form-group label { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .form-group input[type="range"] { width: 100%; height: 8px; background: var(--surface-input); border-radius: 4px; accent-color: var(--primary); cursor: pointer; }
+        
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+        .checkbox-card { display: flex; align-items: center; gap: 0.6rem; font-size: 0.82rem; font-weight: 700; background: var(--surface-input); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-line); cursor: pointer; user-select: none; }
+        .checkbox-card input { accent-color: var(--primary); width: 16px; height: 16px; }
+
+        .hero-result-card { background: var(--primary-light); border: 1px solid rgba(37,99,235,0.2); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; position: relative; }
+        .hero-result-title { font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem; }
+        .hero-result-value { font-size: 1.5rem; font-weight: 800; color: var(--text-main); word-break: break-all; margin-bottom: 0.75rem; }
+        
+        .action-row { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+        .btn-action { background: var(--primary); color: #ffffff; border: none; padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
+        .btn-action:hover { background: #1d4ed8; }
+        .btn-secondary { background: var(--surface-card); color: var(--text-main); border: 1px solid var(--border-line); }
+
+        .hash-box { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-line); text-align: left; }
+        .hash-label { font-size: 0.75rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; margin-bottom: 0.3rem; }
+        .hash-value { font-size: 0.78rem; color: var(--text-main); word-break: break-all; background: var(--surface-input); padding: 0.6rem 0.8rem; border-radius: var(--radius-md); border: 1px solid var(--border-line); }
+
+        .site-footer { border-top: 1px solid var(--border-line); padding: 1.5rem 0; text-align: center; color: var(--text-sub); font-size: 0.85rem; background: var(--surface-card); margin-top: auto; }
+        @media (max-width: 700px) { .hero-result-value { font-size: 1.2rem; } }
+    </style>
+</head>
+<body>
+
+<header class="header-nav">
+    <a href="/" class="brand">MyAllCodes<span>Tools</span></a>
+</header>
+
+<section class="tool-hero">
+    <div class="breadcrumb"><a href="/">Home</a> / Security Tools / Password Generator</div>
+    <span class="tool-badge">Developer & Security</span>
+    <h1 id="pageTitle">Password & Hash Generator</h1>
+    <p>Generate cryptographically secure passwords and compute real-time SHA-256 hashes inside your browser.</p>
+
+    <div class="preset-tabs">
+        <button class="tab-btn" onclick="applyPreset(12, this)">12 Chars</button>
+        <button class="tab-btn active" onclick="applyPreset(16, this)">16 Chars</button>
+        <button class="tab-btn" onclick="applyPreset(24, this)">24 Chars</button>
+        <button class="tab-btn" onclick="applyPreset(32, this)">32 Chars</button>
+    </div>
+</section>
+
+<section class="calculator-section">
+    <div class="calculator-card">
+        <div class="input-grid">
+            <div class="form-group">
+                <label for="lengthVal">
+                    <span>Password Length</span>
+                    <span id="lengthDisplay" class="mono">16</span>
+                </label>
+                <input type="range" id="lengthVal" min="8" max="64" value="16" oninput="updateLength(this.value)">
+            </div>
+        </div>
+
+        <div class="options-grid">
+            <label class="checkbox-card">
+                <input type="checkbox" id="incUppercase" checked onchange="generatePassword()"> Uppercase (A-Z)
+            </label>
+            <label class="checkbox-card">
+                <input type="checkbox" id="incLowercase" checked onchange="generatePassword()"> Lowercase (a-z)
+            </label>
+            <label class="checkbox-card">
+                <input type="checkbox" id="incNumbers" checked onchange="generatePassword()"> Numbers (0-9)
+            </label>
+            <label class="checkbox-card">
+                <input type="checkbox" id="incSymbols" checked onchange="generatePassword()"> Symbols (!@#$)
+            </label>
+        </div>
+
+        <div class="hero-result-card">
+            <div class="hero-result-title">Generated Password</div>
+            <div class="hero-result-value mono" id="passwordValue">--</div>
+
+            <div class="action-row">
+                <button class="btn-action" onclick="generatePassword()">🔄 Regenerate</button>
+                <button class="btn-action btn-secondary" id="copyBtn" onclick="copyPassword()">📋 Copy Password</button>
+            </div>
+
+            <div class="hash-box">
+                <div class="hash-label">SHA-256 Hash</div>
+                <div class="hash-value mono" id="hashValue">--</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools • All Rights Reserved</p>
+</footer>
+
+<script>
+const charSets = {
+    uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    lowercase: 'abcdefghijklmnopqrstuvwxyz',
+    numbers: '0123456789',
+    symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
+};
+
+function applyPreset(len, btn) {
+    document.querySelectorAll('.preset-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    document.getElementById('lengthVal').value = len;
+    updateLength(len);
+}
+
+function updateLength(val) {
+    document.getElementById('lengthDisplay').innerText = val;
+    generatePassword();
+}
+
+async function generateSHA256(text) {
+    const msgUint8 = new TextEncoder().encode(text);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function generatePassword() {
+    const length = parseInt(document.getElementById('lengthVal').value);
+    let validChars = '';
+
+    if (document.getElementById('incUppercase').checked) validChars += charSets.uppercase;
+    if (document.getElementById('incLowercase').checked) validChars += charSets.lowercase;
+    if (document.getElementById('incNumbers').checked) validChars += charSets.numbers;
+    if (document.getElementById('incSymbols').checked) validChars += charSets.symbols;
+
+    const pwdDisplay = document.getElementById('passwordValue');
+    const hashDisplay = document.getElementById('hashValue');
+
+    if (!validChars) {
+        pwdDisplay.innerText = "Select at least 1 option";
+        hashDisplay.innerText = "--";
+        return;
+    }
+
+    const randomBytes = new Uint32Array(length);
+    crypto.getRandomValues(randomBytes);
+
+    let password = '';
+    for (let i = 0; i < length; i++) {
+        password += validChars[randomBytes[i] % validChars.length];
+    }
+
+    pwdDisplay.innerText = password;
+    const hash = await generateSHA256(password);
+    hashDisplay.innerText = hash;
+}
+
+function copyPassword() {
+    const pwd = document.getElementById('passwordValue').innerText;
+    if (!pwd || pwd.startsWith('Select')) return;
+
+    navigator.clipboard.writeText(pwd).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.innerText = '✅ Copied!';
+        setTimeout(() => btn.innerText = '📋 Copy Password', 1500);
+    });
+}
+
+generatePassword();
+</script>
+</body>
+</html>
