@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Tools - MyAllCodes Tools</title>
+    <title>All Tools Directory | MyAllCodes Tools</title>
+    <meta name="description" content="Search and browse our complete directory of free online developer, converter, math, and time zone tools.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
@@ -22,279 +23,204 @@
             --radius-lg: 12px;
             --radius-md: 8px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 12px -2px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 14px -2px rgba(0,0,0,0.08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; -webkit-tap-highlight-color: transparent; }
 
-        /* HEADER NAV WITH LOGO AS HOME LINK */
-        .header-nav {
-            background: var(--surface-card); border-bottom: 1px solid var(--border-line);
-            padding: 0.85rem 2rem; display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm);
-        }
-        .brand { 
-            font-size: 1.3rem; font-weight: 800; color: var(--text-main); text-decoration: none; 
-            display: flex; align-items: center; gap: 0.65rem; transition: opacity 0.2s;
-        }
-        .brand:hover { opacity: 0.9; }
-        .brand-logo-icon {
-            background: var(--primary); color: #fff; width: 34px; height: 34px;
-            border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem; font-weight: 800; box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-        }
+        /* HEADER */
+        .header-nav { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .brand { font-size: 1.25rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
         .brand span { color: var(--primary); }
+        .back-link { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-decoration: none; }
 
-        /* HEADER SEARCH INPUT */
-        .search-group { position: relative; width: 440px; display: flex; gap: 0.5rem; }
-        .search-wrapper { position: relative; flex: 1; }
-        .search-input {
-            width: 100%; padding: 0.6rem 1rem 0.6rem 2.5rem;
-            background: var(--surface-input); border: 1px solid var(--border-line);
-            border-radius: var(--radius-md); color: var(--text-main); font-size: 0.875rem; outline: none;
-            transition: all 0.2s;
-        }
-        .search-input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
-        .search-icon { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-sub); width: 16px; }
-        
-        .header-search-btn {
-            background: var(--primary); color: #fff; border: none; padding: 0 1.25rem;
-            border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 700; cursor: pointer;
-            display: flex; align-items: center; gap: 0.35rem; transition: background 0.2s; flex-shrink: 0;
-        }
-        .header-search-btn:hover { background: var(--primary-dark); }
+        /* SEARCH HERO */
+        .search-hero { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 2.5rem 1.25rem 2rem; text-align: center; }
+        .search-hero h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+        .search-hero p { color: var(--text-sub); font-size: 0.95rem; margin-bottom: 1.5rem; }
 
-        /* MAIN SEARCH WORKSPACE */
-        .search-container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; width: 100%; flex: 1; }
-        
-        /* SUGGESTED / TRENDING KEYWORDS BAR */
-        .trending-card {
-            background: var(--surface-card); border: 1px solid var(--border-line);
-            border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm);
-        }
-        .section-label { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-sub); letter-spacing: 0.5px; margin-bottom: 0.75rem; }
-        
-        .trending-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .tag-btn {
-            background: var(--surface-input); color: var(--text-main); border: 1px solid var(--border-line);
-            padding: 0.45rem 0.95rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
-            transition: all 0.2s; outline: none;
-        }
-        .tag-btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+        .search-box { max-width: 600px; margin: 0 auto; position: relative; }
+        .search-input { width: 100%; padding: 0.85rem 1.25rem; background: var(--surface-input); border: 2px solid var(--border-line); border-radius: var(--radius-lg); font-size: 1rem; color: var(--text-main); outline: none; transition: all 0.2s; }
+        .search-input:focus { border-color: var(--primary); background: #ffffff; box-shadow: var(--shadow-md); }
 
-        /* RESULTS DIRECTORY GRID */
-        .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-        .tool-card-link { text-decoration: none; color: inherit; display: block; }
-        
-        .tool-box { 
-            background: #fff; border: 1px solid var(--border-line); border-radius: var(--radius-lg); 
-            padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; 
-            height: 100%; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm);
-        }
-        .tool-card-link:hover .tool-box { 
-            transform: translateY(-3px); border-color: var(--primary); 
-            box-shadow: var(--shadow-md); background: #fbfcfd;
-        }
-        .tool-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main); }
-        .tool-desc { font-size: 0.8rem; color: var(--text-sub); line-height: 1.4; margin-bottom: 1rem; }
-        .tool-action { font-size: 0.8rem; font-weight: 700; color: var(--primary); display: inline-flex; align-items: center; gap: 0.35rem; }
+        /* MAIN CONTAINER */
+        .container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 2rem 1.25rem; flex: 1; }
+        .section-header { font-size: 0.8rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem; }
 
-        .no-results {
-            display: none; text-align: center; padding: 3rem 1rem; background: #fff;
-            border: 1px dashed var(--border-line); border-radius: var(--radius-lg); color: var(--text-sub); margin-top: 1rem;
-        }
-
-        .site-footer { border-top: 1px solid var(--border-line); padding: 1.5rem 0; text-align: center; color: var(--text-sub); font-size: 0.85rem; background: var(--surface-card); margin-top: auto; }
+        /* GRID LAYOUT */
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
         
-        @media (max-width: 768px) {
-            .search-group { width: 100%; }
+        .tool-card { 
+            background: var(--surface-card); 
+            border: 1px solid var(--border-line); 
+            border-radius: var(--radius-lg); 
+            padding: 1.25rem; 
+            text-decoration: none; 
+            color: inherit; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; 
+            box-shadow: var(--shadow-sm); 
+        }
+        .tool-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .tool-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; }
+        .tool-desc { font-size: 0.82rem; color: var(--text-sub); line-height: 1.5; margin-bottom: 1.25rem; }
+        .tool-action { font-size: 0.82rem; font-weight: 700; color: var(--primary); display: inline-flex; align-items: center; gap: 0.3rem; }
+
+        .no-results { display: none; text-align: center; padding: 4rem 1rem; color: var(--text-sub); font-size: 1.1rem; font-weight: 600; grid-column: 1 / -1; }
+
+        /* FOOTER */
+        .site-footer { border-top: 1px solid var(--border-line); padding: 1.75rem 0; text-align: center; color: var(--text-sub); font-size: 0.85rem; background: var(--surface-card); margin-top: auto; }
+
+        @media (max-width: 640px) {
+            .tools-grid { grid-template-columns: 1fr; }
+            .search-hero h1 { font-size: 1.6rem; }
+            .container { padding: 1.25rem 1rem; }
         }
     </style>
 </head>
 <body>
 
 <header class="header-nav">
-    <!-- WEBSITE LOGO (CLICKING TAKES USER HOME) -->
-    <a href="index.html" class="brand" title="Return to Homepage">
-        <div class="brand-logo-icon">#</div>
-        <div>MyAllCodes<span>Tools</span></div>
-    </a>
-    
-    <!-- SEARCH INPUT AND FUNCTIONAL SEARCH BUTTON -->
-    <div class="search-group">
-        <div class="search-wrapper">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search tools or time zones..." onkeyup="executeSearch()">
-        </div>
-        <button type="button" class="header-search-btn" onclick="executeSearch()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            Search
-        </button>
-    </div>
+    <a href="/" class="brand">MyAllCodes<span>Tools</span></a>
+    <a href="/" class="back-link">← Home</a>
 </header>
 
-<main class="search-container">
-
-    <!-- SUGGESTED / TRENDING SEARCH PILLS -->
-    <div class="trending-card">
-        <div class="section-label">🔥 Suggested & Trending Searches</div>
-        <div class="trending-tags">
-            <button type="button" class="tag-btn" onclick="applyTag('ist to pst')">🇺🇸 IST to PST</button>
-            <button type="button" class="tag-btn" onclick="applyTag('ist to est')">🇺🇸 IST to EST</button>
-            <button type="button" class="tag-btn" onclick="applyTag('dubai')">🇦🇪 Dubai Time</button>
-            <button type="button" class="tag-btn" onclick="applyTag('age calculator')">📅 Age Calculator</button>
-            <button type="button" class="tag-btn" onclick="applyTag('unit converter')">📏 Unit Converter</button>
-            <button type="button" class="tag-btn" onclick="applyTag('bmi calculator')">⚖️ BMI Calculator</button>
-            <button type="button" class="tag-btn" onclick="applyTag('percentage calculator')">📊 Percentage Calculator</button>
-            <button type="button" class="tag-btn" onclick="applyTag('')">Clear Filter</button>
-        </div>
+<section class="search-hero">
+    <h1>Directory Search</h1>
+    <p>Find tools across developers, time zones, units, and math calculators.</p>
+    <div class="search-box">
+        <input type="text" id="searchInput" class="search-input" placeholder="Type to filter tools (e.g. math, age, subnet, ist)..." autofocus>
     </div>
+</section>
 
-    <div class="section-label">Directory Search Results</div>
-    
-    <!-- TOOLS DIRECTORY GRID -->
-    <div id="resultsGrid" class="results-grid">
+<main class="container">
+    <div class="section-header">DIRECTORY SEARCH RESULTS</div>
+
+    <div class="tools-grid" id="toolsGrid">
         
-        <a href="/age-calculator/" class="tool-card-link searchable-item" data-keywords="age calculator birth date dob years">
-            <div class="tool-box">
-                <div>
-                    <div class="tool-title">📅 Age Calculator</div>
-                    <p class="tool-desc">Calculate your exact age in years, months, weeks, and days from date of birth.</p>
-                </div>
-                <span class="tool-action">Open Tool &rarr;</span>
+        <!-- DEVELOPER TOOLS -->
+        <a href="/subnet-calculator/" class="tool-card searchable-item" data-keywords="developer network ip subnet cidr internet ipv4 host broadcast mask">
+            <div>
+                <div class="tool-title">🌐 IP Subnet Calculator</div>
+                <p class="tool-desc">Calculate IPv4 network boundaries, broadcast addresses, CIDR, and host ranges.</p>
             </div>
+            <span class="tool-action">Open Tool &rarr;</span>
         </a>
 
-        <a href="/date-calculator/" class="tool-card-link searchable-item" data-keywords="date calculator difference duration days">
-            <div class="tool-box">
-                <div>
-                    <div class="tool-title">🗓️ Date Difference Tool</div>
-                    <p class="tool-desc">Find exact number of days, weeks, and months between two selected dates.</p>
-                </div>
-                <span class="tool-action">Open Tool &rarr;</span>
+        <a href="/password-generator/" class="tool-card searchable-item" data-keywords="developer security password hash generator sha256 crypto string random">
+            <div>
+                <div class="tool-title">🔐 Password & Hash Generator</div>
+                <p class="tool-desc">Create secure random passwords and generate instant SHA-256 string hashes.</p>
             </div>
+            <span class="tool-action">Open Tool &rarr;</span>
         </a>
 
-        <a href="/unit-converter/" class="tool-card-link searchable-item" data-keywords="unit converter distance length weight km miles">
-            <div class="tool-box">
-                <div>
-                    <div class="tool-title">📏 Unit Converter</div>
-                    <p class="tool-desc">Instant conversions for length, mass, distance, speed, and volume units.</p>
-                </div>
-                <span class="tool-action">Open Tool &rarr;</span>
+        <!-- TIME ZONE TOOLS -->
+        <a href="/world-clock/" class="tool-card searchable-item" data-keywords="time zone world clock analog clocks live time utc est pst ist converter country difference">
+            <div>
+                <div class="tool-title">🕒 World Clock & Country Converter</div>
+                <p class="tool-desc">Compare exact live time differences and interactive analog clocks across 70+ countries.</p>
             </div>
+            <span class="tool-action">Open Tool &rarr;</span>
         </a>
 
-        <a href="/percentage-calculator/" class="tool-card-link searchable-item" data-keywords="percentage percent calculator discount margin">
-            <div class="tool-box">
-                <div>
-                    <div class="tool-title">📊 Percentage Calculator</div>
-                    <p class="tool-desc">Compute percentage differences, discounts, margins, and markups easily.</p>
-                </div>
-                <span class="tool-action">Open Tool &rarr;</span>
+        <a href="/time-zone/ist-to-pst.html" class="tool-card searchable-item" data-keywords="time zone ist pst india pacific usa converter analog clock meeting">
+            <div>
+                <div class="tool-title">🇺🇸 IST to PST Converter</div>
+                <p class="tool-desc">Dedicated live converter for Indian Standard Time to US Pacific Standard Time.</p>
             </div>
+            <span class="tool-action">Open Tool &rarr;</span>
         </a>
 
-        <a href="/password-generator/" class="tool-card-link searchable-item" data-keywords="password generator hash sha256 security crypto random passwords">
-            <div class="tool-box">
-                <div>
-                    <div class="tool-title">🔐 Password & Hash Generator</div>
-                    <p class="tool-desc">Generate cryptographically secure random passwords and instant SHA-256 hashes.</p>
-                </div>
-                <span class="tool-action">Open Tool &rarr;</span>
+        <!-- MATH & CALCULATOR TOOLS -->
+        <a href="/age-calculator/" class="tool-card searchable-item" data-keywords="math maths calculator age date birth year count day birthday duration">
+            <div>
+                <div class="tool-title">📅 Age Calculator</div>
+                <p class="tool-desc">Calculate your exact age in years, months, weeks, and days from date of birth.</p>
             </div>
+            <span class="tool-action">Open Tool &rarr;</span>
         </a>
 
-        <a href="/bmi-calculator/" class="tool-card-link searchable-item" data-keywords="bmi calculator body mass index health weight height">
-            <div class="tool-box">
-                <div>
-                    <div class="tool-title">⚖️ BMI Calculator</div>
-                    <p class="tool-desc">Calculate Body Mass Index according to height and weight parameters.</p>
-                </div>
-                <span class="tool-action">Open Tool &rarr;</span>
+        <a href="/date-difference/" class="tool-card searchable-item" data-keywords="math maths calculator date difference time days between calendar span duration">
+            <div>
+                <div class="tool-title">📆 Date Difference Tool</div>
+                <p class="tool-desc">Find exact number of days, weeks, and months between two selected dates.</p>
             </div>
+            <span class="tool-action">Open Tool &rarr;</span>
         </a>
 
-        <a href="/time-zone/ist-to-pst.html" class="tool-card-link searchable-item" data-keywords="ist to pst time zone converter india pacific time timezone">
-            <div class="tool-box">
-                <div>
-                    <div class="tool-title">🇺🇸 IST to PST Converter</div>
-                    <p class="tool-desc">Dedicated converter for Indian Standard Time to US Pacific Standard Time.</p>
-                </div>
-                <span class="tool-action">Open Tool &rarr;</span>
+        <a href="/percentage-calculator/" class="tool-card searchable-item" data-keywords="math maths calculator percentage percent discount ratio markup profit difference">
+            <div>
+                <div class="tool-title">📊 Percentage Calculator</div>
+                <p class="tool-desc">Compute percentage differences, discounts, margins, and markups easily.</p>
             </div>
+            <span class="tool-action">Open Tool &rarr;</span>
         </a>
 
-        <a href="/time-zone/ist-to-est.html" class="tool-card-link searchable-item" data-keywords="ist to est time zone converter india eastern time timezone est">
-            <div class="tool-box">
-                <div>
-                    <div class="tool-title">🇺🇸 IST to EST Converter</div>
-                    <p class="tool-desc">Dedicated converter for Indian Standard Time to US Eastern Standard Time.</p>
-                </div>
-                <span class="tool-action">Open Tool &rarr;</span>
+        <!-- UNIT & HEALTH TOOLS -->
+        <a href="/unit-converter/" class="tool-card searchable-item" data-keywords="unit converter length mass distance speed volume weight measurement math health">
+            <div>
+                <div class="tool-title">📏 Unit Converter</div>
+                <p class="tool-desc">Instant conversions for length, mass, distance, speed, and volume units.</p>
             </div>
+            <span class="tool-action">Open Tool &rarr;</span>
         </a>
 
-        <a href="/time-zone/ist-to-dubai.html" class="tool-card-link searchable-item" data-keywords="dubai time zone converter uae gulf timezone ist to dubai">
-            <div class="tool-box">
-                <div>
-                    <div class="tool-title">🇦🇪 IST to Dubai Converter</div>
-                    <p class="tool-desc">Quick time lookup and conversion for India to Dubai (GST).</p>
-                </div>
-                <span class="tool-action">Open Tool &rarr;</span>
-            </div>
-        </a>
+        <!-- NO RESULTS MESSAGE -->
+        <div id="noResults" class="no-results">
+            🔍 No tools matched your search query. Try searching for "math", "subnet", "time", or "unit".
+        </div>
 
     </div>
-
-    <!-- EMPTY STATE -->
-    <div id="noResults" class="no-results">
-        <h3>🔍 No matching tools found</h3>
-        <p>Try searching with a different keyword like "PST", "Age", or "Converter".</p>
-    </div>
-
 </main>
 
 <footer class="site-footer">
-    <p>© 2026 MyAllCodes Tools • All Rights Reserved</p>
+    <p>© 2026 MyAllCodes Tools • Privacy-First Free Online Utilities</p>
 </footer>
 
 <script>
-    function executeSearch() {
-        const query = document.getElementById('searchInput').value.toLowerCase().trim();
-        const items = document.querySelectorAll('.searchable-item');
-        let count = 0;
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("searchInput");
+    const cards = document.querySelectorAll(".searchable-item");
+    const noResultsMsg = document.getElementById("noResults");
 
-        items.forEach(item => {
-            const keywords = item.getAttribute('data-keywords') || '';
-            const title = item.innerText || '';
-            
-            if (keywords.toLowerCase().includes(query) || title.toLowerCase().includes(query)) {
-                item.style.display = 'block';
-                count++;
+    function filterTools(query) {
+        const cleanQuery = query.toLowerCase().trim();
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const keywords = (card.getAttribute("data-keywords") || "").toLowerCase();
+            const title = card.querySelector(".tool-title")?.innerText.toLowerCase() || "";
+            const desc = card.querySelector(".tool-desc")?.innerText.toLowerCase() || "";
+
+            if (cleanQuery === "" || keywords.includes(cleanQuery) || title.includes(cleanQuery) || desc.includes(cleanQuery)) {
+                card.style.display = "flex"; // Restores card display in CSS grid
+                visibleCount++;
             } else {
-                item.style.display = 'none';
+                card.style.display = "none"; // Fully removes element from grid flow
             }
         });
 
-        document.getElementById('noResults').style.display = (count === 0) ? 'block' : 'none';
-    }
-
-    function applyTag(keyword) {
-        document.getElementById('searchInput').value = keyword;
-        executeSearch();
-    }
-
-    // Parse URL Parameter on Load (e.g. search.html?q=dubai)
-    window.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const queryParam = urlParams.get('q');
-        if (queryParam) {
-            document.getElementById('searchInput').value = queryParam;
+        if (noResultsMsg) {
+            noResultsMsg.style.display = visibleCount === 0 ? "block" : "none";
         }
-        executeSearch();
-    });
+    }
+
+    // Capture URL parameter ?q= inside search input
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialQuery = urlParams.get("q") || "";
+    
+    if (searchInput) {
+        searchInput.value = initialQuery;
+        searchInput.addEventListener("input", (e) => filterTools(e.target.value));
+    }
+    
+    // Execute filter on page load
+    filterTools(initialQuery);
+});
 </script>
 
 </body>

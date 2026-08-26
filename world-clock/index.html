@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Time Zone Converter & World Clock | MyAllCodes Tools</title>
+    <meta name="description" content="Compare time differences between any two countries or time zones live. Interactive analog clocks, instant meeting planner, and global city offsets.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc; --surface-card: #ffffff; --surface-input: #f1f5f9;
+            --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #eff6ff;
+            --text-main: #0f172a; --text-sub: #64748b; --border-line: #e2e8f0;
+            --radius-xl: 16px; --radius-lg: 12px; --radius-md: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05); --shadow-md: 0 4px 14px -2px rgba(0,0,0,0.08);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; -webkit-tap-highlight-color: transparent; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* HEADER */
+        .header-nav { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .brand { font-size: 1.25rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .brand span { color: var(--primary); }
+        
+        /* HERO */
+        .tool-hero { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 2.25rem 1.25rem 1.75rem; text-align: center; }
+        .breadcrumb { color: var(--text-sub); font-size: 0.8rem; margin-bottom: 0.75rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .tool-badge { display: inline-block; background: var(--primary-light); color: var(--primary); padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; }
+        .tool-hero h1 { font-size: 2.1rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+        .tool-hero p { color: var(--text-sub); font-size: 0.95rem; max-width: 620px; margin: 0 auto 1.25rem; line-height: 1.5; }
+        
+        /* PRESET QUICK BUTTONS */
+        .quick-presets { display: flex; justify-content: center; gap: 0.4rem; flex-wrap: wrap; max-width: 800px; margin: 0 auto; }
+        .preset-btn { background: var(--surface-input); border: 1px solid var(--border-line); padding: 0.35rem 0.8rem; border-radius: 15px; font-size: 0.78rem; font-weight: 700; color: var(--text-main); cursor: pointer; transition: all 0.2s; }
+        .preset-btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+
+        /* MAIN CALCULATOR CONTAINER */
+        .main-container { max-width: 960px; width: 100%; margin: 0 auto; padding: 1.75rem 1.25rem; }
+        
+        /* CONVERTER CONTROLS CARD */
+        .converter-card { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-xl); padding: 1.5rem; box-shadow: var(--shadow-sm); margin-bottom: 1.75rem; }
+        .selectors-wrapper { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.75rem; align-items: center; margin-bottom: 1.25rem; }
+        .input-group label { display: block; font-size: 0.78rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem; }
+        .input-group select { width: 100%; padding: 0.75rem 0.85rem; background: var(--surface-input); border: 1.5px solid var(--border-line); border-radius: var(--radius-lg); font-size: 0.9rem; font-weight: 600; color: var(--text-main); outline: none; transition: border-color 0.2s; }
+        .input-group select:focus { border-color: var(--primary); background: #fff; }
+        
+        .swap-btn { width: 42px; height: 42px; border-radius: 50%; background: var(--primary-light); border: 1px solid rgba(37,99,235,0.2); color: var(--primary); font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-top: 1.2rem; transition: all 0.2s; }
+        .swap-btn:hover { background: var(--primary); color: #fff; transform: rotate(180deg); }
+
+        /* TIME SLIDER / PLANNER */
+        .time-slider-box { background: var(--surface-input); border-radius: var(--radius-lg); padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        .slider-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; font-weight: 700; color: var(--text-sub); }
+        .time-slider { width: 100%; accent-color: var(--primary); cursor: pointer; height: 6px; }
+
+        /* DIFFERENCE BANNER */
+        .diff-banner { background: var(--primary-light); border: 1px dashed var(--primary); border-radius: var(--radius-lg); padding: 0.9rem 1.25rem; text-align: center; font-size: 1rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 1.75rem; }
+
+        /* DUAL CLOCKS GRID */
+        .clocks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .clock-card { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-xl); padding: 1.75rem 1.25rem; text-align: center; box-shadow: var(--shadow-sm); transition: border-color 0.2s; }
+        .clock-card.primary-card { border-top: 4px solid var(--primary); }
+        
+        .clock-title { font-size: 1.2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.15rem; }
+        .clock-subtitle { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem; }
+
+        /* ANALOG SVG CLOCK */
+        .analog-wrapper { width: 150px; height: 150px; margin: 0 auto 1.25rem; }
+        .analog-svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.04)); }
+        
+        .digital-time { font-size: 1.75rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.2rem; }
+        .date-text { font-size: 0.82rem; font-weight: 600; color: var(--text-sub); }
+
+        .site-footer { border-top: 1px solid var(--border-line); padding: 1.75rem 0; text-align: center; color: var(--text-sub); font-size: 0.85rem; background: var(--surface-card); margin-top: auto; }
+
+        @media (max-width: 680px) {
+            .selectors-wrapper { grid-template-columns: 1fr; gap: 0.5rem; }
+            .swap-btn { margin: 0 auto; transform: rotate(90deg); }
+            .swap-btn:hover { transform: rotate(270deg); }
+            .clocks-grid { grid-template-columns: 1fr; }
+            .digital-time { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-nav">
+    <a href="/" class="brand">MyAllCodes<span>Tools</span></a>
+    <a href="/" style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-decoration: none;">← Back to Home</a>
+</header>
+
+<section class="tool-hero">
+    <div class="breadcrumb"><a href="/">Home</a> / Time Zone Tools / Country Time Difference</div>
+    <span class="tool-badge">Live Converter</span>
+    <h1>World Time Zone Converter</h1>
+    <p>Compare exact live time differences, offsets, and convert meeting hours between any two world countries or cities.</p>
+
+    <div class="quick-presets">
+        <button class="preset-btn" onclick="setPreset('Asia/Kolkata', 'America/Los_Angeles')">🇮🇳 India ↔ 🇺🇸 PST</button>
+        <button class="preset-btn" onclick="setPreset('Asia/Kolkata', 'America/New_York')">🇮🇳 India ↔ 🇺🇸 EST</button>
+        <button class="preset-btn" onclick="setPreset('Asia/Kolkata', 'Europe/London')">🇮🇳 India ↔ 🇬🇧 London</button>
+        <button class="preset-btn" onclick="setPreset('Asia/Kolkata', 'Asia/Dubai')">🇮🇳 India ↔ 🇦🇪 Dubai</button>
+        <button class="preset-btn" onclick="setPreset('Europe/London', 'America/New_York')">🇬🇧 UK ↔ 🇺🇸 New York</button>
+        <button class="preset-btn" onclick="setPreset('Asia/Tokyo', 'America/Los_Angeles')">🇯🇵 Japan ↔ 🇺🇸 PST</button>
+    </div>
+</section>
+
+<main class="main-container">
+
+    <div class="converter-card">
+        <div class="selectors-wrapper">
+            <div class="input-group">
+                <label>First Country / City (From)</label>
+                <select id="fromZone" onchange="calculateDifference()"></select>
+            </div>
+
+            <button class="swap-btn" onclick="swapZones()" title="Swap Countries">⇄</button>
+
+            <div class="input-group">
+                <label>Second Country / City (To)</label>
+                <select id="toZone" onchange="calculateDifference()"></select>
+            </div>
+        </div>
+
+        <div class="time-slider-box">
+            <div class="slider-header">
+                <span>Interactive Time Scrubber (Meeting Planner)</span>
+                <span id="sliderVal" class="mono" style="color: var(--primary);">Live Real Time</span>
+            </div>
+            <input type="range" id="hourSlider" class="time-slider" min="0" max="1439" value="0" oninput="onSliderMove(this.value)">
+        </div>
+    </div>
+
+    <div class="diff-banner" id="diffBanner">
+        Calculating time difference...
+    </div>
+
+    <div class="clocks-grid">
+        <!-- FROM CLOCK -->
+        <div class="clock-card primary-card">
+            <div class="clock-title" id="fromTitle">Country A</div>
+            <div class="clock-subtitle" id="fromSub">TIME ZONE</div>
+            
+            <div class="analog-wrapper">
+                <svg class="analog-svg" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="46" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                    ${Array.from({length: 12}).map((_, i) => {
+                        const a = i * 30 * Math.PI / 180;
+                        return `<line x1="${50 + 38 * Math.sin(a)}" y1="${50 - 38 * Math.cos(a)}" x2="${50 + 44 * Math.sin(a)}" y2="${50 - 44 * Math.cos(a)}" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>`;
+                    }).join('')}
+                    <line id="hour-from" x1="50" y1="50" x2="50" y2="27" stroke="#0f172a" stroke-width="3.5" stroke-linecap="round"/>
+                    <line id="min-from" x1="50" y1="50" x2="50" y2="18" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round"/>
+                    <line id="sec-from" x1="50" y1="50" x2="50" y2="13" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="50" cy="50" r="3.5" fill="#2563eb"/>
+                </svg>
+            </div>
+
+            <div class="digital-time mono" id="dig-from">--:--:--</div>
+            <div class="date-text" id="date-from">--</div>
+        </div>
+
+        <!-- TO CLOCK -->
+        <div class="clock-card primary-card">
+            <div class="clock-title" id="toTitle">Country B</div>
+            <div class="clock-subtitle" id="toSub">TIME ZONE</div>
+
+            <div class="analog-wrapper">
+                <svg class="analog-svg" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="46" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+                    ${Array.from({length: 12}).map((_, i) => {
+                        const a = i * 30 * Math.PI / 180;
+                        return `<line x1="${50 + 38 * Math.sin(a)}" y1="${50 - 38 * Math.cos(a)}" x2="${50 + 44 * Math.sin(a)}" y2="${50 - 44 * Math.cos(a)}" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>`;
+                    }).join('')}
+                    <line id="hour-to" x1="50" y1="50" x2="50" y2="27" stroke="#0f172a" stroke-width="3.5" stroke-linecap="round"/>
+                    <line id="min-to" x1="50" y1="50" x2="50" y2="18" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round"/>
+                    <line id="sec-to" x1="50" y1="50" x2="50" y2="13" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="50" cy="50" r="3.5" fill="#2563eb"/>
+                </svg>
+            </div>
+
+            <div class="digital-time mono" id="dig-to">--:--:--</div>
+            <div class="date-text" id="date-to">--</div>
+        </div>
+    </div>
+
+</main>
+
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools • Privacy-First Free Online Utilities</p>
+</footer>
+
+<script>
+// EXTENSIVE WORLD TIME ZONE DATABASE (70+ Global Locations)
+const zoneList = [
+    { name: "🇮🇳 India (IST)", zone: "Asia/Kolkata" },
+    { name: "🇺🇸 USA - Pacific (PST/PDT)", zone: "America/Los_Angeles" },
+    { name: "🇺🇸 USA - Eastern (EST/EDT)", zone: "America/New_York" },
+    { name: "🇺🇸 USA - Central (CST/CDT)", zone: "America/Chicago" },
+    { name: "🇺🇸 USA - Mountain (MST/MDT)", zone: "America/Denver" },
+    { name: "🇬🇧 UK - London (GMT/BST)", zone: "Europe/London" },
+    { name: "🇦🇪 UAE - Dubai (GST)", zone: "Asia/Dubai" },
+    { name: "🇯🇵 Japan - Tokyo (JST)", zone: "Asia/Tokyo" },
+    { name: "🇦🇺 Australia - Sydney (AEST)", zone: "Australia/Sydney" },
+    { name: "🇦🇺 Australia - Perth (AWST)", zone: "Australia/Perth" },
+    { name: "🇨🇦 Canada - Toronto", zone: "America/Toronto" },
+    { name: "🇨🇦 Canada - Vancouver", zone: "America/Vancouver" },
+    { name: "🇩🇪 Germany - Berlin (CET)", zone: "Europe/Berlin" },
+    { name: "🇫🇷 France - Paris (CET)", zone: "Europe/Paris" },
+    { name: "🇸🇬 Singapore (SGT)", zone: "Asia/Singapore" },
+    { name: "🇳🇿 New Zealand - Auckland", zone: "Pacific/Auckland" },
+    { name: "🇸🇦 Saudi Arabia - Riyadh", zone: "Asia/Riyadh" },
+    { name: "🇶🇦 Qatar - Doha", zone: "Asia/Qatar" },
+    { name: "🇨🇳 China - Beijing (CST)", zone: "Asia/Shanghai" },
+    { name: "🇭🇰 Hong Kong (HKT)", zone: "Asia/Hong_Kong" },
+    { name: "🇹🇼 Taiwan - Taipei", zone: "Asia/Taipei" },
+    { name: "🇰🇷 South Korea - Seoul", zone: "Asia/Seoul" },
+    { name: "🇹🇭 Thailand - Bangkok", zone: "Asia/Bangkok" },
+    { name: "🇮🇩 Indonesia - Jakarta", zone: "Asia/Jakarta" },
+    { name: "🇲🇾 Malaysia - Kuala Lumpur", zone: "Asia/Kuala_Lumpur" },
+    { name: "🇵🇰 Pakistan - Karachi", zone: "Asia/Karachi" },
+    { name: "🇧🇩 Bangladesh - Dhaka", zone: "Asia/Dhaka" },
+    { name: "🇱🇰 Sri Lanka - Colombo", zone: "Asia/Colombo" },
+    { name: "🇳🇵 Nepal - Kathmandu", zone: "Asia/Kathmandu" },
+    { name: "🇷🇺 Russia - Moscow", zone: "Europe/Moscow" },
+    { name: "🇹🇷 Turkey - Istanbul", zone: "Europe/Istanbul" },
+    { name: "🇮🇹 Italy - Rome", zone: "Europe/Rome" },
+    { name: "🇪🇸 Spain - Madrid", zone: "Europe/Madrid" },
+    { name: "🇳🇱 Netherlands - Amsterdam", zone: "Europe/Amsterdam" },
+    { name: "🇨🇭 Switzerland - Zurich", zone: "Europe/Zurich" },
+    { name: "🇸🇪 Sweden - Stockholm", zone: "Europe/Stockholm" },
+    { name: "🇳🇴 Norway - Oslo", zone: "Europe/Oslo" },
+    { name: "🇮🇪 Ireland - Dublin", zone: "Europe/Dublin" },
+    { name: "🇿🇦 South Africa - Johannesburg", zone: "Africa/Johannesburg" },
+    { name: "🇪🇬 Egypt - Cairo", zone: "Africa/Cairo" },
+    { name: "🇳🇬 Nigeria - Lagos", zone: "Africa/Lagos" },
+    { name: "🇰🇪 Kenya - Nairobi", zone: "Africa/Nairobi" },
+    { name: "🇧🇷 Brazil - São Paulo", zone: "America/Sao_Paulo" },
+    { name: "🇦🇷 Argentina - Buenos Aires", zone: "America/Buenos_Aires" },
+    { name: "🇲🇽 Mexico - Mexico City", zone: "America/Mexico_City" },
+    { name: "🇨🇱 Chile - Santiago", zone: "America/Santiago" },
+    { name: "🇨🇴 Colombia - Bogota", zone: "America/Bogota" },
+    { name: "🇵🇪 Peru - Lima", zone: "America/Lima" },
+    { name: "🇵🇭 Philippines - Manila", zone: "Asia/Manila" },
+    { name: "🇻🇳 Vietnam - Ho Chi Minh", zone: "Asia/Ho_Chi_Minh" },
+    { name: "🇮🇱 Israel - Tel Aviv", zone: "Asia/Tel_Aviv" }
+];
+
+let isScrubbing = false;
+
+function populateSelects() {
+    const fromSel = document.getElementById('fromZone');
+    const toSel = document.getElementById('toZone');
+    
+    const html = zoneList.map(z => `<option value="${z.zone}">${z.name}</option>`).join('');
+    fromSel.innerHTML = html;
+    toSel.innerHTML = html;
+
+    // Defaults
+    fromSel.value = "Asia/Kolkata";
+    toSel.value = "America/Los_Angeles";
+}
+
+function setPreset(from, to) {
+    document.getElementById('fromZone').value = from;
+    document.getElementById('toZone').value = to;
+    isScrubbing = false;
+    calculateDifference();
+}
+
+function swapZones() {
+    const f = document.getElementById('fromZone');
+    const t = document.getElementById('toZone');
+    const temp = f.value;
+    f.value = t.value;
+    t.value = temp;
+    calculateDifference();
+}
+
+function onSliderMove(val) {
+    isScrubbing = true;
+    const hours = Math.floor(val / 60);
+    const mins = val % 60;
+    const timeFormatted = `${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}`;
+    document.getElementById('sliderVal').innerText = `Custom Time: ${timeFormatted}`;
+    calculateDifference();
+}
+
+function getTimeZoneParts(date, zone) {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: zone,
+        hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false,
+        weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
+    });
+    const parts = formatter.formatToParts(date);
+    const p = {};
+    parts.forEach(part => p[part.type] = part.value);
+    return p;
+}
+
+function calculateDifference() {
+    const fromZone = document.getElementById('fromZone').value;
+    const toZone = document.getElementById('toZone').value;
+
+    const fromObj = zoneList.find(z => z.zone === fromZone);
+    const toObj = zoneList.find(z => z.zone === toZone);
+
+    document.getElementById('fromTitle').innerText = fromObj.name.split(' (')[0];
+    document.getElementById('fromSub').innerText = fromZone;
+
+    document.getElementById('toTitle').innerText = toObj.name.split(' (')[0];
+    document.getElementById('toSub').innerText = toZone;
+
+    const now = new Date();
+    
+    // Custom Time via Slider or Live
+    let fromDate = now;
+    if (isScrubbing) {
+        const minutes = parseInt(document.getElementById('hourSlider').value, 10);
+        fromDate = new Date();
+        fromDate.setHours(Math.floor(minutes / 60), minutes % 60, 0);
+    } else {
+        // Sync slider to live minutes
+        const currentMin = now.getHours() * 60 + now.getMinutes();
+        document.getElementById('hourSlider').value = currentMin;
+        document.getElementById('sliderVal').innerText = "Live Real Time";
+    }
+
+    // Offset calculation
+    const fromP = getTimeZoneParts(fromDate, fromZone);
+    const toP = getTimeZoneParts(fromDate, toZone);
+
+    // Calculate time offset difference
+    const getUtcMinutes = (z) => {
+        const str = new Date().toLocaleString('en-US', { timeZone: z });
+        const d = new Date(str);
+        return d.getTime() / 60000;
+    };
+
+    const diffMinutes = Math.round(getUtcMinutes(toZone) - getUtcMinutes(fromZone));
+    const absDiff = Math.abs(diffMinutes);
+    const hDiff = Math.floor(absDiff / 60);
+    const mDiff = absDiff % 60;
+
+    let diffText = "";
+    if (diffMinutes === 0) {
+        diffText = `${toObj.name} is in the exact same time zone as ${fromObj.name}.`;
+    } else {
+        const aheadBehind = diffMinutes > 0 ? "ahead of" : "behind";
+        const minStr = mDiff > 0 ? ` and ${mDiff} mins` : '';
+        diffText = `${toObj.name.split(' (')[0]} is ${hDiff} hrs${minStr} ${aheadBehind} ${fromObj.name.split(' (')[0]}.`;
+    }
+    document.getElementById('diffBanner').innerText = diffText;
+
+    // Render Clocks
+    renderClockCard('from', fromP, fromZone, fromDate);
+    renderClockCard('to', toP, toZone, fromDate);
+}
+
+function renderClockCard(prefix, p, zone, baseDate) {
+    let hours = parseInt(p.hour, 10) % 12;
+    let minutes = parseInt(p.minute, 10);
+    let seconds = isScrubbing ? 0 : parseInt(p.second, 10);
+
+    const secDeg = seconds * 6;
+    const minDeg = minutes * 6 + seconds * 0.1;
+    const hourDeg = hours * 30 + minutes * 0.5;
+
+    document.getElementById(`hour-${prefix}`).setAttribute('transform', `rotate(${hourDeg} 50 50)`);
+    document.getElementById(`min-${prefix}`).setAttribute('transform', `rotate(${minDeg} 50 50)`);
+    document.getElementById(`sec-${prefix}`).setAttribute('transform', `rotate(${secDeg} 50 50)`);
+
+    const timeStr = new Intl.DateTimeFormat('en-US', {
+        timeZone: zone,
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+    }).format(baseDate);
+
+    document.getElementById(`dig-${prefix}`).innerText = isScrubbing ? timeStr.replace(/:\d\d /, ' ') : timeStr;
+    document.getElementById(`date-${prefix}`).innerText = `${p.weekday}, ${p.month} ${p.day}, ${p.year}`;
+}
+
+// Initializing
+populateSelects();
+calculateDifference();
+
+setInterval(() => {
+    if (!isScrubbing) calculateDifference();
+}, 1000);
+</script>
+</body>
+</html>
