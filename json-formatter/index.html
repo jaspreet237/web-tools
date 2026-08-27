@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Formatter & Validator | MyAllCodes Tools</title>
+    <meta name="description" content="Free online JSON formatter, validator, and minifier. Clean up dirty JSON, fix syntax errors, and format code instantly in your browser.">
+    <link rel="canonical" href="https://myallcodes.in/json-formatter/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc; --surface-card: #ffffff; --surface-input: #f1f5f9;
+            --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #eff6ff;
+            --text-main: #0f172a; --text-sub: #64748b; --border-line: #e2e8f0;
+            --success-bg: #f0fdf4; --success-text: #166534; --success-border: #bbf7d0;
+            --error-bg: #fef2f2; --error-text: #991b1b; --error-border: #fecaca;
+            --radius-xl: 16px; --radius-lg: 12px; --radius-md: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05); --shadow-md: 0 4px 14px -2px rgba(0,0,0,0.08);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* HEADER */
+        .header-nav { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .brand { font-size: 1.25rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .brand span { color: var(--primary); }
+        .back-link { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+
+        /* HERO */
+        .tool-hero { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 2.25rem 1.25rem 1.75rem; text-align: center; }
+        .breadcrumb { color: var(--text-sub); font-size: 0.8rem; margin-bottom: 0.75rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .tool-badge { display: inline-block; background: var(--primary-light); color: var(--primary); padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; }
+        .tool-hero h1 { font-size: 2.1rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+        .tool-hero p { color: var(--text-sub); font-size: 0.95rem; max-width: 620px; margin: 0 auto; line-height: 1.5; }
+
+        /* MAIN WORKSPACE */
+        .main-container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 1.5rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+        
+        /* TOOLBAR */
+        .toolbar { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-lg); padding: 0.75rem 1rem; display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); }
+        .tool-group { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        
+        .btn { background: var(--surface-input); border: 1px solid var(--border-line); padding: 0.5rem 0.9rem; border-radius: var(--radius-md); font-size: 0.82rem; font-weight: 700; color: var(--text-main); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.35rem; }
+        .btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+        .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .btn-primary:hover { background: var(--primary-dark); color: #fff; }
+
+        /* STATUS BANNER */
+        .status-banner { padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 700; display: none; }
+        .status-banner.success { display: block; background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+        .status-banner.error { display: block; background: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); }
+
+        /* EDITOR PANELS */
+        .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex: 1; min-height: 480px; }
+        .panel { display: flex; flex-direction: column; background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+        .panel-header { background: var(--surface-input); padding: 0.6rem 1rem; font-size: 0.78rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-line); display: flex; justify-content: space-between; align-items: center; }
+
+        .json-textarea { flex: 1; width: 100%; border: none; outline: none; padding: 1rem; font-size: 0.88rem; line-height: 1.5; color: var(--text-main); background: transparent; resize: none; tab-size: 2; }
+        .json-textarea::placeholder { color: #94a3b8; }
+
+        /* FOOTER */
+        .site-footer { border-top: 1px solid var(--border-line); padding: 1.75rem 0; text-align: center; color: var(--text-sub); font-size: 0.85rem; background: var(--surface-card); margin-top: auto; }
+
+        @media (max-width: 768px) {
+            .editor-grid { grid-template-columns: 1fr; min-height: 650px; }
+            .json-textarea { min-height: 280px; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .tool-group { justify-content: stretch; }
+            .tool-group .btn { flex: 1; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-nav">
+    <a href="/" class="brand">MyAllCodes<span>Tools</span></a>
+    <a href="/" class="back-link">← Home</a>
+</header>
+
+<section class="tool-hero">
+    <div class="breadcrumb"><a href="/">Home</a> / Developer Tools / JSON Formatter</div>
+    <span class="tool-badge">Developer Utility</span>
+    <h1>JSON Formatter & Validator</h1>
+    <p>Format dirty JSON, validate syntax structure, minify payloads, and debug formatting errors locally.</p>
+</section>
+
+<main class="main-container">
+
+    <div class="toolbar">
+        <div class="tool-group">
+            <button class="btn btn-primary" onclick="formatJson(2)">✨ Format (2 Spaces)</button>
+            <button class="btn" onclick="formatJson(4)">Format (4 Spaces)</button>
+            <button class="btn" onclick="minifyJson()">⚡ Minify</button>
+        </div>
+
+        <div class="tool-group">
+            <button class="btn" onclick="loadSample()">📋 Load Sample</button>
+            <button class="btn" onclick="copyResult()">📄 Copy Output</button>
+            <button class="btn" onclick="clearAll()">🗑️ Clear</button>
+        </div>
+    </div>
+
+    <div id="statusBanner" class="status-banner"></div>
+
+    <div class="editor-grid">
+        <div class="panel">
+            <div class="panel-header">
+                <span>Input JSON</span>
+                <span id="inputCharCount">0 chars</span>
+            </div>
+            <textarea id="jsonInput" class="json-textarea mono" placeholder="Paste your raw, unformatted, or stringified JSON here..." oninput="updateCharCounts()"></textarea>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span>Formatted Result</span>
+                <span id="outputCharCount">0 chars</span>
+            </div>
+            <textarea id="jsonOutput" class="json-textarea mono" placeholder="Formatted JSON will appear here..." readonly></textarea>
+        </div>
+    </div>
+
+</main>
+
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools • Privacy-First Free Online Utilities</p>
+</footer>
+
+<script>
+const jsonInput = document.getElementById('jsonInput');
+const jsonOutput = document.getElementById('jsonOutput');
+const statusBanner = document.getElementById('statusBanner');
+
+function updateCharCounts() {
+    document.getElementById('inputCharCount').innerText = `${jsonInput.value.length} chars`;
+    document.getElementById('outputCharCount').innerText = `${jsonOutput.value.length} chars`;
+}
+
+function showStatus(message, isError = false) {
+    statusBanner.innerText = message;
+    statusBanner.className = `status-banner ${isError ? 'error' : 'success'}`;
+}
+
+function formatJson(indentation = 2) {
+    const raw = jsonInput.value.trim();
+    if (!raw) {
+        showStatus('Please enter or paste JSON code to format.', true);
+        jsonOutput.value = '';
+        updateCharCounts();
+        return;
+    }
+
+    try {
+        const parsed = JSON.parse(raw);
+        const formatted = JSON.stringify(parsed, null, indentation);
+        jsonOutput.value = formatted;
+        showStatus('Valid JSON! Formatted successfully.');
+        updateCharCounts();
+    } catch (err) {
+        jsonOutput.value = '';
+        showStatus(`Invalid JSON Syntax: ${err.message}`, true);
+        updateCharCounts();
+    }
+}
+
+function minifyJson() {
+    const raw = jsonInput.value.trim();
+    if (!raw) {
+        showStatus('Please enter or paste JSON code to minify.', true);
+        jsonOutput.value = '';
+        updateCharCounts();
+        return;
+    }
+
+    try {
+        const parsed = JSON.parse(raw);
+        const minified = JSON.stringify(parsed);
+        jsonOutput.value = minified;
+        showStatus('Valid JSON! Minified successfully.');
+        updateCharCounts();
+    } catch (err) {
+        jsonOutput.value = '';
+        showStatus(`Invalid JSON Syntax: ${err.message}`, true);
+        updateCharCounts();
+    }
+}
+
+function loadSample() {
+    const sample = {
+        "appName": "MyAllCodes Tools",
+        "version": "2.0.0",
+        "status": "active",
+        "features": ["Subnet Calculator", "Time Zone Converter", "JSON Formatter"],
+        "serverConfig": {
+            "port": 8080,
+            "ssl": true,
+            "timeoutMs": 5000
+        }
+    };
+    jsonInput.value = JSON.stringify(sample);
+    formatJson(2);
+}
+
+function copyResult() {
+    if (!jsonOutput.value) {
+        showStatus('Nothing to copy yet. Format your JSON first.', true);
+        return;
+    }
+    navigator.clipboard.writeText(jsonOutput.value).then(() => {
+        showStatus('Copied formatted JSON to clipboard!');
+    }).catch(() => {
+        showStatus('Failed to copy to clipboard.', true);
+    });
+}
+
+function clearAll() {
+    jsonInput.value = '';
+    jsonOutput.value = '';
+    statusBanner.style.display = 'none';
+    updateCharCounts();
+}
+</script>
+
+</body>
+</html>
