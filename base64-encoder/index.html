@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Encoder & Decoder | MyAllCodes Tools</title>
+    <meta name="description" content="Free online Base64 encoder and decoder. Convert plain text, strings, and URLs to Base64 format or decode Base64 strings instantly.">
+    <link rel="canonical" href="https://myallcodes.in/base64-encoder/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc; --surface-card: #ffffff; --surface-input: #f1f5f9;
+            --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #eff6ff;
+            --text-main: #0f172a; --text-sub: #64748b; --border-line: #e2e8f0;
+            --success-bg: #f0fdf4; --success-text: #166534; --success-border: #bbf7d0;
+            --error-bg: #fef2f2; --error-text: #991b1b; --error-border: #fecaca;
+            --radius-xl: 16px; --radius-lg: 12px; --radius-md: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05); --shadow-md: 0 4px 14px -2px rgba(0,0,0,0.08);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* HEADER */
+        .header-nav { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .brand { font-size: 1.25rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .brand span { color: var(--primary); }
+        .back-link { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+
+        /* HERO */
+        .tool-hero { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 2.25rem 1.25rem 1.75rem; text-align: center; }
+        .breadcrumb { color: var(--text-sub); font-size: 0.8rem; margin-bottom: 0.75rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .tool-badge { display: inline-block; background: var(--primary-light); color: var(--primary); padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; }
+        .tool-hero h1 { font-size: 2.1rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+        .tool-hero p { color: var(--text-sub); font-size: 0.95rem; max-width: 620px; margin: 0 auto; line-height: 1.5; }
+
+        /* MAIN CONTAINER */
+        .main-container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 1.5rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+        
+        /* TOOLBAR */
+        .toolbar { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-lg); padding: 0.75rem 1rem; display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); }
+        .tool-group { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        
+        .mode-toggle { display: flex; background: var(--surface-input); padding: 0.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-line); }
+        .mode-btn { background: transparent; border: none; padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 700; color: var(--text-sub); cursor: pointer; transition: all 0.2s; }
+        .mode-btn.active { background: var(--primary); color: #fff; box-shadow: var(--shadow-sm); }
+
+        .btn { background: var(--surface-input); border: 1px solid var(--border-line); padding: 0.5rem 0.9rem; border-radius: var(--radius-md); font-size: 0.82rem; font-weight: 700; color: var(--text-main); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.35rem; }
+        .btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+        .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .btn-primary:hover { background: var(--primary-dark); color: #fff; }
+
+        .checkbox-label { font-size: 0.8rem; font-weight: 700; color: var(--text-sub); display: flex; align-items: center; gap: 0.4rem; cursor: pointer; }
+
+        /* STATUS BANNER */
+        .status-banner { padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 700; display: none; }
+        .status-banner.success { display: block; background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+        .status-banner.error { display: block; background: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); }
+
+        /* EDITORS GRID */
+        .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex: 1; min-height: 480px; }
+        .panel { display: flex; flex-direction: column; background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+        .panel-header { background: var(--surface-input); padding: 0.6rem 1rem; font-size: 0.78rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-line); display: flex; justify-content: space-between; align-items: center; }
+
+        .base-textarea { flex: 1; width: 100%; border: none; outline: none; padding: 1rem; font-size: 0.88rem; line-height: 1.5; color: var(--text-main); background: transparent; resize: none; }
+        .base-textarea::placeholder { color: #94a3b8; }
+
+        /* FOOTER */
+        .site-footer { border-top: 1px solid var(--border-line); padding: 1.75rem 0; text-align: center; color: var(--text-sub); font-size: 0.85rem; background: var(--surface-card); margin-top: auto; }
+
+        @media (max-width: 768px) {
+            .editor-grid { grid-template-columns: 1fr; min-height: 650px; }
+            .base-textarea { min-height: 250px; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .tool-group { justify-content: stretch; }
+            .tool-group .btn { flex: 1; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-nav">
+    <a href="/" class="brand">MyAllCodes<span>Tools</span></a>
+    <a href="/" class="back-link">← Home</a>
+</header>
+
+<section class="tool-hero">
+    <div class="breadcrumb"><a href="/">Home</a> / Developer Tools / Base64 Encoder</div>
+    <span class="tool-badge">Developer Utility</span>
+    <h1>Base64 Encoder & Decoder</h1>
+    <p>Convert plain text strings to Base64 output or decode Base64 data instantly with UTF-8 character support.</p>
+</section>
+
+<main class="main-container">
+
+    <div class="toolbar">
+        <div class="tool-group">
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="btnEncodeMode" onclick="setMode('encode')">Encode</button>
+                <button class="mode-btn" id="btnDecodeMode" onclick="setMode('decode')">Decode</button>
+            </div>
+            <label class="checkbox-label">
+                <input type="checkbox" id="urlSafeCheck" onchange="processText()"> URL-Safe Output
+            </label>
+        </div>
+
+        <div class="tool-group">
+            <button class="btn btn-primary" onclick="processText()">⚡ Convert</button>
+            <button class="btn" onclick="copyOutput()">📄 Copy Output</button>
+            <button class="btn" onclick="loadSample()">📋 Load Sample</button>
+            <button class="btn" onclick="clearAll()">🗑️ Clear</button>
+        </div>
+    </div>
+
+    <div id="statusBanner" class="status-banner"></div>
+
+    <div class="editor-grid">
+        <div class="panel">
+            <div class="panel-header">
+                <span id="inputLabel">Input Text</span>
+                <span id="inputCharCount">0 chars</span>
+            </div>
+            <textarea id="inputText" class="base-textarea mono" placeholder="Enter text to encode or Base64 string to decode..." oninput="processText()"></textarea>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span id="outputLabel">Base64 Output</span>
+                <span id="outputCharCount">0 chars</span>
+            </div>
+            <textarea id="outputText" class="base-textarea mono" placeholder="Result will appear here..." readonly></textarea>
+        </div>
+    </div>
+
+</main>
+
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools • Privacy-First Free Online Utilities</p>
+</footer>
+
+<script>
+let currentMode = 'encode';
+
+const inputText = document.getElementById('inputText');
+const outputText = document.getElementById('outputText');
+const statusBanner = document.getElementById('statusBanner');
+const urlSafeCheck = document.getElementById('urlSafeCheck');
+
+function updateCharCounts() {
+    document.getElementById('inputCharCount').innerText = `${inputText.value.length} chars`;
+    document.getElementById('outputCharCount').innerText = `${outputText.value.length} chars`;
+}
+
+function showStatus(message, isError = false) {
+    statusBanner.innerText = message;
+    statusBanner.className = `status-banner ${isError ? 'error' : 'success'}`;
+}
+
+function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('btnEncodeMode').className = `mode-btn ${mode === 'encode' ? 'active' : ''}`;
+    document.getElementById('btnDecodeMode').className = `mode-btn ${mode === 'decode' ? 'active' : ''}`;
+    
+    document.getElementById('inputLabel').innerText = mode === 'encode' ? 'Input Text' : 'Base64 Input';
+    document.getElementById('outputLabel').innerText = mode === 'encode' ? 'Base64 Output' : 'Decoded Text';
+    
+    processText();
+}
+
+function encodeUtf8ToBase64(str, isUrlSafe) {
+    const bytes = new TextEncoder().encode(str);
+    let binString = '';
+    for (let i = 0; i < bytes.length; i++) {
+        binString += String.fromCharCode(bytes[i]);
+    }
+    let base64 = btoa(binString);
+    if (isUrlSafe) {
+        base64 = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+    return base64;
+}
+
+function decodeBase64ToUtf8(base64Str) {
+    let str = base64Str.trim().replace(/-/g, '+').replace(/_/g, '/');
+    while (str.length % 4) {
+        str += '=';
+    }
+    const binString = atob(str);
+    const bytes = Uint8Array.from(binString, (m) => m.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+}
+
+function processText() {
+    const val = inputText.value;
+    updateCharCounts();
+
+    if (!val) {
+        outputText.value = '';
+        statusBanner.style.display = 'none';
+        updateCharCounts();
+        return;
+    }
+
+    const isUrlSafe = urlSafeCheck.checked;
+
+    if (currentMode === 'encode') {
+        try {
+            outputText.value = encodeUtf8ToBase64(val, isUrlSafe);
+            showStatus('Text successfully encoded to Base64.');
+            updateCharCounts();
+        } catch (err) {
+            outputText.value = '';
+            showStatus(`Encoding Error: ${err.message}`, true);
+        }
+    } else {
+        try {
+            outputText.value = decodeBase64ToUtf8(val);
+            showStatus('Base64 string successfully decoded.');
+            updateCharCounts();
+        } catch (err) {
+            outputText.value = '';
+            showStatus('Invalid Base64 string format.', true);
+        }
+    }
+}
+
+function loadSample() {
+    if (currentMode === 'encode') {
+        inputText.value = "Hello World! 🚀 Base64 UTF-8 Encoding Test.";
+    } else {
+        inputText.value = "SGVsbG8gV29ybGQhIPCagJAgQmFzZTY0IFVURi04IEVuY29kaW5nIFRlc3Qu";
+    }
+    processText();
+}
+
+function copyOutput() {
+    if (!outputText.value) {
+        showStatus('Nothing to copy. Please convert a string first.', true);
+        return;
+    }
+    navigator.clipboard.writeText(outputText.value).then(() => {
+        showStatus('Copied result to clipboard!');
+    }).catch(() => {
+        showStatus('Failed to copy to clipboard.', true);
+    });
+}
+
+function clearAll() {
+    inputText.value = '';
+    outputText.value = '';
+    statusBanner.style.display = 'none';
+    updateCharCounts();
+}
+</script>
+
+</body>
+</html>
