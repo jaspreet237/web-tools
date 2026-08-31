@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Math Solver (Class 5th to 10th) | MyAllCodes Tools</title>
+    <meta name="description" content="Complete step-by-step math calculator for Class 5 to Class 10. 60+ tools covering arithmetic, algebra, geometry, mensuration, trigonometry, and AP.">
+    <link rel="canonical" href="https://tools.myallcodes.in/math-solver/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc; --surface-card: #ffffff; --surface-input: #f1f5f9;
+            --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #eff6ff;
+            --text-main: #0f172a; --text-sub: #64748b; --border-line: #e2e8f0;
+            --success-bg: #f0fdf4; --success-text: #166534; --radius-lg: 12px; --radius-md: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        .header-nav { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .brand { font-size: 1.25rem; font-weight: 800; color: var(--text-main); text-decoration: none; }
+        .brand span { color: var(--primary); }
+        .back-link { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+
+        .tool-hero { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 2rem 1.25rem 1.5rem; text-align: center; }
+        .breadcrumb { color: var(--text-sub); font-size: 0.8rem; margin-bottom: 0.75rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .tool-badge { display: inline-block; background: var(--primary-light); color: var(--primary); padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; margin-bottom: 0.75rem; }
+        .tool-hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.4rem; }
+        .tool-hero p { color: var(--text-sub); font-size: 0.92rem; max-width: 650px; margin: 0 auto; }
+
+        /* GRADE SELECTOR TABS */
+        .grade-tabs { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-top: 1.25rem; }
+        .grade-btn { background: var(--surface-input); border: 1px solid var(--border-line); padding: 0.5rem 1.25rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; color: var(--text-sub); cursor: pointer; transition: all 0.2s; }
+        .grade-btn:hover, .grade-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+
+        .main-container { max-width: 1100px; width: 100%; margin: 0 auto; padding: 1.5rem 1.25rem; flex: 1; display: grid; grid-template-columns: 300px 1fr; gap: 1.5rem; }
+
+        .topic-menu { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-lg); padding: 0.75rem; box-shadow: var(--shadow-sm); height: fit-content; max-height: 80vh; overflow-y: auto; }
+        .menu-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-sub); margin: 0.5rem 0.75rem; letter-spacing: 0.5px; }
+        .menu-btn { width: 100%; text-align: left; background: transparent; border: none; padding: 0.65rem 0.85rem; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 700; color: var(--text-sub); cursor: pointer; transition: all 0.2s; margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.5rem; }
+        .menu-btn:hover { background: var(--surface-input); color: var(--text-main); }
+        .menu-btn.active { background: var(--primary-light); color: var(--primary); }
+
+        .work-card { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm); }
+        .section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 1rem; color: var(--text-main); border-bottom: 1px solid var(--border-line); padding-bottom: 0.5rem; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.85rem; margin-bottom: 1.25rem; }
+        .input-group { display: flex; flex-direction: column; gap: 0.35rem; }
+        label { font-size: 0.8rem; font-weight: 700; color: var(--text-sub); }
+        .math-input { width: 100%; padding: 0.65rem; background: var(--surface-input); border: 1px solid var(--border-line); border-radius: var(--radius-md); font-size: 0.92rem; font-weight: 700; outline: none; }
+        .math-input:focus { border-color: var(--primary); background: #fff; }
+
+        .btn-calc { background: var(--primary); color: #fff; border: none; padding: 0.75rem 1.4rem; border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: background 0.2s; width: 100%; }
+        .btn-calc:hover { background: var(--primary-dark); }
+
+        .solution-box { margin-top: 1.5rem; background: var(--surface-input); border: 1px solid var(--border-line); border-radius: var(--radius-md); padding: 1.25rem; display: none; }
+        .solution-title { font-size: 0.85rem; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 0.85rem; letter-spacing: 0.5px; }
+        .step-item { font-size: 0.9rem; margin-bottom: 0.65rem; line-height: 1.6; color: var(--text-main); background: #fff; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--border-line); }
+        .final-ans { background: var(--success-bg); color: var(--success-text); padding: 0.85rem; border-radius: var(--radius-md); font-weight: 800; margin-top: 1rem; font-size: 1.05rem; text-align: center; }
+
+        .site-footer { border-top: 1px solid var(--border-line); padding: 1.75rem 0; text-align: center; color: var(--text-sub); font-size: 0.85rem; background: var(--surface-card); margin-top: auto; }
+
+        @media (max-width: 768px) {
+            .main-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-nav">
+    <a href="/" class="brand">MyAllCodes<span>Tools</span></a>
+    <a href="/" class="back-link">← Home</a>
+</header>
+
+<section class="tool-hero">
+    <div class="breadcrumb"><a href="/">Home</a> / Student Tools / Class-Wise Math Solver</div>
+    <span class="tool-badge">60+ Tools • Class 5th to 10th</span>
+    <h1>Class-Wise Step-by-Step Math Solver</h1>
+    <p>Select your school grade to access 10 tailored math calculators with step-by-step worked solutions for every chapter.</p>
+    
+    <div class="grade-tabs">
+        <button class="grade-btn active" onclick="loadGrade(5)">Class 5th</button>
+        <button class="grade-btn" onclick="loadGrade(6)">Class 6th</button>
+        <button class="grade-btn" onclick="loadGrade(7)">Class 7th</button>
+        <button class="grade-btn" onclick="loadGrade(8)">Class 8th</button>
+        <button class="grade-btn" onclick="loadGrade(9)">Class 9th</button>
+        <button class="grade-btn" onclick="loadGrade(10)">Class 10th</button>
+    </div>
+</section>
+
+<main class="main-container">
+
+    <div class="topic-menu" id="menuContainer">
+        <!-- Dynamically Populated Menu Buttons -->
+    </div>
+
+    <div class="work-card" id="workCard">
+        <!-- Dynamic Workspace Content -->
+    </div>
+
+</main>
+
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools • Free Educational Step-by-Step Solvers</p>
+</footer>
+
+<script>
+// TOOL DEFINITIONS FOR CLASS 5 TO 10 (10 TOOLS PER CLASS = 60 TOOLS)
+const gradeData = {
+    5: [
+        { id: "c5_1", title: "➕ Large Numbers Addition & Subtraction", fields: [{id:"n1", label:"Number 1", val:45890}, {id:"n2", label:"Number 2", val:12340}], run: solveAddSub },
+        { id: "c5_2", title: "✖️ Long Multiplication & Division", fields: [{id:"n1", label:"Dividend / Number 1", val:1250}, {id:"n2", label:"Divisor / Number 2", val:25}], run: solveMulDiv },
+        { id: "c5_3", title: "🔢 Factors & Multiples Finder", fields: [{id:"n1", label:"Enter Number", val:36}], run: solveFactors },
+        { id: "c5_4", title: "🍕 Fraction Addition & Subtraction", fields: [{id:"n1", label:"Numerator 1", val:3}, {id:"d1", label:"Denominator 1", val:4}, {id:"n2", label:"Numerator 2", val:1}, {id:"d2", label:"Denominator 2", val:2}], run: solveFractions },
+        { id: "c5_5", title: "🔣 Decimal to Fraction Converter", fields: [{id:"n1", label:"Decimal Value", val:0.75}], run: solveDecToFrac },
+        { id: "c5_6", title: "📏 Perimeter of Square & Rectangle", fields: [{id:"l", label:"Length (m)", val:12}, {id:"w", label:"Width (m)", val:8}], run: solvePerimeter5 },
+        { id: "c5_7", title: "📐 Area of Square & Rectangle", fields: [{id:"l", label:"Length (m)", val:15}, {id:"w", label:"Width (m)", val:10}], run: solveArea5 },
+        { id: "c5_8", title: "📦 Volume of Cube & Cuboid", fields: [{id:"l", label:"Length (cm)", val:5}, {id:"w", label:"Width (cm)", val:4}, {id:"h", label:"Height (cm)", val:3}], run: solveVolume5 },
+        { id: "c5_9", title: "🏷️ Unitary Method Cost Calculator", fields: [{id:"q1", label:"Items Given", val:5}, {id:"p1", label:"Total Cost Given", val:250}, {id:"q2", label:"Target Items Count", val:12}], run: solveUnitary },
+        { id: "c5_10", title: "⏱️ Time & Duration Converter", fields: [{id:"h", label:"Hours", val:3}, {id:"m", label:"Minutes", val:45}], run: solveTime5 }
+    ],
+    6: [
+        { id: "c6_1", title: "➕ Integers Addition & Subtraction", fields: [{id:"n1", label:"Integer 1", val:-15}, {id:"n2", label:"Integer 2", val:25}], run: solveIntegers },
+        { id: "c6_2", title: "🌲 Prime Factorization Tree", fields: [{id:"n1", label:"Number", val:84}], run: solvePrimeFactor },
+        { id: "c6_3", title: "🔢 HCF & LCM Multi-Number Solver", fields: [{id:"n1", label:"Number 1", val:24}, {id:"n2", label:"Number 2", val:36}], run: solveHcfLcm },
+        { id: "c6_4", title: "⚖️ Ratio & Proportion ($a:b = c:d$)", fields: [{id:"a", label:"a", val:4}, {id:"b", label:"b", val:8}, {id:"c", label:"c", val:12}], run: solveRatioProp },
+        { id: "c6_5", title: "🔤 Basic Algebraic Expression ($ax + b$)", fields: [{id:"a", label:"Value of a", val:3}, {id:"x", label:"Value of x", val:5}, {id:"b", label:"Value of b", val:7}], run: solveAlgebraicExpr },
+        { id: "c6_6", title: "📐 Complementary & Supplementary Angles", fields: [{id:"a", label:"Given Angle (°)", val:40}], run: solveAngles6 },
+        { id: "c6_7", title: "🍕 Fraction Comparison & Equivalent", fields: [{id:"n1", label:"Num 1", val:2}, {id:"d1", label:"Den 1", val:3}, {id:"n2", label:"Num 2", val:4}, {id:"d2", label:"Den 2", val:5}], run: solveFractionCompare },
+        { id: "c6_8", title: "🎯 Decimal Rounding (Nearest 10, 100)", fields: [{id:"n1", label:"Decimal / Number", val:145.68}], run: solveRoundDecimal },
+        { id: "c6_9", title: "🔷 Regular Polygon Perimeter", fields: [{id:"s", label:"Sides Count", val:6}, {id:"l", label:"Side Length (cm)", val:7}], run: solvePolygonPeri },
+        { id: "c6_10", title: "📊 Mean & Range Calculator", fields: [{id:"n1", label:"Comma Separated Numbers", val:"10, 20, 30, 40, 50"}], run: solveMeanRange }
+    ],
+    7: [
+        { id: "c7_1", title: "➕ Rational Numbers Arithmetic", fields: [{id:"n1", label:"Num 1", val:3}, {id:"d1", label:"Den 1", val:5}, {id:"n2", label:"Num 2", val:2}, {id:"d2", label:"Den 2", val:7}], run: solveRationalArithmetic },
+        { id: "c7_2", title: "✏️ Linear Equation in 1 Var ($ax + b = c$)", fields: [{id:"a", label:"a", val:4}, {id:"b", label:"b", val:-8}, {id:"c", label:"c", val:16}], run: solveLinear1V },
+        { id: "c7_3", title: "📐 Triangle Interior & Exterior Angles", fields: [{id:"a1", label:"Angle 1 (°)", val:60}, {id:"a2", label:"Angle 2 (°)", val:70}], run: solveTriangleAngles },
+        { id: "c7_4", title: "📐 Pythagoras Theorem ($a^2 + b^2 = c^2$)", fields: [{id:"a", label:"Base (a)", val:3}, {id:"b", label:"Perpendicular (b)", val:4}], run: solvePythagoras },
+        { id: "c7_5", title: "📈 Percentage Increase / Decrease", fields: [{id:"oldV", label:"Old Value", val:500}, {id:"newV", label:"New Value", val:650}], run: solvePctChange },
+        { id: "c7_6", title: "💰 Profit & Loss % Calculator", fields: [{id:"cp", label:"Cost Price", val:800}, {id:"sp", label:"Selling Price", val:960}], run: solveProfitLoss7 },
+        { id: "c7_7", title: "🏦 Simple Interest & Total Amount", fields: [{id:"p", label:"Principal (P)", val:10000}, {id:"r", label:"Rate (% p.a.)", val:6.5}, {id:"t", label:"Time (Years)", val:2}], run: solveSimpleInterest },
+        { id: "c7_8", title: "⭕ Circle Area & Circumference", fields: [{id:"r", label:"Radius (r)", val:7}], run: solveCircle7 },
+        { id: "c7_9", title: "▰ Parallelogram & Triangle Area", fields: [{id:"b", label:"Base (b)", val:14}, {id:"h", label:"Height (h)", val:8}], run: solveParaTriangleArea },
+        { id: "c7_10", title: "⚡ Exponents Rules ($a^m \\times a^n$)", fields: [{id:"a", label:"Base (a)", val:2}, {id:"m", label:"Exponent m", val:3}, {id:"n", label:"Exponent n", val:4}], run: solveExponents7 }
+    ],
+    8: [
+        { id: "c8_1", title: "✏️ Linear Eq Both Sides ($ax+b = cx+d$)", fields: [{id:"a", label:"a", val:5}, {id:"b", label:"b", val:10}, {id:"c", label:"c", val:2}, {id:"d", label:"d", val:25}], run: solveLinearBothSides },
+        { id: "c8_2", title: "🔷 Polygon Angle Sum Formula", fields: [{id:"n", label:"Number of Sides (n)", val:8}], run: solvePolygonAngles8 },
+        { id: "c8_3", title: "🔲 Square & Square Root Solver", fields: [{id:"n", label:"Number", val:144}], run: solveSquareRoot },
+        { id: "c8_4", title: "🧊 Cube & Cube Root Solver", fields: [{id:"n", label:"Number", val:512}], run: solveCubeRoot },
+        { id: "c8_5", title: "📈 Compound Interest ($A = P(1+r/100)^n$)", fields: [{id:"p", label:"Principal (P)", val:5000}, {id:"r", label:"Rate (%)", val:10}, {id:"n", label:"Time (Years)", val:2}], run: solveCompoundInterest },
+        { id: "c8_6", title: "🔤 Identity Expansion ($(a+b)^2$ & $a^2-b^2$)", fields: [{id:"a", label:"Value a", val:4}, {id:"b", label:"Value b", val:3}], run: solveAlgebraicIdentities },
+        { id: "c8_7", title: "🛢️ Cylinder Surface Area & Volume", fields: [{id:"r", label:"Radius (r)", val:7}, {id:"h", label:"Height (h)", val:10}], run: solveCylinder8 },
+        { id: "c8_8", title: "🔬 Standard Form & Scientific Notation", fields: [{id:"n", label:"Large / Small Number", val:0.0000456}], run: solveScientificNotation },
+        { id: "c8_9", title: "🔄 Direct & Inverse Proportion", fields: [{id:"x1", label:"x1", val:4}, {id:"y1", label:"y1", val:20}, {id:"x2", label:"x2", val:10}], run: solveProportion8 },
+        { id: "c8_10", title: "📊 Frequency Table Mean Calculator", fields: [{id:"data", label:"Values (comma separated)", val:"5, 10, 15"}, {id:"freq", label:"Frequencies (comma separated)", val:"2, 4, 4"}], run: solveFreqMean }
+    ],
+    9: [
+        { id: "c9_1", title: "🔣 Rationalize Denominator ($\frac{1}{\\sqrt{a}+\\sqrt{b}}$)", fields: [{id:"a", label:"Value a", val:5}, {id:"b", label:"Value b", val:3}], run: solveRationalize },
+        { id: "c9_2", title: "📐 Heron's Formula for Triangle Area", fields: [{id:"a", label:"Side a", val:7}, {id:"b", label:"Side b", val:8}, {id:"c", label:"Side c", val:9}], run: solveHeronsFormula },
+        { id: "c9_3", title: "📍 Coordinate Distance & Midpoint", fields: [{id:"x1", label:"x1", val:2}, {id:"y1", label:"y1", val:3}, {id:"x2", label:"x2", val:7}, {id:"y2", label:"y2", val:15}], run: solveDistance9 },
+        { id: "c9_4", title: "✏️ Linear Eq 2 Vars ($ax + by + c = 0$)", fields: [{id:"a", label:"a", val:2}, {id:"b", label:"b", val:3}, {id:"c", label:"c", val:-12}], run: solveLinear2V9 },
+        { id: "c9_5", title: "🍦 Cone Surface Area & Volume", fields: [{id:"r", label:"Radius (r)", val:6}, {id:"h", label:"Height (h)", val:8}], run: solveCone9 },
+        { id: "c9_6", title: "🌐 Sphere & Hemisphere Volume", fields: [{id:"r", label:"Radius (r)", val:7}], run: solveSphere9 },
+        { id: "c9_7", title: "📊 Statistics: Mean, Median, Mode", fields: [{id:"data", label:"Data (comma separated)", val:"12, 15, 12, 18, 20, 25, 12"}], run: solveStats9 },
+        { id: "c9_8", title: "🎲 Theoretical Probability ($P(E)$)", fields: [{id:"fav", label:"Favorable Outcomes", val:4}, {id:"tot", label:"Total Outcomes", val:52}], run: solveProbability9 },
+        { id: "c9_9", title: "⭕ Circle Chord & Subtended Angle", fields: [{id:"r", label:"Radius (r)", val:10}, {id:"d", label:"Distance to Chord", val:6}], run: solveChord9 },
+        { id: "c9_10", title: "🔤 Polynomial Remainder Theorem", fields: [{id:"p", label:"Constant c of (x - c)", val:2}], run: solveRemainderThm }
+    ],
+    10: [
+        { id: "c10_1", title: "🔢 Euclid's Division Lemma HCF", fields: [{id:"a", label:"Number a", val:4052}, {id:"b", label:"Number b", val:12576}], run: solveEuclidHcf },
+        { id: "c10_2", title: "🔤 Quadratic Formula ($ax^2 + bx + c = 0$)", fields: [{id:"a", label:"a", val:1}, {id:"b", label:"b", val:-7}, {id:"c", label:"c", val:12}], run: solveQuadratic10 },
+        { id: "c10_3", title: "➕ Arithmetic Progression (AP $a_n$ & $S_n$)", fields: [{id:"a", label:"First Term (a)", val:2}, {id:"d", label:"Common Diff (d)", val:5}, {id:"n", label:"Term Number (n)", val:10}], run: solveAP10 },
+        { id: "c10_4", title: "📍 Section Formula (Ratio $m:n$)", fields: [{id:"x1", label:"x1", val:1}, {id:"y1", label:"y1", val:2}, {id:"x2", label:"x2", val:6}, {id:"y2", label:"y2", val:7}, {id:"m", label:"Ratio m", val:2}, {id:"n", label:"Ratio n", val:3}], run: solveSectionFormula },
+        { id: "c10_5", title: "📐 Trigonometric Ratios ($\sin, \cos, \tan$)", fields: [{id:"p", label:"Perpendicular", val:3}, {id:"b", label:"Base", val:4}], run: solveTrigRatios },
+        { id: "c10_6", title: "🏔️ Heights & Distances (Trig Application)", fields: [{id:"h", label:"Height of Tower", val:50}, {id:"ang", label:"Angle of Elevation (°)", val:45}], run: solveHeightsDist },
+        { id: "c10_7", title: "⭕ Sector & Segment Area of Circle", fields: [{id:"r", label:"Radius (r)", val:14}, {id:"ang", label:"Sector Angle θ (°)", val:60}], run: solveSectorArea },
+        { id: "c10_8", title: "🧊 Surface Area & Volume of Combined Solids", fields: [{id:"r", label:"Radius (r)", val:7}, {id:"hc", label:"Cylinder Height", val:10}, {id:"hk", label:"Cone Height", val:6}], run: solveCombinedSolid },
+        { id: "c10_9", title: "⚖️ Pair of Linear Equations System", fields: [{id:"a1", label:"a1", val:2}, {id:"b1", label:"b1", val:3}, {id:"c1", label:"c1", val:11}, {id:"a2", label:"a2", val:2}, {id:"b2", label:"b2", val:-4}, {id:"c2", label:"c2", val:-24}], run: solveLinearPair },
+        { id: "c10_10", title: "📊 Grouped Data Median & Mode", fields: [{id:"mean", label:"Mean (x̄)", val:25.5}, {id:"mode", label:"Mode (Z)", val:24.0}], run: solveEmpiricalStats }
+    ]
+};
+
+let currentGrade = 5;
+let currentToolIndex = 0;
+
+function loadGrade(gradeNum) {
+    currentGrade = gradeNum;
+    currentToolIndex = 0;
+    
+    document.querySelectorAll('.grade-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', (idx + 5) === gradeNum);
+    });
+
+    const menu = document.getElementById('menuContainer');
+    const tools = gradeData[gradeNum];
+    
+    menu.innerHTML = `<div class="menu-title">Class ${gradeNum}th Math Tools</div>` +
+        tools.map((t, i) => `<button class="menu-btn ${i===0?'active':''}" onclick="selectTool(${i})">${t.title}</button>`).join('');
+
+    renderWorkspace();
+}
+
+function selectTool(idx) {
+    currentToolIndex = idx;
+    document.querySelectorAll('.menu-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+    renderWorkspace();
+}
+
+function renderWorkspace() {
+    const tool = gradeData[currentGrade][currentToolIndex];
+    const card = document.getElementById('workCard');
+
+    let fieldsHTML = tool.fields.map(f => `
+        <div class="input-group">
+            <label>${f.label}</label>
+            <input type="${typeof f.val === 'number' ? 'number' : 'text'}" id="${f.id}" class="math-input mono" value="${f.val}">
+        </div>
+    `).join('');
+
+    card.innerHTML = `
+        <div class="section-title">${tool.title}</div>
+        <div class="form-grid">${fieldsHTML}</div>
+        <button class="btn-calc" onclick="runCalculation()">Solve Step-by-Step</button>
+        <div id="solutionBox" class="solution-box"></div>
+    `;
+
+    runCalculation();
+}
+
+function runCalculation() {
+    const tool = gradeData[currentGrade][currentToolIndex];
+    tool.run();
+}
+
+// ================= MATH ENGINE FUNCTIONS ================= //
+function getVal(id) { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; }
+function getStr(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+
+function renderSol(steps, final) {
+    const box = document.getElementById('solutionBox');
+    let html = `<div class="solution-title">Step-by-Step Solution</div>`;
+    steps.forEach((s, idx) => { html += `<div class="step-item"><b>Step ${idx+1}:</b> ${s}</div>`; });
+    html += `<div class="final-ans">${final}</div>`;
+    box.innerHTML = html;
+    box.style.display = 'block';
+}
+
+/* CLASS 5 CALCULATORS */
+function solveAddSub() {
+    const n1 = getVal('n1'), n2 = getVal('n2');
+    renderSol([`Sum = ${n1} + ${n2} = ${n1 + n2}`, `Difference = ${n1} - ${n2} = ${n1 - n2}`], `Sum: ${n1+n2} | Diff: ${n1-n2}`);
+}
+function solveMulDiv() {
+    const n1 = getVal('n1'), n2 = getVal('n2');
+    renderSol([`Product = ${n1} × ${n2} = ${n1 * n2}`, `Quotient = ${n1} ÷ ${n2} = ${n2 !== 0 ? (n1/n2).toFixed(2) : 'Undefined'}`], `Product: ${n1*n2} | Quotient: ${n2!==0?(n1/n2).toFixed(2):'∞'}`);
+}
+function solveFactors() {
+    const n = Math.abs(getVal('n1'));
+    let factors = [];
+    for(let i=1; i<=n; i++) if(n % i === 0) factors.push(i);
+    renderSol([`Check all numbers from 1 to ${n} that divide ${n} without remainder.`, `Factors found: ${factors.join(', ')}`], `Total Factors of ${n}: ${factors.length} (${factors.join(', ')})`);
+}
+function solveFractions() {
+    const n1 = getVal('n1'), d1 = getVal('d1'), n2 = getVal('n2'), d2 = getVal('d2');
+    const num = (n1 * d2) + (n2 * d1), den = d1 * d2;
+    renderSol([`Find common denominator: ${d1} × ${d2} = ${den}`, `Convert numerators: (${n1}×${d2}) + (${n2}×${d1}) = ${num}`], `Result = ${num}/${den} (${(num/den).toFixed(2)})`);
+}
+function solveDecToFrac() {
+    const dec = getVal('n1');
+    const len = dec.toString().split('.')[1] ? dec.toString().split('.')[1].length : 0;
+    const den = Math.pow(10, len), num = Math.round(dec * den);
+    renderSol([`Multiply decimal by 10^${len} to clear decimal: ${num}`, `Place over denominator 10^${len} = ${den}`], `Fraction: ${num}/${den}`);
+}
+function solvePerimeter5() {
+    const l = getVal('l'), w = getVal('w');
+    renderSol([`Perimeter of Rectangle = 2 × (Length + Width) = 2 × (${l} + ${w}) = 2 × ${l+w}`, `Perimeter of Square (using side ${l}) = 4 × ${l}`], `Rect Peri: ${2*(l+w)} m | Sq Peri: ${4*l} m`);
+}
+function solveArea5() {
+    const l = getVal('l'), w = getVal('w');
+    renderSol([`Area of Rectangle = Length × Width = ${l} × ${w} = ${l*w}`, `Area of Square (using side ${l}) = ${l} × ${l} = ${l*l}`], `Rect Area: ${l*w} sq.m | Sq Area: ${l*l} sq.m`);
+}
+function solveVolume5() {
+    const l = getVal('l'), w = getVal('w'), h = getVal('h');
+    renderSol([`Volume = Length × Width × Height = ${l} × ${w} × ${h}`], `Volume = ${l*w*h} cu.cm`);
+}
+function solveUnitary() {
+    const q1 = getVal('q1'), p1 = getVal('p1'), q2 = getVal('q2');
+    const unitPrice = p1 / q1;
+    renderSol([`Find cost of 1 item = Total Cost ÷ Quantity = ₹${p1} ÷ ${q1} = ₹${unitPrice.toFixed(2)}`, `Calculate cost of ${q2} items = ${q2} × ₹${unitPrice.toFixed(2)}`], `Cost of ${q2} items = ₹${(unitPrice * q2).toFixed(2)}`);
+}
+function solveTime5() {
+    const h = getVal('h'), m = getVal('m');
+    renderSol([`Total Minutes = (${h} hours × 60) + ${m} mins = ${h*60} + ${m}`, `Total Seconds = Total Minutes × 60`], `Total Mins: ${(h*60)+m} mins | Total Secs: ${((h*60)+m)*60} secs`);
+}
+
+/* CLASS 6 CALCULATORS */
+function solveIntegers() {
+    const n1 = getVal('n1'), n2 = getVal('n2');
+    renderSol([`Sum: (${n1}) + (${n2}) = ${n1 + n2}`, `Difference: (${n1}) - (${n2}) = ${n1 - n2}`], `Sum = ${n1+n2} | Diff = ${n1-n2}`);
+}
+function solvePrimeFactor() {
+    let n = Math.abs(getVal('n1')), factors = [], temp = n;
+    for (let i = 2; i <= temp; i++) {
+        while (temp % i === 0) { factors.push(i); temp /= i; }
+    }
+    renderSol([`Divide ${n} repeatedly by prime numbers (2, 3, 5, 7...)`, `Prime factors: ${factors.join(' × ')}`], `Prime Factorization: ${n} = ${factors.join(' × ')}`);
+}
+function solveHcfLcm() {
+    let a = Math.abs(getVal('n1')), b = Math.abs(getVal('n2'));
+    let x = a, y = b; while (y) { let t = y; y = x % y; x = t; }
+    let hcf = x, lcm = (a * b) / hcf;
+    renderSol([`HCF by Division Algorithm: ${hcf}`, `LCM Formula = (a × b) ÷ HCF = (${a}×${b}) ÷ ${hcf}`], `HCF = ${hcf} | LCM = ${lcm}`);
+}
+function solveRatioProp() {
+    const a = getVal('a'), b = getVal('b'), c = getVal('c');
+    const d = (b * c) / a;
+    renderSol([`In proportion $a:b = c:d$, product of extremes = product of means ($a \\times d = b \\times c$)`, `$d = (b \\times c) \\div a = (${b} \\times ${c}) \\div ${a}$`], `Fourth Proportional (d) = ${d.toFixed(2)}`);
+}
+function solveAlgebraicExpr() {
+    const a = getVal('a'), x = getVal('x'), b = getVal('b');
+    renderSol([`Expression: ${a}x + ${b}`, `Substitute x = ${x}: (${a} × ${x}) + ${b} = ${a*x} + ${b}`], `Result = ${a*x + b}`);
+}
+function solveAngles6() {
+    const a = getVal('a');
+    renderSol([`Complementary Angle = 90° - ${a}° = ${90 - a}°`, `Supplementary Angle = 180° - ${a}° = ${180 - a}°`], `Complement = ${90-a}° | Supplement = ${180-a}°`);
+}
+function solveFractionCompare() {
+    const n1 = getVal('n1'), d1 = getVal('d1'), n2 = getVal('n2'), d2 = getVal('d2');
+    const v1 = n1/d1, v2 = n2/d2;
+    renderSol([`Cross Multiply: ${n1}×${d2} = ${n1*d2} and ${n2}×${d1} = ${n2*d1}`, `${n1*d2 > n2*d1 ? 'First fraction is larger' : (n1*d2 < n2*d1 ? 'Second fraction is larger' : 'Fractions are equal')}`], `${n1}/${d1} ${v1>v2?'>':(v1<v2?'<':'=')} ${n2}/${d2}`);
+}
+function solveRoundDecimal() {
+    const n = getVal('n1');
+    renderSol([`Nearest 10: ${Math.round(n/10)*10}`, `Nearest 100: ${Math.round(n/100)*100}`, `Rounded (1 decimal): ${n.toFixed(1)}`], `Rounded: ${Math.round(n)}`);
+}
+function solvePolygonPeri() {
+    const s = getVal('s'), l = getVal('l');
+    renderSol([`Perimeter of regular polygon = Number of sides × Side length = ${s} × ${l}`], `Perimeter = ${s * l} cm`);
+}
+function solveMeanRange() {
+    const arr = getStr('n1').split(',').map(s=>parseFloat(s.trim())).filter(n=>!isNaN(n));
+    if(!arr.length) return;
+    const sum = arr.reduce((a,b)=>a+b,0), mean = sum/arr.length;
+    const min = Math.min(...arr), max = Math.max(...arr), range = max - min;
+    renderSol([`Mean = Sum (${sum}) ÷ Count (${arr.length}) = ${mean.toFixed(2)}`, `Range = Maximum (${max}) - Minimum (${min}) = ${range}`], `Mean = ${mean.toFixed(2)} | Range = ${range}`);
+}
+
+/* CLASS 7 CALCULATORS */
+function solveRationalArithmetic() { solveFractions(); }
+function solveLinear1V() {
+    const a = getVal('a'), b = getVal('b'), c = getVal('c');
+    const x = (c - b) / a;
+    renderSol([`Subtract constant: ${a}x = ${c} - (${b}) = ${c-b}`, `Divide by coefficient: x = ${c-b} ÷ ${a}`], `x = ${x.toFixed(4)}`);
+}
+function solveTriangleAngles() {
+    const a1 = getVal('a1'), a2 = getVal('a2');
+    const a3 = 180 - (a1 + a2);
+    renderSol([`Angle Sum Property: A1 + A2 + A3 = 180°`, `A3 = 180° - (${a1}° + ${a2}°) = 180° - ${a1+a2}°`, `Exterior Angle = A1 + A2 = ${a1+a2}°`], `Missing Angle = ${a3}° | Exterior Angle = ${a1+a2}°`);
+}
+function solvePythagoras() {
+    const a = getVal('a'), b = getVal('b');
+    const c = Math.sqrt(a*a + b*b);
+    renderSol([`Pythagoras Theorem: c² = a² + b²`, `c² = ${a}² + ${b}² = ${a*a} + ${b*b} = ${a*a + b*b}`, `c = √${a*a + b*b}`], `Hypotenuse (c) = ${c.toFixed(2)}`);
+}
+function solvePctChange() {
+    const o = getVal('oldV'), n = getVal('newV');
+    const diff = n - o, pct = (diff / o) * 100;
+    renderSol([`Difference = New (${n}) - Old (${o}) = ${diff}`, `Percentage Change = (${diff} ÷ ${o}) × 100`], `${pct>=0?'Increase':'Decrease'} = ${Math.abs(pct).toFixed(2)}%`);
+}
+function solveProfitLoss7() {
+    const cp = getVal('cp'), sp = getVal('sp');
+    const diff = sp - cp, pct = (Math.abs(diff)/cp)*100;
+    renderSol([`Difference = SP (${sp}) - CP (${cp}) = ₹${diff}`, `Percentage = (|Diff| ÷ CP) × 100`], `${diff>=0?'Profit':'Loss'} = ₹${Math.abs(diff)} (${pct.toFixed(2)}%)`);
+}
+function solveSimpleInterest() {
+    const p = getVal('p'), r = getVal('r'), t = getVal('t');
+    const si = (p * r * t) / 100;
+    renderSol([`SI Formula = (P × R × T) ÷ 100 = (${p} × ${r} × ${t}) ÷ 100`, `Total Amount = P + SI = ${p} + ${si}`], `Interest = ₹${si.toFixed(2)} | Amount = ₹${(p+si).toFixed(2)}`);
+}
+function solveCircle7() {
+    const r = getVal('r');
+    const area = Math.PI * r * r, circ = 2 * Math.PI * r;
+    renderSol([`Area = π × r² = 3.1416 × ${r}² = ${area.toFixed(2)}`, `Circumference = 2 × π × r = 2 × 3.1416 × ${r} = ${circ.toFixed(2)}`], `Area = ${area.toFixed(2)} sq.units | Circumference = ${circ.toFixed(2)} units`);
+}
+function solveParaTriangleArea() {
+    const b = getVal('b'), h = getVal('h');
+    renderSol([`Parallelogram Area = Base × Height = ${b} × ${h} = ${b*h}`, `Triangle Area = ½ × Base × Height = ½ × ${b} × ${h} = ${0.5*b*h}`], `Para Area = ${b*h} | Triangle Area = ${0.5*b*h}`);
+}
+function solveExponents7() {
+    const a = getVal('a'), m = getVal('m'), n = getVal('n');
+    renderSol([`Product Rule: a^m × a^n = a^(m+n) = ${a}^(${m}+${n}) = ${a}^${m+n}`, `Quotient Rule: a^m ÷ a^n = a^(m-n) = ${a}^${m-n}`], `${a}^${m+n} = ${Math.pow(a, m+n)}`);
+}
+
+/* CLASS 8 CALCULATORS */
+function solveLinearBothSides() {
+    const a = getVal('a'), b = getVal('b'), c = getVal('c'), d = getVal('d');
+    const x = (d - b) / (a - c);
+    renderSol([`Rearrange terms: (${a} - ${c})x = ${d} - ${b}`, `${a-c}x = ${d-b}`, `x = ${d-b} ÷ ${a-c}`], `x = ${x.toFixed(4)}`);
+}
+function solvePolygonAngles8() {
+    const n = getVal('n');
+    const sum = (n - 2) * 180, each = sum / n;
+    renderSol([`Sum of interior angles = (n - 2) × 180° = (${n} - 2) × 180° = ${sum}°`, `Each angle (if regular) = ${sum}° ÷ ${n} = ${each.toFixed(2)}°`], `Sum = ${sum}° | Each Angle = ${each.toFixed(2)}°`);
+}
+function solveSquareRoot() {
+    const n = getVal('n');
+    renderSol([`Square of ${n} = ${n} × ${n} = ${n*n}`, `Square Root of ${n} = √${n} = ${Math.sqrt(n).toFixed(4)}`], `Square: ${n*n} | Square Root: ${Math.sqrt(n).toFixed(4)}`);
+}
+function solveCubeRoot() {
+    const n = getVal('n');
+    renderSol([`Cube of ${n} = ${n} × ${n} × ${n} = ${n*n*n}`, `Cube Root of ${n} = ∛${n} = ${Math.cbrt(n).toFixed(4)}`], `Cube: ${n*n*n} | Cube Root: ${Math.cbrt(n).toFixed(4)}`);
+}
+function solveCompoundInterest() {
+    const p = getVal('p'), r = getVal('r'), n = getVal('n');
+    const amt = p * Math.pow((1 + r/100), n), ci = amt - p;
+    renderSol([`Amount Formula = P(1 + R/100)^n = ${p} × (1 + ${r}/100)^${n}`, `Compound Interest = Amount - Principal = ${amt.toFixed(2)} - ${p}`], `CI = ₹${ci.toFixed(2)} | Total Amount = ₹${amt.toFixed(2)}`);
+}
+function solveAlgebraicIdentities() {
+    const a = getVal('a'), b = getVal('b');
+    renderSol([`(a + b)² = a² + 2ab + b² = ${a*a} + ${2*a*b} + ${b*b} = ${Math.pow(a+b, 2)}`, `(a - b)² = a² - 2ab + b² = ${Math.pow(a-b, 2)}`, `a² - b² = (a+b)(a-b) = ${a*a - b*b}`], `(a+b)² = ${Math.pow(a+b,2)} | a²-b² = ${a*a-b*b}`);
+}
+function solveCylinder8() {
+    const r = getVal('r'), h = getVal('h');
+    const csa = 2 * Math.PI * r * h, tsa = 2 * Math.PI * r * (r + h), vol = Math.PI * r * r * h;
+    renderSol([`Curved Surface Area = 2πrh = ${csa.toFixed(2)}`, `Total Surface Area = 2πr(r + h) = ${tsa.toFixed(2)}`, `Volume = πr²h = ${vol.toFixed(2)}`], `CSA: ${csa.toFixed(2)} | TSA: ${tsa.toFixed(2)} | Vol: ${vol.toFixed(2)}`);
+}
+function solveScientificNotation() {
+    const n = getVal('n1');
+    renderSol([`Scientific notation represents numbers as m × 10^e`], `Standard Form: ${n.toExponential(4)}`);
+}
+function solveProportion8() {
+    const x1 = getVal('x1'), y1 = getVal('y1'), x2 = getVal('x2');
+    const y2Direct = (y1 * x2) / x1, y2Inverse = (x1 * y1) / x2;
+    renderSol([`Direct Proportion (x1/y1 = x2/y2) => y2 = ${y2Direct.toFixed(2)}`, `Inverse Proportion (x1×y1 = x2×y2) => y2 = ${y2Inverse.toFixed(2)}`], `Direct y2 = ${y2Direct.toFixed(2)} | Inverse y2 = ${y2Inverse.toFixed(2)}`);
+}
+function solveFreqMean() {
+    const vals = getStr('data').split(',').map(s=>parseFloat(s.trim()));
+    const freqs = getStr('freq').split(',').map(s=>parseFloat(s.trim()));
+    let sumFx = 0, sumF = 0;
+    for(let i=0; i<vals.length; i++) { sumFx += vals[i]*freqs[i]; sumF += freqs[i]; }
+    renderSol([`Σfx = ${sumFx}`, `Σf = ${sumF}`, `Mean (x̄) = Σfx ÷ Σf = ${sumFx} ÷ ${sumF}`], `Mean (x̄) = ${(sumFx/sumF).toFixed(4)}`);
+}
+
+/* CLASS 9 CALCULATORS */
+function solveRationalize() {
+    const a = getVal('a'), b = getVal('b');
+    const den = a - b;
+    renderSol([`Multiply numerator & denominator by (√${a} - √${b})`, `Denominator becomes (√${a})² - (√${b})² = ${a} - ${b} = ${den}`], `Rationalized: (√${a} - √${b}) / ${den}`);
+}
+function solveHeronsFormula() {
+    const a = getVal('a'), b = getVal('b'), c = getVal('c');
+    const s = (a + b + c) / 2;
+    const area = Math.sqrt(s * (s - a) * (s - b) * (s - c));
+    renderSol([`Semi-perimeter s = (a + b + c) ÷ 2 = ${s}`, `Area = √[s(s-a)(s-b)(s-c)] = √[${s} × ${s-a} × ${s-b} × ${s-c}]`], `Area = ${area.toFixed(2)} sq.units`);
+}
+function solveDistance9() {
+    const x1 = getVal('x1'), y1 = getVal('y1'), x2 = getVal('x2'), y2 = getVal('y2');
+    const dist = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+    const midX = (x1+x2)/2, midY = (y1+y2)/2;
+    renderSol([`Distance = √[(x2-x1)² + (y2-y1)²] = √[(${x2-x1})² + (${y2-y1})²] = ${dist.toFixed(4)}`, `Midpoint = ((x1+x2)/2, (y1+y2)/2) = (${midX}, ${midY})`], `Distance = ${dist.toFixed(2)} | Midpoint = (${midX}, ${midY})`);
+}
+function solveLinear2V9() {
+    const a = getVal('a'), b = getVal('b'), c = getVal('c');
+    renderSol([`Equation: ${a}x + ${b}y + ${c} = 0`, `When x = 0 => y = ${(-c/b).toFixed(2)}`, `When y = 0 => x = ${(-c/a).toFixed(2)}`], `Points: (0, ${(-c/b).toFixed(2)}) & (${(-c/a).toFixed(2)}, 0)`);
+}
+function solveCone9() {
+    const r = getVal('r'), h = getVal('h');
+    const l = Math.sqrt(r*r + h*h);
+    const csa = Math.PI * r * l, vol = (1/3) * Math.PI * r * r * h;
+    renderSol([`Slant height (l) = √(r² + h²) = ${l.toFixed(2)}`, `CSA = πrl = ${csa.toFixed(2)}`, `Volume = 1/3 πr²h = ${vol.toFixed(2)}`], `Slant Height = ${l.toFixed(2)} | CSA = ${csa.toFixed(2)} | Vol = ${vol.toFixed(2)}`);
+}
+function solveSphere9() {
+    const r = getVal('r');
+    const volS = (4/3)*Math.PI*r*r*r, ssa = 4*Math.PI*r*r;
+    renderSol([`Sphere Surface Area = 4πr² = ${ssa.toFixed(2)}`, `Sphere Volume = 4/3 πr³ = ${volS.toFixed(2)}`, `Hemisphere Volume = 2/3 πr³ = ${(volS/2).toFixed(2)}`], `Sphere Vol = ${volS.toFixed(2)} | Hemisphere Vol = ${(volS/2).toFixed(2)}`);
+}
+function solveStats9() {
+    const arr = getStr('data').split(',').map(s=>parseFloat(s.trim())).sort((a,b)=>a-b);
+    const mean = arr.reduce((a,b)=>a+b,0) / arr.length;
+    const mid = Math.floor(arr.length/2);
+    const median = arr.length % 2 !== 0 ? arr[mid] : (arr[mid-1] + arr[mid])/2;
+    renderSol([`Sorted Data: ${arr.join(', ')}`, `Mean = ${mean.toFixed(2)}`, `Median = ${median.toFixed(2)}`], `Mean = ${mean.toFixed(2)} | Median = ${median.toFixed(2)}`);
+}
+function solveProbability9() {
+    const fav = getVal('fav'), tot = getVal('tot');
+    renderSol([`Probability P(E) = Favorable Outcomes ÷ Total Outcomes = ${fav} ÷ ${tot}`], `P(E) = ${(fav/tot).toFixed(4)} (${((fav/tot)*100).toFixed(2)}%)`);
+}
+function solveChord9() {
+    const r = getVal('r'), d = getVal('d');
+    const halfChord = Math.sqrt(r*r - d*d);
+    renderSol([`Perpendicular from center bisects chord: (half chord)² = r² - d²`, `Half Chord = √(${r}² - ${d}²) = ${halfChord.toFixed(2)}`], `Full Chord Length = ${(2*halfChord).toFixed(2)} units`);
+}
+function solveRemainderThm() {
+    const c = getVal('p');
+    renderSol([`By Remainder Theorem, dividing polynomial P(x) by (x - c) gives Remainder R = P(c)`, `Evaluated at x = ${c}`], `Substituted Value x = ${c}`);
+}
+
+/* CLASS 10 CALCULATORS */
+function solveEuclidHcf() {
+    let a = getVal('a'), b = getVal('b');
+    let x = Math.max(a,b), y = Math.min(a,b), steps = [];
+    while(y > 0) {
+        let q = Math.floor(x/y), r = x % y;
+        steps.push(`${x} = ${y} × ${q} + ${r}`);
+        x = y; y = r;
+    }
+    renderSol(steps, `HCF = ${x}`);
+}
+function solveQuadratic10() {
+    const a = getVal('a'), b = getVal('b'), c = getVal('c');
+    const D = b*b - 4*a*c;
+    if(D >= 0) {
+        const x1 = (-b + Math.sqrt(D))/(2*a), x2 = (-b - Math.sqrt(D))/(2*a);
+        renderSol([`Discriminant D = b² - 4ac = (${b})² - 4(${a})(${c}) = ${D}`, `Roots = (-b ± √D) / 2a`], `Roots: x1 = ${x1.toFixed(4)}, x2 = ${x2.toFixed(4)}`);
+    } else {
+        renderSol([`Discriminant D = ${D} (< 0)`, `Roots are imaginary`], `No Real Roots`);
+    }
+}
+function solveAP10() {
+    const a = getVal('a'), d = getVal('d'), n = getVal('n');
+    const an = a + (n-1)*d, sn = (n/2)*(2*a + (n-1)*d);
+    renderSol([`nth Term (an) = a + (n-1)d = ${a} + (${n}-1)${d} = ${an}`, `Sum of n Terms (Sn) = n/2 [2a + (n-1)d] = ${sn}`], `a_${n} = ${an} | S_${n} = ${sn}`);
+}
+function solveSectionFormula() {
+    const x1 = getVal('x1'), y1 = getVal('y1'), x2 = getVal('x2'), y2 = getVal('y2'), m = getVal('m'), n = getVal('n');
+    const px = (m*x2 + n*x1)/(m+n), py = (m*y2 + n*y1)/(m+n);
+    renderSol([`P(x) = (m·x2 + n·x1)/(m+n) = (${m}×${x2} + ${n}×${x1})/${m+n} = ${px.toFixed(2)}`, `P(y) = (m·y2 + n·y1)/(m+n) = (${m}×${y2} + ${n}×${y1})/${m+n} = ${py.toFixed(2)}`], `Coordinates P(x, y) = (${px.toFixed(2)}, ${py.toFixed(2)})`);
+}
+function solveTrigRatios() {
+    const p = getVal('p'), b = getVal('b');
+    const h = Math.sqrt(p*p + b*b);
+    renderSol([`Hypotenuse h = √(p² + b²) = ${h.toFixed(2)}`, `sin θ = p/h = ${(p/h).toFixed(4)}`, `cos θ = b/h = ${(b/h).toFixed(4)}`, `tan θ = p/b = ${(p/b).toFixed(4)}`], `sin=${(p/h).toFixed(2)}, cos=${(b/h).toFixed(2)}, tan=${(p/b).toFixed(2)}`);
+}
+function solveHeightsDist() {
+    const h = getVal('h'), ang = getVal('ang');
+    const rad = ang * (Math.PI/180);
+    const dist = h / Math.tan(rad);
+    renderSol([`tan(${ang}°) = Height / Distance`, `Distance = Height ÷ tan(${ang}°) = ${h} ÷ ${Math.tan(rad).toFixed(4)}`], `Distance to Base = ${dist.toFixed(2)} m`);
+}
+function solveSectorArea() {
+    const r = getVal('r'), ang = getVal('ang');
+    const area = (ang/360) * Math.PI * r * r;
+    const len = (ang/360) * 2 * Math.PI * r;
+    renderSol([`Sector Area = (θ/360) × πr² = (${ang}/360) × 3.1416 × ${r}² = ${area.toFixed(2)}`, `Arc Length = (θ/360) × 2πr = ${len.toFixed(2)}`], `Sector Area = ${area.toFixed(2)} sq.units | Arc Length = ${len.toFixed(2)}`);
+}
+function solveCombinedSolid() {
+    const r = getVal('r'), hc = getVal('hc'), hk = getVal('hk');
+    const volCyl = Math.PI * r * r * hc, volCone = (1/3) * Math.PI * r * r * hk;
+    renderSol([`Cylinder Vol = πr²h = ${volCyl.toFixed(2)}`, `Cone Vol = 1/3 πr²h = ${volCone.toFixed(2)}`, `Total Volume = ${volCyl.toFixed(2)} + ${volCone.toFixed(2)}`], `Total Solid Volume = ${(volCyl + volCone).toFixed(2)} cu.units`);
+}
+function solveLinearPair() {
+    const a1=getVal('a1'), b1=getVal('b1'), c1=getVal('c1'), a2=getVal('a2'), b2=getVal('b2'), c2=getVal('c2');
+    const D = a1*b2 - a2*b1, Dx = c1*b2 - c2*b1, Dy = a1*c2 - a2*c1;
+    if(D !== 0) {
+        renderSol([`Cramer's Rule Determinant D = ${D}`, `Dx = ${Dx}, Dy = ${Dy}`, `x = Dx/D, y = Dy/D`], `System Solution: x = ${(Dx/D).toFixed(2)}, y = ${(Dy/D).toFixed(2)}`);
+    } else {
+        renderSol([`Determinant D = 0`], `Parallel or Coincident Lines (Infinite or No Solution)`);
+    }
+}
+function solveEmpiricalStats() {
+    const mean = getVal('mean'), mode = getVal('mode');
+    const median = (mode + 2 * mean) / 3;
+    renderSol([`Empirical Relationship: Mode = 3·Median - 2·Mean`, `3·Median = Mode + 2·Mean = ${mode} + 2(${mean}) = ${mode + 2*mean}`, `Median = ${mode + 2*mean} ÷ 3`], `Median = ${median.toFixed(2)}`);
+}
+
+// Initial Load: Class 5th
+window.addEventListener('DOMContentLoaded', () => loadGrade(5));
+</script>
+
+</body>
+</html>
