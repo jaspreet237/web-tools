@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time File & Text Diff Checker | MyAllCodes Tools</title>
+    <meta name="description" content="Instant in-place code and text diff checker. Upload or paste text directly into side-by-side panes for real-time line and word-level difference highlighting.">
+    <link rel="canonical" href="https://tools.myallcodes.in/diff-checker/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc; --surface-card: #ffffff; --surface-input: #f1f5f9;
+            --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #eff6ff;
+            --text-main: #0f172a; --text-sub: #64748b; --border-line: #e2e8f0;
+            --success-bg: #f0fdf4; --success-border: #bbf7d0; --success-text: #166534;
+            --danger-bg: #fef2f2; --danger-border: #fecaca; --danger-text: #991b1b;
+            --warning-bg: #fffbebfb; --warning-border: #fde68a; --warning-text: #b45309;
+            --radius-lg: 12px; --radius-md: 8px; --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        .header-nav { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .brand { font-size: 1.25rem; font-weight: 800; color: var(--text-main); text-decoration: none; }
+        .brand span { color: var(--primary); }
+        .back-link { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+
+        .tool-hero { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 1.25rem 1.25rem 0.85rem; text-align: center; }
+        .breadcrumb { color: var(--text-sub); font-size: 0.8rem; margin-bottom: 0.3rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .tool-badge { display: inline-block; background: var(--primary-light); color: var(--primary); padding: 0.2rem 0.65rem; border-radius: 20px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; margin-bottom: 0.3rem; }
+        .tool-hero h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.2rem; }
+        .tool-hero p { color: var(--text-sub); font-size: 0.85rem; max-width: 680px; margin: 0 auto; }
+
+        .main-container { max-width: 1440px; width: 100%; margin: 0 auto; padding: 0.85rem 1.25rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+
+        /* CONTROL TOOLBAR */
+        .toolbar { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-lg); padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; box-shadow: var(--shadow-sm); }
+        .tool-group { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+        .btn-action { background: var(--surface-card); border: 1px solid var(--border-line); padding: 0.4rem 0.75rem; border-radius: var(--radius-md); font-size: 0.78rem; font-weight: 700; color: var(--text-main); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.35rem; }
+        .btn-action:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+        
+        .toggle-label { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 700; color: var(--text-sub); cursor: pointer; user-select: none; }
+        .toggle-label input { accent-color: var(--primary); cursor: pointer; }
+
+        /* INTERACTIVE CLICKABLE STATS BAR */
+        .stats-bar { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; font-weight: 700; flex-wrap: wrap; }
+        .stat-badge {
+            padding: 0.35rem 0.7rem; border-radius: 6px; cursor: pointer; user-select: none;
+            transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 0.35rem;
+            border: 1px solid transparent;
+        }
+        .stat-badge:hover { transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+        .stat-badge:active { transform: translateY(0); }
+        
+        .stat-info { background: var(--surface-input); color: var(--text-sub); border-color: var(--border-line); }
+        .stat-del { background: var(--danger-bg); color: var(--danger-text); border-color: var(--danger-border); }
+        .stat-add { background: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
+        .stat-mod { background: var(--warning-bg); color: var(--warning-text); border-color: var(--warning-border); }
+
+        .nav-btn { background: var(--primary-light); color: var(--primary); border: 1px solid #bfdbfe; font-weight: 800; }
+        .nav-btn:hover { background: var(--primary); color: #ffffff; }
+
+        /* DUAL EDITOR GRID */
+        .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; flex: 1; }
+        .pane-card { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-lg); display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow-sm); }
+        .pane-header { background: var(--surface-input); border-bottom: 1px solid var(--border-line); padding: 0.55rem 0.9rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 800; }
+        .pane-title { display: flex; align-items: center; gap: 0.5rem; }
+        .pane-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .pane-dot.original { background: #ef4444; }
+        .pane-dot.modified { background: #22c55e; }
+
+        .pane-actions { display: flex; align-items: center; gap: 0.35rem; }
+        .btn-file { position: relative; overflow: hidden; }
+        .btn-file input[type="file"] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+
+        /* OVERLAY VIEWPORT ENGINE */
+        .editor-body { display: flex; height: 560px; position: relative; background: #ffffff; }
+        
+        .line-gutter {
+            width: 46px; min-width: 46px; background: #f8fafc; border-right: 1px solid var(--border-line);
+            user-select: none; overflow: hidden; font-family: 'JetBrains Mono', monospace;
+            font-size: 13px; line-height: 20px; padding: 10px 0; text-align: right; color: #94a3b8;
+        }
+        .gutter-num { padding-right: 8px; height: 20px; box-sizing: border-box; }
+
+        .edit-viewport { flex: 1; position: relative; overflow: hidden; }
+
+        /* IDENTICAL TYPOGRAPHY & OVERLAY MATCHING */
+        .backdrop-layer, .textarea-input {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 20px;
+            letter-spacing: 0px;
+            tab-size: 4;
+            white-space: pre;
+            word-break: normal;
+            overflow-wrap: normal;
+            padding: 10px;
+            margin: 0;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .backdrop-layer {
+            position: absolute; inset: 0; pointer-events: none; z-index: 1;
+            color: #0f172a; overflow: hidden;
+        }
+
+        .textarea-input {
+            position: absolute; inset: 0; z-index: 2;
+            background: transparent; color: transparent; caret-color: #0f172a;
+            resize: none; overflow: auto;
+        }
+
+        .textarea-input::placeholder { color: var(--text-sub); opacity: 0.6; }
+
+        /* LINE & WORD HIGHLIGHT STYLES */
+        .line-row { height: 20px; line-height: 20px; white-space: pre; width: max-content; min-width: 100%; }
+        
+        .line-del { background-color: #fef2f2; }
+        .word-del { background-color: #fecaca; color: #991b1b; font-weight: 700; border-radius: 3px; padding: 0 2px; text-decoration: line-through; }
+
+        .line-add { background-color: #f0fdf4; }
+        .word-add { background-color: #bbf7d0; color: #166534; font-weight: 700; border-radius: 3px; padding: 0 2px; text-decoration: underline; }
+
+        .line-mod { background-color: #fffbebfb; }
+
+        /* JUMP CURSOR PULSE ANIMATION */
+        @keyframes jumpPulse {
+            0% { background-color: #bfdbfe; outline: 2px solid #2563eb; }
+            50% { background-color: #93c5fd; outline: 2px solid #2563eb; }
+            100% { background-color: transparent; outline: 2px solid transparent; }
+        }
+        .jump-highlight { animation: jumpPulse 1.4s ease-in-out; }
+
+        .drop-active { background: var(--primary-light) !important; border: 2px dashed var(--primary) !important; }
+
+        .site-footer { border-top: 1px solid var(--border-line); padding: 1rem 0; text-align: center; color: var(--text-sub); font-size: 0.8rem; background: var(--surface-card); margin-top: auto; }
+
+        @media (max-width: 900px) {
+            .editor-grid { grid-template-columns: 1fr; }
+            .editor-body { height: 380px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-nav">
+    <a href="/" class="brand">MyAllCodes<span>Tools</span></a>
+    <a href="/" class="back-link">← Home</a>
+</header>
+
+<section class="tool-hero">
+    <div class="breadcrumb"><a href="/">Home</a> / Developer Tools / Live File Diff Checker</div>
+    <span class="tool-badge">Instant • In-Place Highlights • Interactive Jumps</span>
+    <h1>Real-Time Code & File Diff Checker</h1>
+    <p>Compare code, JSON, or text documents instantly. Paste or type into either window — line & word differences highlight in real-time. Click stat counts to jump to diffs.</p>
+</section>
+
+<main class="main-container">
+
+    <!-- TOOLBAR CONTROLS -->
+    <div class="toolbar">
+        <div class="tool-group">
+            <label class="toggle-label">
+                <input type="checkbox" id="chkWhitespace" onchange="renderDiff()"> Ignore Whitespace
+            </label>
+            <label class="toggle-label">
+                <input type="checkbox" id="chkCase" onchange="renderDiff()"> Ignore Case
+            </label>
+            <label class="toggle-label">
+                <input type="checkbox" id="chkSyncScroll" checked> Synchronize Scroll
+            </label>
+        </div>
+
+        <!-- INTERACTIVE CLICKABLE STATS BAR -->
+        <div class="stats-bar">
+            <span class="stat-badge stat-info" id="statTotal" onclick="jumpToTop()" title="Click to jump to top">Total Lines: 0</span>
+            <span class="stat-badge stat-del" id="statDeletions" onclick="jumpCategory('del')" title="Click to jump to next deletion">-0 Deletions</span>
+            <span class="stat-badge stat-add" id="statAdditions" onclick="jumpCategory('add')" title="Click to jump to next addition">+0 Additions</span>
+            <span class="stat-badge stat-mod" id="statModified" onclick="jumpCategory('mod')" title="Click to jump to next modification">~0 Modified</span>
+        </div>
+
+        <div class="tool-group">
+            <button class="btn-action nav-btn" onclick="navigateAllDiffs(-1)" title="Previous Difference">↑ Prev Diff</button>
+            <button class="btn-action nav-btn" onclick="navigateAllDiffs(1)" title="Next Difference">↓ Next Diff</button>
+            <button class="btn-action" onclick="swapPanes()">⇄ Swap</button>
+            <button class="btn-action" onclick="clearAll()">🗑️ Clear</button>
+        </div>
+    </div>
+
+    <!-- DUAL IN-PLACE EDITING GRID -->
+    <div class="editor-grid">
+        <!-- LEFT PANE: ORIGINAL -->
+        <div class="pane-card" id="cardLeft">
+            <div class="pane-header">
+                <div class="pane-title">
+                    <span class="pane-dot original"></span>
+                    <span>ORIGINAL (FILE A)</span>
+                </div>
+                <div class="pane-actions">
+                    <button class="btn-action btn-file">
+                        📁 Open File <input type="file" onchange="handleFileUpload(event, 'textLeft')">
+                    </button>
+                    <button class="btn-action" onclick="copyPane('textLeft')">📋 Copy</button>
+                </div>
+            </div>
+            <div class="editor-body">
+                <div class="line-gutter" id="gutterLeft"></div>
+                <div class="edit-viewport">
+                    <div class="backdrop-layer" id="backdropLeft"></div>
+                    <textarea id="textLeft" class="textarea-input mono" placeholder="Paste original text or drag file here..." oninput="renderDiff()" onscroll="syncScroll('left')" spellcheck="false"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANE: MODIFIED -->
+        <div class="pane-card" id="cardRight">
+            <div class="pane-header">
+                <div class="pane-title">
+                    <span class="pane-dot modified"></span>
+                    <span>MODIFIED (FILE B)</span>
+                </div>
+                <div class="pane-actions">
+                    <button class="btn-action btn-file">
+                        📁 Open File <input type="file" onchange="handleFileUpload(event, 'textRight')">
+                    </button>
+                    <button class="btn-action" onclick="copyPane('textRight')">📋 Copy</button>
+                </div>
+            </div>
+            <div class="editor-body">
+                <div class="line-gutter" id="gutterRight"></div>
+                <div class="edit-viewport">
+                    <div class="backdrop-layer" id="backdropRight"></div>
+                    <textarea id="textRight" class="textarea-input mono" placeholder="Paste modified text or drag file here..." oninput="renderDiff()" onscroll="syncScroll('right')" spellcheck="false"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools • Free Privacy-First Real-Time Diff Utility</p>
+</footer>
+
+<script>
+let isSyncingScroll = false;
+
+// NAVIGATION INDEX TRACKING FOR CLICKABLE JUMPS
+let diffIndices = {
+    del: [],
+    add: [],
+    mod: [],
+    all: []
+};
+let navPointers = {
+    del: -1,
+    add: -1,
+    mod: -1,
+    all: -1
+};
+
+// LCS LINE DIFF ALGORITHM
+function computePaneDiffs(linesA, linesB, options) {
+    const M = linesA.length;
+    const N = linesB.length;
+    const normA = linesA.map(l => normalizeLine(l, options));
+    const normB = linesB.map(l => normalizeLine(l, options));
+
+    const dp = Array.from({ length: M + 1 }, () => new Int32Array(N + 1));
+    for (let i = 1; i <= M; i++) {
+        for (let j = 1; j <= N; j++) {
+            if (normA[i - 1] === normB[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    const leftStatus = Array.from({ length: M }, () => ({ type: 'equal', partner: -1 }));
+    const rightStatus = Array.from({ length: N }, () => ({ type: 'equal', partner: -1 }));
+
+    let i = M, j = N;
+    while (i > 0 || j > 0) {
+        if (i > 0 && j > 0 && normA[i - 1] === normB[j - 1]) {
+            leftStatus[i - 1] = { type: 'equal', partner: j - 1 };
+            rightStatus[j - 1] = { type: 'equal', partner: i - 1 };
+            i--; j--;
+        } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+            rightStatus[j - 1] = { type: 'add', partner: -1 };
+            j--;
+        } else if (i > 0 && (j === 0 || dp[i][j - 1] < dp[i - 1][j])) {
+            leftStatus[i - 1] = { type: 'remove', partner: -1 };
+            i--;
+        }
+    }
+
+    // Pair adjacent remove & add lines for word-level inline diffs
+    let remPtr = 0, addPtr = 0;
+    while (remPtr < M) {
+        if (leftStatus[remPtr].type === 'remove') {
+            while (addPtr < N && rightStatus[addPtr].type !== 'add') {
+                addPtr++;
+            }
+            if (addPtr < N && rightStatus[addPtr].type === 'add') {
+                leftStatus[remPtr].type = 'modified';
+                leftStatus[remPtr].partner = addPtr;
+                rightStatus[addPtr].type = 'modified';
+                rightStatus[addPtr].partner = remPtr;
+                addPtr++;
+            }
+        }
+        remPtr++;
+    }
+
+    return { leftStatus, rightStatus };
+}
+
+function normalizeLine(line, options) {
+    let result = line;
+    if (options.ignoreWhitespace) result = result.trim().replace(/\s+/g, ' ');
+    if (options.ignoreCase) result = result.toLowerCase();
+    return result;
+}
+
+// INLINE WORD-LEVEL DIFF GENERATOR
+function diffWords(strA, strB) {
+    const tokensA = strA.match(/\w+|\s+|[^\w\s]/g) || [];
+    const tokensB = strB.match(/\w+|\s+|[^\w\s]/g) || [];
+
+    const M = tokensA.length;
+    const N = tokensB.length;
+
+    const dp = Array.from({ length: M + 1 }, () => new Int32Array(N + 1));
+    for (let i = 1; i <= M; i++) {
+        for (let j = 1; j <= N; j++) {
+            if (tokensA[i - 1] === tokensB[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    let i = M, j = N;
+    const resA = [];
+    const resB = [];
+
+    while (i > 0 || j > 0) {
+        if (i > 0 && j > 0 && tokensA[i - 1] === tokensB[j - 1]) {
+            resA.unshift({ type: 'equal', text: tokensA[i - 1] });
+            resB.unshift({ type: 'equal', text: tokensB[j - 1] });
+            i--; j--;
+        } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+            resB.unshift({ type: 'add', text: tokensB[j - 1] });
+            j--;
+        } else if (i > 0 && (j === 0 || dp[i][j - 1] < dp[i - 1][j])) {
+            resA.unshift({ type: 'del', text: tokensA[i - 1] });
+            i--;
+        }
+    }
+
+    let htmlA = '';
+    resA.forEach(item => {
+        const escaped = escapeHtml(item.text);
+        if (item.type === 'del') htmlA += `<span class="word-del">${escaped}</span>`;
+        else htmlA += escaped;
+    });
+
+    let htmlB = '';
+    resB.forEach(item => {
+        const escaped = escapeHtml(item.text);
+        if (item.type === 'add') htmlB += `<span class="word-add">${escaped}</span>`;
+        else htmlB += escaped;
+    });
+
+    return { htmlA, htmlB };
+}
+
+function escapeHtml(text) {
+    return (text || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// MAIN REAL-TIME DIFF RENDERER
+function renderDiff() {
+    const textA = document.getElementById('textLeft').value;
+    const textB = document.getElementById('textRight').value;
+
+    const options = {
+        ignoreWhitespace: document.getElementById('chkWhitespace').checked,
+        ignoreCase: document.getElementById('chkCase').checked
+    };
+
+    const linesA = textA ? textA.split(/\r?\n/) : [];
+    const linesB = textB ? textB.split(/\r?\n/) : [];
+
+    const backdropLeft = document.getElementById('backdropLeft');
+    const backdropRight = document.getElementById('backdropRight');
+    const gutterLeft = document.getElementById('gutterLeft');
+    const gutterRight = document.getElementById('gutterRight');
+
+    diffIndices = { del: [], add: [], mod: [], all: [] };
+
+    if (linesA.length === 0 && linesB.length === 0) {
+        backdropLeft.innerHTML = '';
+        backdropRight.innerHTML = '';
+        gutterLeft.innerHTML = '';
+        gutterRight.innerHTML = '';
+        updateStats(0, 0, 0, 0);
+        return;
+    }
+
+    const { leftStatus, rightStatus } = computePaneDiffs(linesA, linesB, options);
+
+    let delCount = 0, addCount = 0, modCount = 0;
+
+    // Render Left Backdrop (Original)
+    let leftHtml = '';
+    let leftGutterHtml = '';
+    linesA.forEach((line, idx) => {
+        const stat = leftStatus[idx];
+        let contentHtml = escapeHtml(line);
+        let lineClass = '';
+
+        if (stat.type === 'remove') {
+            lineClass = 'line-del';
+            contentHtml = line ? `<span class="word-del">${escapeHtml(line)}</span>` : '';
+            delCount++;
+            diffIndices.del.push({ pane: 'textLeft', line: idx });
+            diffIndices.all.push({ pane: 'textLeft', line: idx });
+        } else if (stat.type === 'modified') {
+            lineClass = 'line-mod';
+            const inline = diffWords(line, linesB[stat.partner]);
+            contentHtml = inline.htmlA;
+            modCount++;
+            diffIndices.mod.push({ pane: 'textLeft', line: idx });
+            diffIndices.all.push({ pane: 'textLeft', line: idx });
+        }
+
+        leftHtml += `<div class="line-row ${lineClass}">${contentHtml || '&nbsp;'}</div>`;
+        leftGutterHtml += `<div class="gutter-num">${idx + 1}</div>`;
+    });
+
+    // Render Right Backdrop (Modified)
+    let rightHtml = '';
+    let rightGutterHtml = '';
+    linesB.forEach((line, idx) => {
+        const stat = rightStatus[idx];
+        let contentHtml = escapeHtml(line);
+        let lineClass = '';
+
+        if (stat.type === 'add') {
+            lineClass = 'line-add';
+            contentHtml = line ? `<span class="word-add">${escapeHtml(line)}</span>` : '';
+            addCount++;
+            diffIndices.add.push({ pane: 'textRight', line: idx });
+            diffIndices.all.push({ pane: 'textRight', line: idx });
+        } else if (stat.type === 'modified') {
+            lineClass = 'line-mod';
+            const inline = diffWords(linesA[stat.partner], line);
+            contentHtml = inline.htmlB;
+        }
+
+        rightHtml += `<div class="line-row ${lineClass}">${contentHtml || '&nbsp;'}</div>`;
+        rightGutterHtml += `<div class="gutter-num">${idx + 1}</div>`;
+    });
+
+    backdropLeft.innerHTML = leftHtml;
+    backdropRight.innerHTML = rightHtml;
+    gutterLeft.innerHTML = leftGutterHtml;
+    gutterRight.innerHTML = rightGutterHtml;
+
+    updateStats(linesA.length + linesB.length, delCount, addCount, modCount);
+    syncScroll('left');
+}
+
+// CLICKABLE STAT BADGES & CURSOR JUMP ENGINE
+function jumpCategory(type) {
+    const list = diffIndices[type];
+    if (!list || list.length === 0) return;
+
+    navPointers[type] = (navPointers[type] + 1) % list.length;
+    const target = list[navPointers[type]];
+    jumpToLine(target.pane, target.line);
+}
+
+function navigateAllDiffs(direction) {
+    const list = diffIndices.all;
+    if (!list || list.length === 0) return;
+
+    if (direction === 1) {
+        navPointers.all = (navPointers.all + 1) % list.length;
+    } else {
+        navPointers.all = (navPointers.all - 1 + list.length) % list.length;
+    }
+    const target = list[navPointers.all];
+    jumpToLine(target.pane, target.line);
+}
+
+function jumpToLine(paneId, lineIndex) {
+    const backdropId = paneId === 'textLeft' ? 'backdropLeft' : 'backdropRight';
+    const lineElements = document.querySelectorAll(`#${backdropId} .line-row`);
+    if (lineIndex < 0 || lineIndex >= lineElements.length) return;
+
+    const targetLineEl = lineElements[lineIndex];
+    const textarea = document.getElementById(paneId);
+
+    textarea.scrollTop = Math.max(0, targetLineEl.offsetTop - 80);
+    syncScroll(paneId === 'textLeft' ? 'left' : 'right');
+
+    // Pulse animation on target line
+    document.querySelectorAll('.jump-highlight').forEach(el => el.classList.remove('jump-highlight'));
+    targetLineEl.classList.add('jump-highlight');
+
+    // Place text cursor at the line start
+    const textLines = textarea.value.split(/\r?\n/);
+    let charPos = 0;
+    for (let i = 0; i < lineIndex; i++) {
+        charPos += textLines[i].length + 1;
+    }
+    textarea.focus();
+    textarea.setSelectionRange(charPos, charPos + (textLines[lineIndex] ? textLines[lineIndex].length : 0));
+
+    setTimeout(() => { targetLineEl.classList.remove('jump-highlight'); }, 1500);
+}
+
+function jumpToTop() {
+    document.getElementById('textLeft').scrollTop = 0;
+    document.getElementById('textRight').scrollTop = 0;
+    syncScroll('left');
+}
+
+// SYNCHRONIZED SCROLLING ENGINE
+function syncScroll(source) {
+    if (isSyncingScroll) return;
+    isSyncingScroll = true;
+
+    const leftTxt = document.getElementById('textLeft');
+    const rightTxt = document.getElementById('textRight');
+    const leftBdp = document.getElementById('backdropLeft');
+    const rightBdp = document.getElementById('backdropRight');
+    const leftGutter = document.getElementById('gutterLeft');
+    const rightGutter = document.getElementById('gutterRight');
+
+    const shouldSyncPanes = document.getElementById('chkSyncScroll').checked;
+
+    if (source === 'left') {
+        leftBdp.scrollTop = leftTxt.scrollTop;
+        leftGutter.scrollTop = leftTxt.scrollTop;
+        leftBdp.scrollLeft = leftTxt.scrollLeft;
+        if (shouldSyncPanes) {
+            rightTxt.scrollTop = leftTxt.scrollTop;
+            rightTxt.scrollLeft = leftTxt.scrollLeft;
+            rightBdp.scrollTop = leftTxt.scrollTop;
+            rightGutter.scrollTop = leftTxt.scrollTop;
+            rightBdp.scrollLeft = leftTxt.scrollLeft;
+        }
+    } else {
+        rightBdp.scrollTop = rightTxt.scrollTop;
+        rightGutter.scrollTop = rightTxt.scrollTop;
+        rightBdp.scrollLeft = rightTxt.scrollLeft;
+        if (shouldSyncPanes) {
+            leftTxt.scrollTop = rightTxt.scrollTop;
+            leftTxt.scrollLeft = rightTxt.scrollLeft;
+            leftBdp.scrollTop = rightTxt.scrollTop;
+            leftGutter.scrollTop = rightTxt.scrollTop;
+            leftBdp.scrollLeft = rightTxt.scrollLeft;
+        }
+    }
+
+    setTimeout(() => { isSyncingScroll = false; }, 10);
+}
+
+// TAB KEY INDENTATION HANDLER
+['textLeft', 'textRight'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + 4;
+            renderDiff();
+        }
+    });
+});
+
+// UTILITIES
+function updateStats(total, del, add, mod) {
+    document.getElementById('statTotal').innerText = `Total Lines: ${total}`;
+    document.getElementById('statDeletions').innerText = `-${del} Deletions`;
+    document.getElementById('statAdditions').innerText = `+${add} Additions`;
+    document.getElementById('statModified').innerText = `~${mod} Modified`;
+}
+
+function swapPanes() {
+    const left = document.getElementById('textLeft');
+    const right = document.getElementById('textRight');
+    const temp = left.value;
+    left.value = right.value;
+    right.value = temp;
+    renderDiff();
+}
+
+function clearAll() {
+    document.getElementById('textLeft').value = '';
+    document.getElementById('textRight').value = '';
+    navPointers = { del: -1, add: -1, mod: -1, all: -1 };
+    renderDiff();
+}
+
+function copyPane(id) {
+    const text = document.getElementById(id).value;
+    if (text) navigator.clipboard.writeText(text);
+}
+
+function handleFileUpload(evt, targetId) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById(targetId).value = e.target.result;
+        renderDiff();
+    };
+    reader.readAsText(file);
+}
+
+// DRAG AND DROP HANDLERS
+['textLeft', 'textRight'].forEach(id => {
+    const el = document.getElementById(id);
+    const card = id === 'textLeft' ? document.getElementById('cardLeft') : document.getElementById('cardRight');
+    el.addEventListener('dragover', (e) => { e.preventDefault(); card.classList.add('drop-active'); });
+    el.addEventListener('dragleave', () => card.classList.remove('drop-active'));
+    el.addEventListener('drop', (e) => {
+        e.preventDefault();
+        card.classList.remove('drop-active');
+        if (e.dataTransfer.files.length) {
+            const reader = new FileReader();
+            reader.onload = (evt) => { el.value = evt.target.result; renderDiff(); };
+            reader.readAsText(e.dataTransfer.files[0]);
+        }
+    });
+});
+</script>
+
+</body>
+</html>
