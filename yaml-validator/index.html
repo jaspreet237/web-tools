@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAML Validator, Formatter & JSON Converter | MyAllCodes Tools</title>
+    <meta name="description" content="Instant online YAML validator with precise line-by-line error highlighting, top remediation suggestions, auto-fix options, and bi-directional YAML to JSON conversion.">
+    <link rel="canonical" href="https://tools.myallcodes.in/yaml-validator/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <style>
+        :root {
+            --bg-body: #f8fafc; --surface-card: #ffffff; --surface-input: #f1f5f9;
+            --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #eff6ff;
+            --text-main: #0f172a; --text-sub: #64748b; --border-line: #e2e8f0;
+            --success-bg: #f0fdf4; --success-border: #bbf7d0; --success-text: #166534;
+            --danger-bg: #fef2f2; --danger-border: #fecaca; --danger-text: #991b1b;
+            --warning-bg: #fffbe3; --warning-border: #fde68a; --warning-text: #92400e;
+            --radius-lg: 12px; --radius-md: 8px; --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        .header-nav { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .brand { font-size: 1.25rem; font-weight: 800; color: var(--text-main); text-decoration: none; }
+        .brand span { color: var(--primary); }
+        .back-link { font-size: 0.85rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+
+        .tool-hero { background: var(--surface-card); border-bottom: 1px solid var(--border-line); padding: 1.25rem 1.25rem 0.85rem; text-align: center; }
+        .breadcrumb { color: var(--text-sub); font-size: 0.8rem; margin-bottom: 0.3rem; }
+        .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .tool-badge { display: inline-block; background: var(--primary-light); color: var(--primary); padding: 0.2rem 0.65rem; border-radius: 20px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; margin-bottom: 0.3rem; }
+        .tool-hero h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.2rem; }
+        .tool-hero p { color: var(--text-sub); font-size: 0.85rem; max-width: 680px; margin: 0 auto; }
+
+        .main-container { max-width: 1440px; width: 100%; margin: 0 auto; padding: 0.85rem 1.25rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+
+        .toolbar { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-lg); padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; box-shadow: var(--shadow-sm); }
+        .tool-group { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+        .btn-action { background: var(--surface-card); border: 1px solid var(--border-line); padding: 0.4rem 0.75rem; border-radius: var(--radius-md); font-size: 0.78rem; font-weight: 700; color: var(--text-main); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.35rem; }
+        .btn-action:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+        .btn-primary { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+        .btn-primary:hover { background: var(--primary-dark); color: #ffffff; }
+
+        .btn-fix { background: #166534; color: #ffffff; border-color: #166534; font-weight: 800; }
+        .btn-fix:hover { background: #15803d; color: #ffffff; }
+
+        .status-badge { padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem; }
+        .status-idle { background: var(--surface-input); color: var(--text-sub); border: 1px solid var(--border-line); }
+        .status-valid { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+        .status-invalid { background: var(--danger-bg); color: var(--danger-text); border: 1px solid var(--danger-border); }
+
+        .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; flex: 1; }
+        .pane-card { background: var(--surface-card); border: 1px solid var(--border-line); border-radius: var(--radius-lg); display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow-sm); }
+        .pane-header { background: var(--surface-input); border-bottom: 1px solid var(--border-line); padding: 0.55rem 0.9rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 800; }
+
+        .pane-actions { display: flex; align-items: center; gap: 0.35rem; }
+        .btn-file { position: relative; overflow: hidden; }
+        .btn-file input[type="file"] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+
+        /* TOP REMEDIATION & ERROR PANEL */
+        .error-panel {
+            background: var(--danger-bg); border-bottom: 1px solid var(--danger-border);
+            padding: 0.75rem 1rem; font-size: 0.8rem; display: none; flex-direction: column; gap: 0.55rem;
+        }
+        .error-header { display: flex; align-items: center; justify-content: space-between; font-weight: 700; color: var(--danger-text); }
+        .error-details { font-family: 'JetBrains Mono', monospace; background: #fff; padding: 0.45rem 0.65rem; border-radius: var(--radius-md); border: 1px solid var(--danger-border); color: #7f1d1d; font-size: 0.78rem; word-break: break-word; }
+        
+        .remediation-box {
+            background: var(--warning-bg); border: 1px solid var(--warning-border);
+            padding: 0.55rem 0.75rem; border-radius: var(--radius-md); color: var(--warning-text);
+            font-size: 0.78rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;
+        }
+        .remediation-text { font-weight: 600; line-height: 1.4; flex: 1; }
+
+        .editor-body { flex: 1; display: flex; height: 500px; position: relative; background: #ffffff; overflow: hidden; }
+
+        /* LINE NUMBERED EDITOR CONTAINER */
+        .editor-wrapper { display: flex; width: 100%; height: 100%; position: relative; }
+        
+        .line-gutter {
+            width: 48px; background: #f8fafc; border-right: 1px solid var(--border-line);
+            padding: 0.85rem 0; font-family: 'JetBrains Mono', monospace; font-size: 13px;
+            line-height: 1.5; color: #94a3b8; text-align: right; user-select: none;
+            overflow: hidden; flex-shrink: 0;
+        }
+
+        .line-num { padding-right: 10px; height: 19.5px; }
+        .line-num.err-line {
+            background: #fecaca; color: #991b1b; font-weight: bold; position: relative;
+        }
+        .line-num.err-line::after {
+            content: '▶'; position: absolute; left: 4px; font-size: 10px; color: #dc2626;
+        }
+
+        .textarea-input {
+            flex: 1; height: 100%; border: none; outline: none; resize: none;
+            padding: 0.85rem; font-family: 'JetBrains Mono', monospace; font-size: 13px;
+            line-height: 1.5; color: var(--text-main); background: transparent; tab-size: 2;
+            white-space: pre; overflow: auto;
+        }
+
+        .site-footer { border-top: 1px solid var(--border-line); padding: 1rem 0; text-align: center; color: var(--text-sub); font-size: 0.8rem; background: var(--surface-card); margin-top: auto; }
+
+        @media (max-width: 900px) {
+            .editor-grid { grid-template-columns: 1fr; }
+            .editor-body { height: 380px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-nav">
+    <a href="/" class="brand">MyAllCodes<span>Tools</span></a>
+    <a href="/" class="back-link">← Home</a>
+</header>
+
+<section class="tool-hero">
+    <div class="breadcrumb"><a href="/">Home</a> / Developer Tools / YAML Validator</div>
+    <span class="tool-badge">Validate • Highlight • Auto-Fix • JSON Convert</span>
+    <h1>YAML Validator, Formatter & Converter</h1>
+    <p>Validate YAML syntax, locate line errors instantly with visual highlighting, get smart remediation suggestions, and auto-fix issues in one click.</p>
+</section>
+
+<main class="main-container">
+
+    <div class="toolbar">
+        <div class="tool-group">
+            <button class="btn-action btn-primary" onclick="formatYAML()">✨ Prettify YAML</button>
+            <button class="btn-action" onclick="convertToJSON()">🔄 Convert to JSON</button>
+            <button class="btn-action" onclick="convertJSONtoYAML()">🔄 Convert JSON to YAML</button>
+        </div>
+
+        <div id="statusBadge" class="status-badge status-idle">
+            <span>● Ready</span>
+        </div>
+
+        <div class="tool-group">
+            <button class="btn-action" onclick="loadSampleYAML()">💡 Load Sample</button>
+            <button class="btn-action" onclick="clearAll()">🗑️ Clear</button>
+        </div>
+    </div>
+
+    <div class="editor-grid">
+        <div class="pane-card">
+            <div class="pane-header">
+                <span>INPUT (YAML or JSON)</span>
+                <div class="pane-actions">
+                    <button class="btn-action btn-file">
+                        📁 Open File <input type="file" accept=".yaml,.yml,.json,.txt" onchange="handleFileUpload(event)">
+                    </button>
+                    <button class="btn-action" onclick="pasteInput()">📋 Paste</button>
+                </div>
+            </div>
+
+            <div class="error-panel" id="errorPanel">
+                <div class="error-header">
+                    <span id="errorLocationTitle">⚠️ Syntax Error on Line 0, Column 0</span>
+                </div>
+                <div class="error-details" id="errorMessage">Parsing details...</div>
+                <div class="remediation-box" id="remediationBox">
+                    <div class="remediation-text" id="remediationText">Suggested Fix: Inspect indentation or missing colons.</div>
+                    <button class="btn-action btn-fix" id="btnAutoFix" onclick="applyQuickFix()">⚡ Apply Solution</button>
+                </div>
+            </div>
+
+            <div class="editor-body">
+                <div class="editor-wrapper">
+                    <div id="lineGutter" class="line-gutter">
+                        <div class="line-num">1</div>
+                    </div>
+                    <textarea id="yamlInput" class="textarea-input mono" placeholder="Paste YAML or JSON content here..." oninput="onInputChanged()" onscroll="syncScroll()" spellcheck="false"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="pane-card">
+            <div class="pane-header">
+                <span id="outputTitle">PROCESSED OUTPUT</span>
+                <div class="pane-actions">
+                    <button class="btn-action" onclick="copyOutput()">📋 Copy Output</button>
+                    <button class="btn-action" onclick="downloadOutput()">💾 Download</button>
+                </div>
+            </div>
+            <div class="editor-body">
+                <textarea id="outputArea" class="textarea-input mono" readonly placeholder="Formatted output or converted JSON will appear here..."></textarea>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools • Free Client-Side Utility</p>
+</footer>
+
+<script>
+let currentError = null;
+
+function syncScroll() {
+    const input = document.getElementById('yamlInput');
+    const gutter = document.getElementById('lineGutter');
+    gutter.scrollTop = input.scrollTop;
+}
+
+function updateLineNumbers(errorLine = null) {
+    const input = document.getElementById('yamlInput');
+    const gutter = document.getElementById('lineGutter');
+    const lines = input.value.split('\n').length;
+
+    let html = '';
+    for (let i = 1; i <= lines; i++) {
+        const isErr = (i === errorLine);
+        html += `<div class="line-num ${isErr ? 'err-line' : ''}">${i}</div>`;
+    }
+    gutter.innerHTML = html;
+}
+
+function onInputChanged() {
+    autoValidate();
+}
+
+function autoValidate() {
+    const raw = document.getElementById('yamlInput').value;
+    const statusBadge = document.getElementById('statusBadge');
+    const errorPanel = document.getElementById('errorPanel');
+
+    if (!raw.trim()) {
+        statusBadge.className = 'status-badge status-idle';
+        statusBadge.innerHTML = '<span>● Ready</span>';
+        errorPanel.style.display = 'none';
+        document.getElementById('outputArea').value = '';
+        updateLineNumbers(null);
+        currentError = null;
+        return;
+    }
+
+    try {
+        jsyaml.load(raw);
+        statusBadge.className = 'status-badge status-valid';
+        statusBadge.innerHTML = '<span>✓ Valid YAML / Syntax</span>';
+        errorPanel.style.display = 'none';
+        updateLineNumbers(null);
+        currentError = null;
+    } catch (err) {
+        currentError = err;
+        statusBadge.className = 'status-badge status-invalid';
+        statusBadge.innerHTML = '<span>✕ Syntax Error</span>';
+        
+        let line = 1;
+        let col = 1;
+        if (err.mark) {
+            line = err.mark.line + 1;
+            col = err.mark.column + 1;
+        }
+
+        updateLineNumbers(line);
+        showErrorPanel(err, line, col, raw);
+    }
+}
+
+function showErrorPanel(err, line, col, rawText) {
+    const errorPanel = document.getElementById('errorPanel');
+    const locationTitle = document.getElementById('errorLocationTitle');
+    const errorMessage = document.getElementById('errorMessage');
+    const remediationText = document.getElementById('remediationText');
+    const btnAutoFix = document.getElementById('btnAutoFix');
+
+    locationTitle.innerText = `⚠️ Syntax Error on Line ${line}, Column ${col}`;
+    errorMessage.innerText = err.reason || err.message;
+
+    const lines = rawText.split('\n');
+    const problemLineText = lines[line - 1] || '';
+    const reason = (err.reason || '').toLowerCase();
+
+    btnAutoFix.style.display = 'inline-flex';
+
+    if (problemLineText.includes('\t') || (err.message || '').includes('tab')) {
+        remediationText.innerText = `Remediation: Tab character found on line ${line}. YAML forbids tabs. Click 'Apply Solution' to convert tabs to spaces.`;
+    } 
+    else if (reason.includes('indentation') || reason.includes('bad indentation') || reason.includes('mapping')) {
+        remediationText.innerText = `Remediation: Bad line indentation starting at line ${line}. Click 'Apply Solution' to auto-align all key-value levels line by line.`;
+    }
+    else if (reason.includes('colon')) {
+        remediationText.innerText = `Remediation: Missing space after colon on line ${line}. Click 'Apply Solution' to fix formatting.`;
+    }
+    else if (reason.includes('duplicate')) {
+        remediationText.innerText = `Remediation: Duplicate key on line ${line}. Rename or remove duplicate key entries.`;
+        btnAutoFix.style.display = 'none';
+    }
+    else {
+        remediationText.innerText = `Remediation: Indentation/syntax mismatch detected. Click 'Apply Solution' to line-by-line fix structural indents.`;
+    }
+
+    errorPanel.style.display = 'flex';
+}
+
+/* ITERATIVE LINE-BY-LINE AUTO-FIX ENGINE */
+function applyQuickFix() {
+    const rawText = document.getElementById('yamlInput').value;
+    if (!rawText.trim()) return;
+
+    const fixedText = iterativeLineByLineFix(rawText);
+    document.getElementById('yamlInput').value = fixedText;
+    
+    // Validate result and prettify if fully fixed
+    autoValidate();
+    if (!currentError) {
+        formatYAML();
+    }
+}
+
+function iterativeLineByLineFix(rawText) {
+    // Step 0: Strip non-breaking spaces (\u00A0) and standard tabs
+    let text = rawText.replace(/\u00A0/g, ' ').replace(/\t/g, '  ');
+
+    // Step 1: Clean missing space after colon (e.g. key:val -> key: val)
+    let lines = text.split('\n').map(line => {
+        return line.replace(/^(\s*[\w\-\.\_]+):([^\s\n"'])/g, '$1: $2');
+    });
+
+    // Test immediate validity
+    try {
+        jsyaml.load(lines.join('\n'));
+        return lines.join('\n');
+    } catch (e) {}
+
+    // Step 2: Iterative Repair Loop (Fixes cascade mapping & indentation line-by-line)
+    for (let pass = 0; pass < 30; pass++) {
+        let errLineIdx = -1;
+        try {
+            jsyaml.load(lines.join('\n'));
+            return lines.join('\n'); // All errors resolved!
+        } catch (err) {
+            if (err.mark && typeof err.mark.line === 'number') {
+                errLineIdx = err.mark.line;
+            } else {
+                break;
+            }
+        }
+
+        if (errLineIdx < 0 || errLineIdx >= lines.length) break;
+
+        // Try repairing line at error or preceding line
+        let repaired = repairLineIndent(lines, errLineIdx);
+        if (!repaired && errLineIdx > 0) {
+            repaired = repairLineIndent(lines, errLineIdx - 1);
+        }
+
+        if (!repaired) break; // Reached non-auto-repairable line
+    }
+
+    return lines.join('\n');
+}
+
+function repairLineIndent(lines, lineIdx) {
+    const currentLine = lines[lineIdx];
+    const trimmed = currentLine.trim();
+    
+    // Skip empty lines, comments, or boundary markers
+    if (!trimmed || trimmed.startsWith('#') || trimmed === '---' || trimmed === '...') return false;
+
+    // Locate preceding non-comment, non-empty line
+    let prevIdx = -1;
+    for (let i = lineIdx - 1; i >= 0; i--) {
+        const lineContent = lines[i].trim();
+        if (lineContent && !lineContent.startsWith('#') && lineContent !== '---' && lineContent !== '...') {
+            prevIdx = i;
+            break;
+        }
+    }
+
+    if (prevIdx === -1) {
+        lines[lineIdx] = trimmed;
+        return true;
+    }
+
+    const prevLine = lines[prevIdx];
+    const prevIndent = (prevLine.match(/^\s*/) || [''])[0].length;
+    const prevTrimmed = prevLine.trim();
+    const prevIsParent = prevTrimmed.endsWith(':') && !prevTrimmed.includes('#');
+
+    // Generate candidate indents for lineIdx
+    let candidateIndents = [];
+    if (prevIsParent) {
+        candidateIndents = [prevIndent + 2, prevIndent];
+    } else {
+        candidateIndents = [prevIndent, Math.max(0, prevIndent - 2), 0];
+    }
+
+    const originalLine = lines[lineIdx];
+    for (let indent of candidateIndents) {
+        lines[lineIdx] = ' '.repeat(indent) + trimmed;
+        try {
+            jsyaml.load(lines.join('\n'));
+            return true;
+        } catch (e) {
+            // Check if error moved further down the file
+            if (e.mark && e.mark.line > lineIdx) {
+                return true;
+            }
+        }
+    }
+
+    // Revert if candidate attempts didn't advance parsing
+    lines[lineIdx] = originalLine;
+    return false;
+}
+
+function formatYAML() {
+    const raw = document.getElementById('yamlInput').value;
+    if (!raw.trim()) return;
+
+    try {
+        const doc = jsyaml.load(raw);
+        const formatted = jsyaml.dump(doc, { indent: 2, lineWidth: -1 });
+        document.getElementById('outputArea').value = formatted;
+        document.getElementById('outputTitle').innerText = 'FORMATTED YAML';
+        autoValidate();
+    } catch (err) {
+        autoValidate();
+    }
+}
+
+function convertToJSON() {
+    const raw = document.getElementById('yamlInput').value;
+    if (!raw.trim()) return;
+
+    try {
+        const doc = jsyaml.load(raw);
+        const jsonStr = JSON.stringify(doc, null, 2);
+        document.getElementById('outputArea').value = jsonStr;
+        document.getElementById('outputTitle').innerText = 'CONVERTED JSON';
+        autoValidate();
+    } catch (err) {
+        autoValidate();
+    }
+}
+
+function convertJSONtoYAML() {
+    const raw = document.getElementById('yamlInput').value;
+    if (!raw.trim()) return;
+
+    try {
+        const jsonDoc = JSON.parse(raw);
+        const yamlStr = jsyaml.dump(jsonDoc, { indent: 2, lineWidth: -1 });
+        document.getElementById('outputArea').value = yamlStr;
+        document.getElementById('outputTitle').innerText = 'CONVERTED YAML';
+        autoValidate();
+    } catch (err) {
+        const statusBadge = document.getElementById('statusBadge');
+        statusBadge.className = 'status-badge status-invalid';
+        statusBadge.innerHTML = '<span>✕ Invalid JSON Input</span>';
+    }
+}
+
+function loadSampleYAML() {
+    const sample = `# This is a comment line (starts with a hash)
+---
+# The three dashes above optionally signal the start of a document
+
+server:
+ host: "127.0.0.1"          # String (quotes are optional)
+          port: 8080                  # Integer
+                timeout: 5.5                # Floating-point number
+  ssl_enabled: true          # Boolean (true/false)
+  maintenance_mode: null     # Null value (empty field)
+
+# A list/sequence denoted by hyphens
+allowed_environments:
+  - development
+  - staging
+  - production
+
+# A list containing nested objects/dictionaries
+database_clusters:
+  - region: "us-east"
+    replicas: 3
+  - region: "eu-west"
+    replicas: 2
+
+...
+# The three dots optionally signal the end of a document`;
+
+    document.getElementById('yamlInput').value = sample;
+    autoValidate();
+}
+
+function clearAll() {
+    document.getElementById('yamlInput').value = '';
+    document.getElementById('outputArea').value = '';
+    autoValidate();
+}
+
+async function pasteInput() {
+    const text = await navigator.clipboard.readText();
+    if (text) {
+        document.getElementById('yamlInput').value = text;
+        autoValidate();
+    }
+}
+
+function copyOutput() {
+    const out = document.getElementById('outputArea').value;
+    if (out) navigator.clipboard.writeText(out);
+}
+
+function downloadOutput() {
+    const out = document.getElementById('outputArea').value;
+    if (!out) return;
+    const isJson = out.trim().startsWith('{') || out.trim().startsWith('[');
+    const ext = isJson ? 'json' : 'yaml';
+    
+    const blob = new Blob([out], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `output.${ext}`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function handleFileUpload(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('yamlInput').value = e.target.result;
+        autoValidate();
+    };
+    reader.readAsText(file);
+}
+
+// Initial setup
+updateLineNumbers(null);
+</script>
+
+</body>
+</html>
