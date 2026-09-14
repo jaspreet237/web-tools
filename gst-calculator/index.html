@@ -8,7 +8,7 @@
     <title>GST Late Fee & Interest Calculator | MyAllCodes Tools</title>
 
     <meta name="description"
-        content="Calculate GST late fees, interest under Section 50, and CGST/SGST breakdowns for GSTR-3B, GSTR-1, and other returns. Free online GST penalty calculator.">
+        content="Calculate GST late fees, interest under Section 50, and CGST/SGST breakdowns for GSTR-3B, GSTR-1, and other returns with auto-due-date mapping.">
 
     <link rel="canonical" href="https://myallcodes.in/gst-late-fee-calculator/">
 
@@ -219,6 +219,11 @@
             box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
 
+        .form-group input:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         .options-row {
             display: flex;
             align-items: center;
@@ -390,7 +395,7 @@
     <h1>GST Late Fee & Interest Calculator</h1>
 
     <p>
-        Calculate delayed return penalties, split CGST and SGST fees, and interest under Section 50 for GSTR-3B, GSTR-1, and other filings.
+        Calculate delayed return penalties, split CGST and SGST fees, and interest under Section 50 with automatic statutory due date mapping.
     </p>
 </section>
 
@@ -402,17 +407,19 @@
         <div class="input-grid">
             <div class="form-group">
                 <label for="returnType">GST Return Type</label>
-                <select id="returnType" onchange="calculateGST()">
-                    <option value="gstr3b">GSTR-3B (Monthly/Quarterly)</option>
-                    <option value="gstr1">GSTR-1 (Outward Supplies)</option>
-                    <option value="gstr4">GSTR-4 (Composition)</option>
-                    <option value="gstr9">GSTR-9 (Annual Return)</option>
+                <select id="returnType" onchange="updateDueDateAndCalculate()">
+                    <option value="gstr3b_m">GSTR-3B (Monthly)</option>
+                    <option value="gstr3b_q">GSTR-3B (Quarterly / QRMP)</option>
+                    <option value="gstr1_m">GSTR-1 (Monthly - 11th)</option>
+                    <option value="gstr1_q">GSTR-1 (Quarterly - 13th)</option>
+                    <option value="gstr4">GSTR-4 (Composition - 30th April)</option>
+                    <option value="gstr9">GSTR-9 (Annual Return - 31st Dec)</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="returnPeriod">Return Period (Month / Year)</label>
-                <input type="month" id="returnPeriod" onchange="calculateGST()">
+                <label for="returnPeriod">Return Period (Month / Quarter / Year)</label>
+                <input type="month" id="returnPeriod" onchange="updateDueDateAndCalculate()">
             </div>
         </div>
 
@@ -434,7 +441,7 @@
 
         <div class="input-grid">
             <div class="form-group">
-                <label for="dueDate">Original Due Date</label>
+                <label for="dueDate">Original Due Date (Auto-calculated)</label>
                 <input type="date" id="dueDate" onchange="calculateGST()">
             </div>
 
@@ -506,7 +513,7 @@
 
         <h3>Key Rules Handled</h3>
         <p>
-            • <strong>Late Fee Slabs:</strong> Standard returns carry ₹50/day (₹25 CGST + ₹25 SGST) or ₹20/day for NIL returns, subjected to turnover caps.<br>
+            • <strong>Auto Due Dates:</strong> The system automatically evaluates standard statutory dates (e.g., 20th for GSTR-3B, 11th/13th for GSTR-1, April 30th for GSTR-4, Dec 31st for GSTR-9) based on the selected tax period.<br>
             • <strong>Interest on Delayed Payment:</strong> Interest is calculated at 18% per annum under Section 50 on net tax liability cleared through cash ledger.
         </p>
     </div>
@@ -522,18 +529,63 @@ const dueDateInput = document.getElementById('dueDate');
 const filingDateInput = document.getElementById('filingDate');
 const returnPeriodInput = document.getElementById('returnPeriod');
 
-function setInitialDates() {
+function setInitialValues() {
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
 
     returnPeriodInput.value = `${yyyy}-${mm}`;
-    
-    // Default mock due date to 20th of current month
-    dueDateInput.value = `${yyyy}-${mm}-20`;
     filingDateInput.value = `${yyyy}-${mm}-${dd}`;
 
+    updateDueDateAndCalculate();
+}
+
+function updateDueDateAndCalculate() {
+    const returnType = document.getElementById('returnType').value;
+    const periodVal = returnPeriodInput.value; // Format: "YYYY-MM"
+
+    if (!periodVal) return;
+
+    const [yearStr, monthStr] = periodVal.split('-');
+    let year = parseInt(yearStr);
+    let month = parseInt(monthStr); // 1-12
+
+    let dueYear = year;
+    let dueMonth = month + 1;
+    let dueDay = 20; // Default GSTR-3B Monthly
+
+    if (dueMonth > 12) {
+        dueMonth = 1;
+        dueYear += 1;
+    }
+
+    if (returnType === 'gstr3b_m') {
+        dueDay = 20; // 20th of the succeeding month
+    } else if (returnType === 'gstr3b_q') {
+        // Assuming end of quarter month, due date is usually 22nd or 24th of next month. Let's map to 22nd.
+        dueDay = 22;
+        // If quarter ends in month 3, 6, 9, 12, succeeding month is month+1
+    } else if (returnType === 'gstr1_m') {
+        dueDay = 11; // 11th of succeeding month
+    } else if (returnType === 'gstr1_q') {
+        dueDay = 13; // 13th of month following quarter
+    } else if (returnType === 'gstr4') {
+        // GSTR-4 for financial year YYYY is due on 30th April of YYYY+1
+        dueYear = year + 1;
+        dueMonth = 4;
+        dueDay = 30;
+    } else if (returnType === 'gstr9') {
+        // GSTR-9 for financial year YYYY is due on 31st December of YYYY+1
+        dueYear = year + 1;
+        dueMonth = 12;
+        dueDay = 31;
+    }
+
+    const formattedDueMonth = String(dueMonth).padStart(2, '0');
+    const formattedDueDay = String(dueDay).padStart(2, '0');
+    
+    dueDateInput.value = `${dueYear}-${formattedDueMonth}-${formattedDueDay}`;
     calculateGST();
 }
 
@@ -622,7 +674,7 @@ function goHomeSearch() {
 }
 
 // Initialize on page load
-setInitialDates();
+setInitialValues();
 </script>
 
 </body>
