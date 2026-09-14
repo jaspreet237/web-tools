@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GST Late Fee & Interest Calculator | MyAllCodes Tools</title>
+
+    <meta name="description"
+        content="Calculate GST late fees, interest under Section 50, and CGST/SGST breakdowns for GSTR-3B, GSTR-1, and other returns. Free online GST penalty calculator.">
+
+    <link rel="canonical" href="https://myallcodes.in/gst-late-fee-calculator/">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --surface-card: #ffffff;
+            --surface-input: #f1f5f9;
+
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+
+            --border-line: #e2e8f0;
+
+            --radius-xl: 16px;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px -2px rgba(0,0,0,0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* =========================
+            HEADER & LIVE BAR
+        ========================= */
+
+        .header-nav {
+            background: var(--surface-card);
+            border-bottom: 1px solid var(--border-line);
+            padding: 0.85rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .brand {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand span { color: var(--primary); }
+
+        .search-wrapper {
+            position: relative;
+            width: 360px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.6rem 1rem 0.6rem 2.5rem;
+            background: var(--surface-input);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-md);
+            color: var(--text-main);
+            font-size: 0.875rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-sub);
+            width: 16px;
+        }
+
+        /* =========================
+            HERO SECTION
+        ========================= */
+
+        .tool-hero {
+            background: var(--surface-card);
+            border-bottom: 1px solid var(--border-line);
+            padding: 2rem 1.5rem 1.5rem;
+            text-align: center;
+        }
+
+        .breadcrumb {
+            color: var(--text-sub);
+            font-size: 0.78rem;
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .tool-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid rgba(37,99,235,0.15);
+            padding: 0.35rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 0.9rem;
+        }
+
+        .tool-hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.6rem;
+        }
+
+        .tool-hero p {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* =========================
+            MAIN CALCULATOR CARD
+        ========================= */
+
+        .calculator-section {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .calculator-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem 0.85rem;
+            background: var(--surface-input);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-md);
+            color: var(--text-main);
+            font-size: 0.88rem;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        .options-row {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: var(--surface-input);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 15px;
+            height: 15px;
+        }
+
+        /* Primary Output Card */
+        .hero-result-card {
+            background: var(--primary-light);
+            border: 1px solid rgba(37,99,235,0.2);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-result-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.4rem;
+        }
+
+        .hero-result-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+
+        /* Breakdown Output Cards */
+        .result-section {
+            border-top: 1px solid var(--border-line);
+            padding-top: 1.25rem;
+        }
+
+        .breakdown-title {
+            font-size: 0.82rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .breakdown-card {
+            background: var(--surface-input);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-md);
+            padding: 0.9rem 0.75rem;
+            text-align: center;
+        }
+
+        .breakdown-value {
+            display: block;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .breakdown-label {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        /* =========================
+            INFO & FOOTER
+        ========================= */
+
+        .info-section {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem;
+        }
+
+        .info-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-line);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-card h2 { font-size: 1.1rem; margin-bottom: 0.7rem; }
+        .info-card h3 { font-size: 0.9rem; margin-top: 1.25rem; margin-bottom: 0.4rem; }
+        .info-card p { color: var(--text-sub); font-size: 0.82rem; line-height: 1.7; }
+
+        .site-footer {
+            border-top: 1px solid var(--border-line);
+            padding: 1.5rem 0;
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            background: var(--surface-card);
+            margin-top: auto;
+        }
+
+        @media (max-width: 700px) {
+            .input-grid, .breakdown-grid { grid-template-columns: 1fr; }
+            .search-wrapper { width: 160px; }
+            .hero-result-value { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="header-nav">
+    <a href="/" class="brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        MyAllCodes<span>Tools</span>
+    </a>
+
+    <div class="search-wrapper">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" class="search-input" placeholder="Search converter..." onclick="goHomeSearch()">
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="tool-hero">
+    <div class="breadcrumb">
+        <a href="/">Home</a> &nbsp;/&nbsp; GST Tools &nbsp;/&nbsp; GST Late Fee & Interest Calculator
+    </div>
+
+    <span class="tool-badge">GST Compliance Utility</span>
+
+    <h1>GST Late Fee & Interest Calculator</h1>
+
+    <p>
+        Calculate delayed return penalties, split CGST and SGST fees, and interest under Section 50 for GSTR-3B, GSTR-1, and other filings.
+    </p>
+</section>
+
+<!-- Calculator Section -->
+<section class="calculator-section">
+    <div class="calculator-card">
+
+        <!-- Inputs Grid -->
+        <div class="input-grid">
+            <div class="form-group">
+                <label for="returnType">GST Return Type</label>
+                <select id="returnType" onchange="calculateGST()">
+                    <option value="gstr3b">GSTR-3B (Monthly/Quarterly)</option>
+                    <option value="gstr1">GSTR-1 (Outward Supplies)</option>
+                    <option value="gstr4">GSTR-4 (Composition)</option>
+                    <option value="gstr9">GSTR-9 (Annual Return)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="returnPeriod">Return Period (Month / Year)</label>
+                <input type="month" id="returnPeriod" onchange="calculateGST()">
+            </div>
+        </div>
+
+        <div class="input-grid">
+            <div class="form-group">
+                <label for="turnoverSlab">Annual Aggregate Turnover</label>
+                <select id="turnoverSlab" onchange="calculateGST()">
+                    <option value="15000000">Up to ₹1.5 Crore (Max Cap: ₹2,000)</option>
+                    <option value="50000000">₹1.5 Crore to ₹5 Crore (Max Cap: ₹5,000)</option>
+                    <option value="500000000">Above ₹5 Crore (Max Cap: ₹10,000)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="taxGroup">
+                <label for="taxLiability">Net Tax Liability Paid in Cash (₹)</label>
+                <input type="number" id="taxLiability" placeholder="e.g. 25000" min="0" value="0" oninput="calculateGST()">
+            </div>
+        </div>
+
+        <div class="input-grid">
+            <div class="form-group">
+                <label for="dueDate">Original Due Date</label>
+                <input type="date" id="dueDate" onchange="calculateGST()">
+            </div>
+
+            <div class="form-group">
+                <label for="filingDate">Actual Filing Date</label>
+                <input type="date" id="filingDate" onchange="calculateGST()">
+            </div>
+        </div>
+
+        <!-- Options Row -->
+        <div class="options-row">
+            <label class="checkbox-label">
+                <input type="checkbox" id="isNil" onchange="toggleNilReturn()"> This is a NIL Return (Zero Tax Liability)
+            </label>
+        </div>
+
+        <!-- Highlighted Main Duration Output -->
+        <div class="hero-result-card">
+            <div class="hero-result-title">Total Payable (Late Fee + Interest)</div>
+            <div class="hero-result-value" id="resTotal">₹0.00</div>
+        </div>
+
+        <!-- Multi-Unit Breakdown Grid -->
+        <div class="result-section">
+            <div class="breakdown-title">Detailed Penalty Breakdown</div>
+            <div class="breakdown-grid">
+                <div class="breakdown-card">
+                    <span class="breakdown-value mono" id="resDays">0 Days</span>
+                    <span class="breakdown-label">Delay Period</span>
+                </div>
+
+                <div class="breakdown-card">
+                    <span class="breakdown-value mono" id="resLateFee">₹0</span>
+                    <span class="breakdown-label">Total Late Fee</span>
+                </div>
+
+                <div class="breakdown-card">
+                    <span class="breakdown-value mono" id="resInterest">₹0.00</span>
+                    <span class="breakdown-label">Interest (18% p.a.)</span>
+                </div>
+
+                <div class="breakdown-card">
+                    <span class="breakdown-value mono" id="resCgstFee">₹0</span>
+                    <span class="breakdown-label">CGST Late Fee Component</span>
+                </div>
+
+                <div class="breakdown-card">
+                    <span class="breakdown-value mono" id="resSgstFee">₹0</span>
+                    <span class="breakdown-label">SGST Late Fee Component</span>
+                </div>
+
+                <div class="breakdown-card">
+                    <span class="breakdown-value mono" id="resCapStatus">Normal</span>
+                    <span class="breakdown-label">Cap Limit Status</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Content Info -->
+<section class="info-section">
+    <div class="info-card">
+        <h2>About GST Late Fee & Interest Calculations</h2>
+        <p>
+            Under GST laws, filing returns after the prescribed due date attracts a late fee split equally between CGST and SGST, alongside interest charges calculated on delayed cash tax payments.
+        </p>
+
+        <h3>Key Rules Handled</h3>
+        <p>
+            • <strong>Late Fee Slabs:</strong> Standard returns carry ₹50/day (₹25 CGST + ₹25 SGST) or ₹20/day for NIL returns, subjected to turnover caps.<br>
+            • <strong>Interest on Delayed Payment:</strong> Interest is calculated at 18% per annum under Section 50 on net tax liability cleared through cash ledger.
+        </p>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <p>© 2026 MyAllCodes Tools &bull; All Rights Reserved</p>
+</footer>
+
+<script>
+const dueDateInput = document.getElementById('dueDate');
+const filingDateInput = document.getElementById('filingDate');
+const returnPeriodInput = document.getElementById('returnPeriod');
+
+function setInitialDates() {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+
+    returnPeriodInput.value = `${yyyy}-${mm}`;
+    
+    // Default mock due date to 20th of current month
+    dueDateInput.value = `${yyyy}-${mm}-20`;
+    filingDateInput.value = `${yyyy}-${mm}-${dd}`;
+
+    calculateGST();
+}
+
+function toggleNilReturn() {
+    const isNil = document.getElementById('isNil').checked;
+    const taxLiabilityInput = document.getElementById('taxLiability');
+    const taxGroup = document.getElementById('taxGroup');
+
+    if (isNil) {
+        taxLiabilityInput.value = 0;
+        taxLiabilityInput.disabled = true;
+        taxGroup.style.opacity = '0.5';
+    } else {
+        taxLiabilityInput.disabled = false;
+        taxGroup.style.opacity = '1';
+    }
+    calculateGST();
+}
+
+function calculateGST() {
+    const turnoverSlab = parseInt(document.getElementById('turnoverSlab').value) || 15000000;
+    const dueDateVal = dueDateInput.value;
+    const filingDateVal = filingDateInput.value;
+    const isNil = document.getElementById('isNil').checked;
+    const taxLiability = parseFloat(document.getElementById('taxLiability').value) || 0;
+
+    if (!dueDateVal || !filingDateVal) return;
+
+    const dueDate = new Date(dueDateVal);
+    const filingDate = new Date(filingDateVal);
+
+    const diffTime = filingDate - dueDate;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 0) {
+        document.getElementById('resDays').innerText = '0 Days';
+        document.getElementById('resLateFee').innerText = '₹0';
+        document.getElementById('resInterest').innerText = '₹0.00';
+        document.getElementById('resCgstFee').innerText = '₹0';
+        document.getElementById('resSgstFee').innerText = '₹0';
+        document.getElementById('resCapStatus').innerText = 'No Delay';
+        document.getElementById('resTotal').innerText = '₹0.00';
+        return;
+    }
+
+    // Daily rate: ₹50 for normal (₹25 CGST + ₹25 SGST), ₹20 for Nil (₹10 CGST + ₹10 SGST)
+    let dailyRate = isNil ? 20 : 50;
+    let rawLateFee = diffDays * dailyRate;
+
+    // Turnover Caps calculation
+    let maxCap = 10000;
+    if (turnoverSlab <= 15000000) {
+        maxCap = isNil ? 500 : 2000;
+    } else if (turnoverSlab <= 50000000) {
+        maxCap = isNil ? 500 : 5000;
+    } else {
+        maxCap = isNil ? 500 : 10000;
+    }
+
+    let finalLateFee = Math.min(rawLateFee, maxCap);
+    
+    // Split equally into CGST and SGST
+    let cgstFee = finalLateFee / 2;
+    let sgstFee = finalLateFee / 2;
+
+    // Interest calculation: 18% p.a under Section 50
+    let interest = 0;
+    if (!isNil && taxLiability > 0) {
+        interest = (taxLiability * 0.18 * diffDays) / 365;
+    }
+
+    let totalPayable = finalLateFee + interest;
+
+    // Output bindings
+    document.getElementById('resDays').innerText = `${diffDays} Day${diffDays > 1 ? 's' : ''}`;
+    document.getElementById('resLateFee').innerText = `₹${finalLateFee.toLocaleString('en-IN')}`;
+    document.getElementById('resInterest').innerText = `₹${interest.toFixed(2)}`;
+    document.getElementById('resCgstFee').innerText = `₹${cgstFee.toLocaleString('en-IN')}`;
+    document.getElementById('resSgstFee').innerText = `₹${sgstFee.toLocaleString('en-IN')}`;
+    document.getElementById('resCapStatus').innerText = rawLateFee > maxCap ? `Capped at ₹${maxCap.toLocaleString('en-IN')}` : `Within Limits`;
+    document.getElementById('resTotal').innerText = `₹${totalPayable.toFixed(2)}`;
+}
+
+function goHomeSearch() {
+    window.location.href = "/?search=gst-late-fee-calculator";
+}
+
+// Initialize on page load
+setInitialDates();
+</script>
+
+</body>
+</html>
